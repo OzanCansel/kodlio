@@ -115,7 +115,8 @@ SOURCES += main.cpp \
     zip/zip7zextractor.cpp \
     exception/environmentvariablenotset.cpp \
     http/internetaccessibility.cpp \
-    exception/unziperror.cpp
+    exception/unziperror.cpp \
+    traverse/arduinolibrarytraverse.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -287,5 +288,6 @@ HEADERS += \
     zip/zip7zextractor.h \
     exception/environmentvariablenotset.h \
     http/internetaccessibility.h \
-    exception/unziperror.h
+    exception/unziperror.h \
+    traverse/arduinolibrarytraverse.h
 

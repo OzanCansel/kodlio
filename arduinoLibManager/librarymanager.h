@@ -23,6 +23,9 @@ public:
     double          downloadingProgress();
     QString         downloadingLibName();
     QString         downloadingLibVersion();
+    QList<ArduinoLibDescription*>*      localLibs();
+    QList<ArduinoLibDescription*>*      onlineLibs();
+
 
 public slots:
 
@@ -60,7 +63,7 @@ signals:
 
 private:
 
-    QList<ArduinoLibDescription*>    _descriptions;
+    QList<ArduinoLibDescription*>    _onlineLibs;
     QList<ArduinoLibDescription*>    _localLibs;
 
     ArduinoLibDescription*  retrieveDescFromOnline(QString name , QString version);

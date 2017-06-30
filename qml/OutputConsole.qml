@@ -27,17 +27,27 @@ Rectangle {
 
     function    commandOutput(text){
         checkFlags();
-        consoleText.append("<span style=\"color : "  + Theme.commandOutConsoleColor + " \">" + text + "</span>")
+        var     texts = text.split("\n")
+        for(var i = 0; i < texts.length; i++){
+            consoleText.append("<span style=\"color : "  + Theme.commandOutConsoleColor + " \">" + texts[i] + "</span>")
+        }
     }
 
     function    standartOutput(text){
         checkFlags()
-        consoleText.append("<span style=\"color : " + Theme.stdOutConsoleColor +  "\">" + text + "</span>");
+        var     texts = text.split("\n")
+        for(var i = 0; i < texts.length; i++){
+            consoleText.append("<span style=\"color : " + Theme.stdOutConsoleColor +  "\">" + texts[i] + "</span>");
+        }
     }
 
     function    errorOutput(text){
         checkFlags()
-        consoleText.append("<span style=\"color : " + Theme.stdErrConsoleColor + ";\">"  + text + "</span>")
+        var     texts = text.split("\n")
+        for(var i = 0; i < texts.length; i++){
+
+            consoleText.append("<span style=\"color : " + Theme.stdErrConsoleColor + ";\">"  + texts[i] + "</span>")
+        }
     }
 
     Flickable   {

@@ -70,7 +70,6 @@ QList<FunctionUsageParsed>  FunctionParser::extractFunctions(QString &text){
         functions.append(func);
     }
 
-
     return functions;
 }
 

@@ -5,6 +5,9 @@
 #include <QRegularExpressionMatch>
 #include "roboskopenvironment.h"
 #include "exception/compileerror.h"
+#include "traverse/arduinolibrarytraverse.h"
+#include "traverse/filetraverse.h"
+#include "arduinoLibManager/librarymanager.h"
 
 Toolchain::Toolchain(Compiler *compiler, Programmer *programmer, QObject *parent) : QObject(parent)
 {
@@ -28,13 +31,24 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
     QString hexFileAbsPath = objFolder.absoluteFilePath("roboskop.hex");
     QStringList sources;
     QStringList objFiles;
+
     /*QStringList includes = QStringList() << buildHeaderFolder.absolutePath() << "/home/arnest/arduino-1.6.13/hardware/arduino/avr/variants/standard"*/;
     QStringList includes = QStringList() << buildHeaderFolder.absolutePath() << QDir(RoboskopEnvironment::getInstance()->path(RoboskopEnvironment::Variants)).filePath("standard");
+
 
     //Proje dizini ekleniyor
     if(!extraFolders.contains(rootPath)){
         extraFolders.push_front(rootPath);
     }
+
+    QList<ArduinoLibDescription*>   dependencies = specifyLibraryDependencies(rootPath);
+
+    //Gerekli kutuphaneler build klasorune ekleniyor
+    foreach (ArduinoLibDescription *desc, dependencies) {
+        extraFolders << desc->localDir();
+        includes << desc->localDir().append("/src");
+    }
+
 
     //Headerlar kopyalanıyor
     foreach (QString path, extraFolders) {
@@ -45,10 +59,11 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
     }
 
     if(_debugEnabled)   qDebug() << sketchCppPath << " derleniyor..." << " -> " << sketchOutputCppPath;
-    try{
+
+    try {
         stdOutput("sketch.cpp derleniyor...");
         _compiler->compileCppFile(buildCppFolder.filePath("sketch.cpp") , buildFolder.filePath("sketch.cpp.o") , includes);
-    }catch(CompileError err){
+    }   catch(CompileError err) {
         if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() sketch.cpp derlenirken hata oluştu. -> " << err.err;
 
         emit compileEnd(false);
@@ -56,6 +71,11 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
     }
 
     int     fIdx = 1;
+
+    //Kutuphaneler derleniyor
+    foreach (ArduinoLibDescription *dependency, dependencies) {
+
+    }
 
     //Dosyalar compile ediliyor
     foreach (QString srcFile, buildCppFolder.entryList()) {
@@ -198,4 +218,127 @@ QString Toolchain::extractFileExtension(QString path){
     QString extension = path.right(path.length() - idx);
 
     return extension;
+}
+
+QList<ArduinoLibDescription*> Toolchain::specifyLibraryDependencies(QString rootPath){
+    FileTraverse            traverser;
+    LibraryManager          libManager;
+
+    //Local kutuphaneler yukleniyor
+    libManager.retrieveLocalLibraries();
+    QList<ArduinoLibDescription*>*                  localLibs   =   libManager.localLibs();
+    QList<TraversedFileInfo>                        files;
+    QHash<QString , ArduinoLibDescription*>         headerMapping;
+    QList<TraversedFileInfo>                        internalHeaderAndSources;
+    QList<ArduinoLibDescription*>                   dependencies;
+    QStringList                                     localHeaderNames;
+
+    foreach (ArduinoLibDescription* desc , *localLibs) {
+        QStringList headers = desc->headerNames();
+
+        //Headerler map ediliyor
+        foreach (QString header, headers) {
+            headerMapping[header] = desc;
+        }
+    }
+
+    //Headerler ve cppler ekleniyor
+    extractHeaderAndSources(rootPath , internalHeaderAndSources , localHeaderNames);
+
+    for (int i = 0; i < internalHeaderAndSources.length(); ++i) {
+        TraversedFileInfo   sourceFile = internalHeaderAndSources.at(i);
+        QFile       f(sourceFile.info().filePath());
+
+        //Eger dosya acilamadiysa pas geciliyor
+        if(!f.open(QIODevice::ReadOnly)){
+            continue;
+        }
+
+        //Dosya icerigi okunuyor
+        QTextStream     textStream(&f);
+        QString     content = textStream.readAll();
+
+        //Dosya icinde #include <headerName> ifadesi araniyor
+        QString     includeExpression   =   "#include((\\s)*)(<|\\\")((\\d|[a-zA-Z]|\\.)+)(h?)(\\>|\\\")";
+        QRegularExpression  expr(includeExpression);
+        QRegularExpressionMatchIterator it = expr.globalMatch(content);
+
+        //Eslesmeler okunuyor
+        while(it.hasNext()){
+            QRegularExpressionMatch match = it.next();
+            QRegularExpression      bracketMatch("<|\\\"");
+            QString includeStatement = match.captured(0);
+            int headerStart = bracketMatch.match(includeStatement).capturedEnd(0);
+            QStringRef  headerRef(&includeStatement , headerStart , includeStatement.length() - headerStart -1);
+            QString headerName = headerRef.toString();
+
+            //Eger .h olmadan yazilmissa ekleniyor
+            if(!headerName.contains(".h"))
+                headerName.append(".h");
+
+            //Headerin projede olup olmadigi kontrol ediliyor
+            bool included = localHeaderNames.contains(headerName);
+
+            //Eger ki header mevcutsa pas geciliyor
+            if(included)
+                continue;
+
+            //Header mevcut degilse kutuphanelerde araniyor
+            bool found = headerMapping.keys().contains(headerName);
+
+            //Kutuphanelerde bulunursa dependencylere ekleniyor
+            if(found){
+                ArduinoLibDescription* desc = headerMapping[headerName];
+                ArduinoLibDescription* copiedDesc = new  ArduinoLibDescription(*desc);
+                QString     libDir = copiedDesc->localDir();
+                copiedDesc->setParent(this);
+
+                //Bagimliliklara ekleniyor
+                dependencies.append(copiedDesc);
+
+                //Eklenen kutuphane lokal olarak goruluyor
+                extractHeaderAndSources(libDir , internalHeaderAndSources , localHeaderNames);
+                qDebug() << "L -> " << internalHeaderAndSources.length();
+            }
+        }
+    }
+
+    return dependencies;
+}
+
+void Toolchain::extractHeaderAndSources(QString &rootDir, QList<TraversedFileInfo> &files , QStringList &headerNames){
+    FileTraverse    traverse;
+
+    QList<TraversedFileInfo> traversedFiles = traverse.traverseRecursively(rootDir);
+
+    foreach(TraversedFileInfo file , traversedFiles){
+        QFileInfo   info    =  file.info();
+        bool    isHeader = info.fileName().endsWith(".h");
+        bool    isSource = info.fileName().endsWith(".cpp");
+
+        //Header vea source ise kontrol edilecekler arasina ekleniyor
+        if(isHeader || isSource)
+            files.append(file);
+
+        //Eger headers local header koleksiyonune ekleniyor
+        if(isHeader)
+            headerNames.append(file.info().fileName());
+    }
+}
+
+//Implemente edilmedi, yarim su anda
+QStringList Toolchain::compileLib(QString rootDir, QString outputDir){
+    FileTraverse    traverser;
+    QList<TraversedFileInfo>    files = traverser.traverseRecursively(rootDir);
+
+    //cpp dosyalari derleniyor
+    foreach (TraversedFileInfo file, files) {
+        if(file.info().fileName().endsWith(".cpp")){
+            QString     inputFPath = file.info().filePath();
+            QString     outputFPath = QString(outputDir).append(file.info().fileName()).append(".o");
+//            _compiler->compileCppFile(file.info().filePath() , outputFPath ,);
+        }
+    }
+
+    return QStringList();
 }

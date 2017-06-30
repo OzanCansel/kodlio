@@ -5,6 +5,8 @@
 #include <QStringList>
 #include "toolchain/compiler.h"
 #include "toolchain/programmer.h"
+#include "arduinoLibManager/arduinolibdescription.h"
+#include "traverse/traversedfileinfo.h"
 
 class Toolchain : public QObject
 {
@@ -32,10 +34,13 @@ private:
     Compiler    *_compiler;
     Programmer  *_programmer;
 
-    bool        copyFilesRecursively(QString rootPath , QString destPath , QString pattern , QStringList *l);
-    QStringList extractDependecies(const QString &rootPath) const;
-    QString     extractFileName(QString path);
-    QString     extractFileExtension(QString path);
+    bool                            copyFilesRecursively(QString rootPath , QString destPath , QString pattern , QStringList *l);
+    QStringList                     extractDependecies(const QString &rootPath) const;
+    QList<ArduinoLibDescription*>   specifyLibraryDependencies(QString rootPath);
+    QString                         extractFileName(QString path);
+    QString                         extractFileExtension(QString path);
+    void                            extractHeaderAndSources(QString &rootDir , QList<TraversedFileInfo> &files , QStringList &headerNames);
+    QStringList                     compileLib(QString rootDir , QString outputDir);
 
 };
 

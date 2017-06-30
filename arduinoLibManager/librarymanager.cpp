@@ -12,7 +12,8 @@
 #include "arduinolibdownloader.h"
 #include "zip/zip7zextractor.h"
 #include "osinfo.h"
-#include "exception/environmentvariablenotset.h"\
+#include "exception/environmentvariablenotset.h"
+#include "roboskopenvironment.h"
 
 void LibraryManager::registerQmlType(){
     qmlRegisterType<LibraryManager>("Kodlio" , 1 , 0 , "ArduinoLibManager");
@@ -39,7 +40,7 @@ void LibraryManager::retrieveOnlineLibraries(){
     QJsonArray libJsonArray     =   QJsonDocument::fromJson(reply->readAll()).object()["libraries"].toArray();
 
     //Onceki liste temizleniyor
-    _descriptions.clear();
+    _onlineLibs.clear();
 
     foreach (QJsonValue val, libJsonArray) {
         ArduinoLibDescription   *desc = new ArduinoLibDescription(this);
@@ -47,7 +48,7 @@ void LibraryManager::retrieveOnlineLibraries(){
         //Json parse ediliyor
         desc->deserialize(obj);
 
-        _descriptions.append(desc);
+        _onlineLibs.append(desc);
     }
 
     emit onlineLibsChanged();
@@ -63,6 +64,9 @@ void LibraryManager::retrieveLocalLibraries(){
 
     FileTraverse    traverser;
     QList<TraversedFileInfo> files = traverser.traverseRecursively(ArduinoLibEnvironment().get("installedLibsDir"));
+    QList<TraversedFileInfo> builtInLibs    =   traverser.traverseRecursively(RoboskopEnvironment::getInstance()->getLibrariesPath());
+
+    files.append(builtInLibs);
 
     foreach(TraversedFileInfo file , files){
 
@@ -82,7 +86,7 @@ void LibraryManager::retrieveLocalLibraries(){
 
 void    LibraryManager::filterOnlineLibs(QString name){
     qDebug() << "Filtering -> " << name;
-    foreach (ArduinoLibDescription *desc, _descriptions) {
+    foreach (ArduinoLibDescription *desc, _onlineLibs) {
         if(desc->name().contains(name , Qt::CaseInsensitive))
             emit filterOnlineResult(desc->asVariant());
     }
@@ -197,7 +201,7 @@ void LibraryManager::removeLibs(QVariantList libs){
 
 ArduinoLibDescription* LibraryManager::retrieveDescFromOnline(QString name, QString version){
 
-    foreach (ArduinoLibDescription* desc, _descriptions) {
+    foreach (ArduinoLibDescription* desc, _onlineLibs) {
         if(desc->name() == name && desc->version() == version)
             return desc;
     }
@@ -278,6 +282,14 @@ bool    LibraryManager::isDownloading(){
 
 double LibraryManager::downloadingProgress(){
     return _downloadingProgress;
+}
+
+QList<ArduinoLibDescription*>*   LibraryManager::localLibs(){
+    return &_localLibs;
+}
+
+QList<ArduinoLibDescription*>* LibraryManager::onlineLibs(){
+    return &_onlineLibs;
 }
 
 /*Slots*/

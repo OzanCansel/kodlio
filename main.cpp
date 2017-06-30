@@ -30,8 +30,7 @@
 #include "http/internetaccessibility.h"
 #include <QStandardPaths>
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]){
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
@@ -60,17 +59,6 @@ int main(int argc, char *argv[])
     EditorSettings                  settings;
 
     CodeDescriptionGenerator        descGen;
-
-//    LibraryManager                  libMan;
-//    QVariantList                    libs;
-//    QVariantMap                     l1;
-
-//    l1["name"]      =   "Esplora";
-//    l1["version"]   =   "1.0.1";
-
-//    libs << l1;
-//    libMan.refreshArduinoLibraries();
-//    libMan.installLibs(libs);
 
     QString tempProjPath    =   QDir(QCoreApplication::applicationDirPath()).filePath("temp");
     if(!manager.projectExists(tempProjPath))    manager.createProject(tempProjPath);

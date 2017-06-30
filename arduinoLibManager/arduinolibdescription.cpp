@@ -2,6 +2,7 @@
 #include <QtQml>
 #include <QFile>
 #include <QTextStream>
+#include "traverse/filetraverse.h"
 
 void ArduinoLibDescription::registerQmlType(){
     qmlRegisterType<ArduinoLibDescription>("Kodlio" , 1 , 0 , "ArduinoLibDescription");
@@ -23,6 +24,7 @@ ArduinoLibDescription::ArduinoLibDescription(const ArduinoLibDescription &other)
     setCategory(other.category());
     setUrl(other.url());
     setArchivedFileName(other.archivedFileName());
+    _libDir = other.localDir();
 }
 
 ArduinoLibDescription& ArduinoLibDescription::operator =(const ArduinoLibDescription &other){
@@ -196,4 +198,23 @@ void ArduinoLibDescription::setArchivedFileName(QString val){
     _archivedFileName = val;
 
     emit archivedFileNameChanged();
+}
+
+QStringList ArduinoLibDescription::headerNames(){
+
+    if(_libDir.isEmpty())
+        return QStringList();
+
+    QStringList headers;
+    FileTraverse traverser;
+
+    QList<TraversedFileInfo>    files = traverser.traverseRecursively(_libDir);
+
+    foreach (TraversedFileInfo file, files) {
+        if(file.info().fileName().endsWith(".h")){
+            headers.append(file.info().fileName());
+        }
+    }
+
+    return headers;
 }

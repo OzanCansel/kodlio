@@ -41,6 +41,7 @@ public:
     QString     url() const;
     QString     archivedFileName() const;
     QString     localDir() const;
+    QStringList headerNames();
 
 signals:
 
