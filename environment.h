@@ -17,7 +17,10 @@ public slots:
 
     bool            isAssigned(QString key);
     void            set(QString key , QString value);
-    QString         get(QString key);
+    QString         get(QString key , bool ensureExists = false);
+    QString         appStartDir();
+    QString         toolsDir();
+    QString         sdkDir();
 
 protected   :
 

@@ -116,7 +116,8 @@ SOURCES += main.cpp \
     exception/environmentvariablenotset.cpp \
     http/internetaccessibility.cpp \
     exception/unziperror.cpp \
-    traverse/arduinolibrarytraverse.cpp
+    traverse/arduinolibrarytraverse.cpp \
+    toolchain/avrtoolchainenvironment.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -289,5 +290,6 @@ HEADERS += \
     exception/environmentvariablenotset.h \
     http/internetaccessibility.h \
     exception/unziperror.h \
-    traverse/arduinolibrarytraverse.h
+    traverse/arduinolibrarytraverse.h \
+    toolchain/avrtoolchainenvironment.h
 

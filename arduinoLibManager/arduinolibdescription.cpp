@@ -140,6 +140,15 @@ QString ArduinoLibDescription::localDir() const{
     return _libDir;
 }
 
+QString ArduinoLibDescription::srcDir() const{
+    QDir    dir(localDir().append("/src"));
+
+    if(dir.exists())
+        return QString(_libDir).append("/src");
+    else
+        return localDir();
+}
+
 void ArduinoLibDescription::setName(QString val){
     _name = val;
 

@@ -153,12 +153,20 @@ Rectangle {
             }
         }
 
+        Rectangle{
+            color               :   "red"
+            width               :   parent.width + 50
+            height              :   parent.height + 50
+            opacity             :   0.2
+            radius              :   20
+        }
+
         id      :   commentContainer
-        height  :   editorFlickable.height
-        width   :   editorFlickable.width - x
         z       :   5
         x       :   editorFlickable.x + editorFlickable.width * 0.3
         clip    :   true
+        width   :   childrenRect.width + 10
+        height  :   childrenRect.height + 20
     }
 
     Flickable   {
@@ -175,7 +183,7 @@ Rectangle {
             width       :   50
             height      :   textEditorCont.height - Theme.internalControlsMargin * 2
             radius      :   5
-            opacity     :   0.25
+            opacity     :   0.6
         }
 
 
@@ -183,6 +191,7 @@ Rectangle {
             id              :   lines
             anchors.fill    :   parent
             anchors.margins :   Theme.internalControlsMargin
+
             Repeater    {
                 id          :   lineNumberRepeater
                 model       :   45
@@ -206,6 +215,7 @@ Rectangle {
                         color                       :   hasError(calculateRepeateLineNum(index)) ? "red" : "black"
                         font.pixelSize              :   textControl.font.pixelSize * 0.8
                         font.family                 :   textControl.font.family
+                        font.bold                   :   true
                         height                      :   parent.height
                         anchors.centerIn            :   parent
                     }
@@ -292,6 +302,7 @@ Rectangle {
 
         id                  :   editorFlickable
         anchors.left        :   lineNumber.right
+//        anchors.leftMargin  :   13
         anchors.right       :   parent.right
         anchors.top         :   parent.top
         anchors.bottom      :   parent.bottom
@@ -318,6 +329,15 @@ Rectangle {
                 color       :   Theme.editorBackgroundColor
                 border.width:   projectManager.modified ? 3 : 0
                 border.color:   Theme.editorModifiedBorderColor
+
+                Image {
+                    id              :   name
+                    source          :   "/res/icon/logo.png"
+                    anchors.fill    :   parent
+                    anchors.margins :   parent.height * 0.2
+                    opacity         :   0.05
+                    fillMode        :   Image.PreserveAspectFit
+                }
             }
 
             font.pointSize  :   settings.fontSize
@@ -434,7 +454,7 @@ Rectangle {
                 return;
             var descriptionObj = lineDescriptor.createObject(commentContainer , { "text" : "-" + description.description ,
                                                                  "y" : yPos ,
-                                                                 "font.pixelSize" : textControl.font.pixelSize });
+                                                                 "font.pixelSize" : textControl.font.pixelSize , "z" : 2});
 
             codeDescriptions.push(descriptionObj)
             checkCodeDescriptions()

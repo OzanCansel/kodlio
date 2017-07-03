@@ -57,7 +57,6 @@ int main(int argc, char *argv[]){
     CompilerErrorParser             errParser;
     OsInfo                          osInfo;
     EditorSettings                  settings;
-
     CodeDescriptionGenerator        descGen;
 
     QString tempProjPath    =   QDir(QCoreApplication::applicationDirPath()).filePath("temp");

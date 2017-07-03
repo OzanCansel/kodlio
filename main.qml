@@ -124,7 +124,7 @@ ApplicationWindow {
             id          :   compileControlsContainer
             height      :   parent.height -  26
             anchors.verticalCenter  :   parent.verticalCenter
-            width       :   80
+            width       :   120
             z           :   2
 
             Item{
@@ -140,6 +140,7 @@ ApplicationWindow {
                     anchors.margins :   parent.height * 0.05
                     fillMode        :   Image.PreserveAspectFit
                     z               :   2
+                    visible         :   false
                 }
 
                 Rectangle{
@@ -148,6 +149,7 @@ ApplicationWindow {
                     radius  :   height / 2
                     color   :   "white"
                     opacity :   1
+                    visible :   false
                 }
             }
 
@@ -155,7 +157,7 @@ ApplicationWindow {
 
                 anchors.fill    :   parent
                 anchors.leftMargin  :   5
-                anchors.topMargin   :   50
+                anchors.topMargin   :   -17
                 anchors.bottomMargin:   -8
                 radius          :   10
                 border.width    :   0
@@ -300,6 +302,7 @@ ApplicationWindow {
                     height          :   1
                     color           :   "black"
                     anchors.bottom  :   compileControlBar.top
+                    visible         :   false
                 }
 
                 CompileControlBar   {
@@ -307,6 +310,7 @@ ApplicationWindow {
                     height                      :   180
                     width                       :   parent.width * 0.8
                     anchors.bottom              :   parent.bottom
+                    anchors.bottomMargin        :   58
                     anchors.horizontalCenter    :   parent.horizontalCenter
                 }
             }
@@ -324,7 +328,7 @@ ApplicationWindow {
                 height              :   50
                 anchors.left        :   parent.left
                 width               :   sketchName.width + 20
-                anchors.leftMargin  :   60
+                anchors.leftMargin  :   5
                 anchors.rightMargin :   5
                 color               :   "#006f98"
                 radius              :   10
@@ -332,7 +336,7 @@ ApplicationWindow {
                 Text {
                     id                      :   sketchName
                     x                       :   Theme.headersLeftMargin
-                    text                    :   projectManager.projectName
+                    text                    :   "Proje Adi : " + projectManager.projectName
                     font.pointSize          :   16
                     anchors.verticalCenter  :   parent.verticalCenter
                     color                   :   "white"

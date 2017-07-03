@@ -20,6 +20,7 @@ public:
     QString     compileFolderRecursively(QString rootPath , QString outputPath , QStringList extraFolders = QStringList());
     bool        uploadHex(QString buildFolderPath);
     void        setDebugEnabled(bool enabled);
+    QStringList                     compileLib(QString rootDir , QString outputDir);
 
 signals:
 
@@ -40,7 +41,6 @@ private:
     QString                         extractFileName(QString path);
     QString                         extractFileExtension(QString path);
     void                            extractHeaderAndSources(QString &rootDir , QList<TraversedFileInfo> &files , QStringList &headerNames);
-    QStringList                     compileLib(QString rootDir , QString outputDir);
 
 };
 

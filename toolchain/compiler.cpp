@@ -53,6 +53,7 @@ void Compiler::compileCppFile(QString inputFilePath, QString outputFilePath, QSt
     command.append(inputFilePath)
             .append(" -o ")
             .append(outputFilePath);
+
     if(_debugEnabled)   qDebug() << "Komut " << command;
 
     emit commandOutput(command);

@@ -8,6 +8,7 @@
 #include "traverse/arduinolibrarytraverse.h"
 #include "traverse/filetraverse.h"
 #include "arduinoLibManager/librarymanager.h"
+#include "avrtoolchainenvironment.h"
 
 Toolchain::Toolchain(Compiler *compiler, Programmer *programmer, QObject *parent) : QObject(parent)
 {
@@ -32,9 +33,11 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
     QStringList sources;
     QStringList objFiles;
 
+
+    buildFolder.removeRecursively();
+
     /*QStringList includes = QStringList() << buildHeaderFolder.absolutePath() << "/home/arnest/arduino-1.6.13/hardware/arduino/avr/variants/standard"*/;
     QStringList includes = QStringList() << buildHeaderFolder.absolutePath() << QDir(RoboskopEnvironment::getInstance()->path(RoboskopEnvironment::Variants)).filePath("standard");
-
 
     //Proje dizini ekleniyor
     if(!extraFolders.contains(rootPath)){
@@ -45,10 +48,9 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
 
     //Gerekli kutuphaneler build klasorune ekleniyor
     foreach (ArduinoLibDescription *desc, dependencies) {
-        extraFolders << desc->localDir();
-        includes << desc->localDir().append("/src");
+        //extraFolders << desc->localDir();
+        includes << desc->srcDir();
     }
-
 
     //Headerlar kopyalanıyor
     foreach (QString path, extraFolders) {
@@ -74,7 +76,15 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
 
     //Kutuphaneler derleniyor
     foreach (ArduinoLibDescription *dependency, dependencies) {
+        try{
+            if(_debugEnabled)   qDebug() << dependency->name() << " derleniyor...";
+        compileLib(dependency->srcDir() , objOutputPath);
+        }catch(CompileError &err){
+            if(_debugEnabled)   qDebug() << "ToolChain::compileFolderRecursively()-compileLib() Derleme aşamasında hata oluştu. -> " << err.err;
 
+            emit compileEnd(false);
+            return err.err;
+        }
     }
 
     //Dosyalar compile ediliyor
@@ -224,6 +234,7 @@ QList<ArduinoLibDescription*> Toolchain::specifyLibraryDependencies(QString root
     FileTraverse            traverser;
     LibraryManager          libManager;
 
+
     //Local kutuphaneler yukleniyor
     libManager.retrieveLocalLibraries();
     QList<ArduinoLibDescription*>*                  localLibs   =   libManager.localLibs();
@@ -328,15 +339,29 @@ void Toolchain::extractHeaderAndSources(QString &rootDir, QList<TraversedFileInf
 
 //Implemente edilmedi, yarim su anda
 QStringList Toolchain::compileLib(QString rootDir, QString outputDir){
-    FileTraverse    traverser;
-    QList<TraversedFileInfo>    files = traverser.traverseRecursively(rootDir);
+    FileTraverse                    traverser;
+    QList<TraversedFileInfo>        files           =   traverser.traverseRecursively(rootDir);
+    QList<ArduinoLibDescription*>   dependencies    =   specifyLibraryDependencies(rootDir);
+    AvrToolchainEnvironment         env;
+    QStringList                     includes;
+
+    //Arduino kutuphaneleri ekleniyor
+    includes << rootDir <<env.coreLibs() << env.standardVariants();
+
+    //Kutuphaneler ekleniyor
+    foreach (ArduinoLibDescription* lib, dependencies) {
+        QString     includePath = lib->srcDir();
+        includes << includePath;
+    }
 
     //cpp dosyalari derleniyor
     foreach (TraversedFileInfo file, files) {
         if(file.info().fileName().endsWith(".cpp")){
             QString     inputFPath = file.info().filePath();
             QString     outputFPath = QString(outputDir).append(file.info().fileName()).append(".o");
-//            _compiler->compileCppFile(file.info().filePath() , outputFPath ,);
+
+            //Cpp dosyasi derleniyor
+            _compiler->compileCppFile(inputFPath , outputFPath , includes);
         }
     }
 
