@@ -111,10 +111,6 @@ Item {
                 listProjectsRequired()
             }
         }
-        MenuItem{
-             id         :   examplesMenu
-             text       :   "ornekYukle"
-        }
         MenuItem    {
             id          :   logoutIt
             text        :   "Çıkış"

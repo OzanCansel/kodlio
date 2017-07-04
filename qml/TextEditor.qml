@@ -153,14 +153,6 @@ Rectangle {
             }
         }
 
-        Rectangle{
-            color               :   "red"
-            width               :   parent.width + 50
-            height              :   parent.height + 50
-            opacity             :   0.2
-            radius              :   20
-        }
-
         id      :   commentContainer
         z       :   5
         x       :   editorFlickable.x + editorFlickable.width * 0.3

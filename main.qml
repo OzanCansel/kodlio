@@ -336,7 +336,7 @@ ApplicationWindow {
                 Text {
                     id                      :   sketchName
                     x                       :   Theme.headersLeftMargin
-                    text                    :   "Proje Adi : " + projectManager.projectName
+                    text                    :   "Proje Adı : " + projectManager.projectName
                     font.pointSize          :   16
                     anchors.verticalCenter  :   parent.verticalCenter
                     color                   :   "white"
