@@ -13,7 +13,8 @@ win32 {
                 OUT_PWD_WIN ~= s,/,\\,g
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\* $${OUT_PWD_WIN}\\debug\\ /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\sdk $${OUT_PWD_WIN}\\debug\\sdk /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e &
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e
 
                 message(robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e)
 
@@ -24,7 +25,8 @@ win32 {
                 OUT_PWD_WIN ~= s,/,\\,g
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\* $${OUT_PWD_WIN}\\release\\ /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\sdk $${OUT_PWD_WIN}\\release\\sdk /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\release\\drivers /e
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\release\\drivers /e &
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e
 
         }
 }
