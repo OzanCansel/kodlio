@@ -6,33 +6,42 @@ QtObject {
     property string currentTheme   :   "techTheme"
 
     //Colors
-    readonly property color     genericContainerBackground      :   orangeTheme[currentTheme].genericContainerBackground
-    readonly property color     consoleBackgroundColor          :   orangeTheme[currentTheme].consoleBackgroundColor
-    readonly property color     controlsHeaderTextColor         :   orangeTheme[currentTheme].controlsHeaderTextColor
-    readonly property color     panelHeadersBackgroundColor     :   orangeTheme[currentTheme].panelHeadersBackgroundColor
-    readonly property color     editorBackgroundColor           :   orangeTheme[currentTheme].editorBackgroundColor
-    readonly property color     editorStandardFontColor         :   orangeTheme[currentTheme].editorStandardFontColor
-    readonly property color     editorModifiedBorderColor       :   orangeTheme[currentTheme].editorModifiedBorderColor
-    readonly property color     autoCompleteDescriptionColor    :   orangeTheme[currentTheme].autoCompleteDescriptionColor
-    readonly property color     autoCompleteDescriptionFontColor:   orangeTheme[currentTheme].autoCompleteDescriptionFontColor
-    readonly property color     compileButtonBackgroundColor    :   orangeTheme[currentTheme].compileButtonBackgroundColor
-    readonly property color     uploadButtonBackgroundColor     :   orangeTheme[currentTheme].uploadButtonBackgroundColor
-    readonly property color     dropdownMenuButtonBackColor     :   orangeTheme[currentTheme].dropdownMenuButtonBackColor
-    readonly property color     dropdownMenuButtonHoverColor    :   orangeTheme[currentTheme].dropdownMenuButtonHoverColor
-    readonly property color     ideMenuItemHoverBackColor       :   orangeTheme[currentTheme].ideMenuItemHoverBackColor
-    readonly property color     ideMenuItemBackColor            :   orangeTheme[currentTheme].ideMenuItemBackColor
-    readonly property color     outputConsoleBackColor          :   orangeTheme[currentTheme].outputConsoleBackColor
-    readonly property color     stdErrConsoleColor              :   orangeTheme[currentTheme].stdErrConsoleColor
-    readonly property color     stdOutConsoleColor              :   orangeTheme[currentTheme].stdOutConsoleColor
-    readonly property color     commandOutConsoleColor          :   orangeTheme[currentTheme].commandOutConsoleColor
-    readonly property color     genericButtonBackColor          :   orangeTheme[currentTheme].genericButtonBackColor
-    readonly property color     genericButtonHoverColor         :   orangeTheme[currentTheme].genericButtonHoverColor
-    readonly property color     genericButtonTextColor          :   orangeTheme[currentTheme].genericButtonTextColor
-    readonly property color     serialMonitorOutputBackColor    :   orangeTheme[currentTheme].serialMonitorOutputBackColor
-    readonly property color     dialogBackgroundColor           :   orangeTheme[currentTheme].dialogBackgroundColor
-    readonly property color     serialMonitorIn                 :   orangeTheme[currentTheme].serialMonitorIn
-    readonly property color     serialMonitorOut                :   orangeTheme[currentTheme].serialMonitorOut
-    readonly property color     serialMonitorInfo               :   orangeTheme[currentTheme].serialMonitorInfo
+    readonly property color     documentHeaderDefaultColor      :   themes[currentTheme].documentHeaderDefaultColor
+    readonly property color     documentHeaderSelectedHoverColor:   themes[currentTheme].documentHeaderSelectedHoverColor
+    readonly property color     documentProjectHeaderColor      :   themes[currentTheme].documentProjectHeaderColor
+    readonly property color     lineNumeratorTextColor          :   themes[currentTheme].lineNumeratorTextColor
+    readonly property color     lineNumeratorBackgroundColor    :   themes[currentTheme].lineNumeratorBackgroundColor
+    readonly property real      lineNumeratorOpacity            :   themes[currentTheme].lineNumeratorOpacity
+    readonly property real      controlSpacing                  :   themes[currentTheme].controlSpacing
+    readonly property real      controlXMargin                  :   themes[currentTheme].controlXMargin
+    readonly property real      controlYMargin                  :   themes[currentTheme].controlYMargin
+    readonly property color     genericContainerBackground      :   themes[currentTheme].genericContainerBackground
+    readonly property color     consoleBackgroundColor          :   themes[currentTheme].consoleBackgroundColor
+    readonly property color     controlsHeaderTextColor         :   themes[currentTheme].controlsHeaderTextColor
+    readonly property color     panelHeadersBackgroundColor     :   themes[currentTheme].panelHeadersBackgroundColor
+    readonly property color     editorBackgroundColor           :   themes[currentTheme].editorBackgroundColor
+    readonly property color     editorStandardFontColor         :   themes[currentTheme].editorStandardFontColor
+    readonly property color     editorModifiedBorderColor       :   themes[currentTheme].editorModifiedBorderColor
+    readonly property color     autoCompleteDescriptionColor    :   themes[currentTheme].autoCompleteDescriptionColor
+    readonly property color     autoCompleteDescriptionFontColor:   themes[currentTheme].autoCompleteDescriptionFontColor
+    readonly property color     compileButtonBackgroundColor    :   themes[currentTheme].compileButtonBackgroundColor
+    readonly property color     uploadButtonBackgroundColor     :   themes[currentTheme].uploadButtonBackgroundColor
+    readonly property color     dropdownMenuButtonBackColor     :   themes[currentTheme].dropdownMenuButtonBackColor
+    readonly property color     dropdownMenuButtonHoverColor    :   themes[currentTheme].dropdownMenuButtonHoverColor
+    readonly property color     ideMenuItemHoverBackColor       :   themes[currentTheme].ideMenuItemHoverBackColor
+    readonly property color     ideMenuItemBackColor            :   themes[currentTheme].ideMenuItemBackColor
+    readonly property color     outputConsoleBackColor          :   themes[currentTheme].outputConsoleBackColor
+    readonly property color     stdErrConsoleColor              :   themes[currentTheme].stdErrConsoleColor
+    readonly property color     stdOutConsoleColor              :   themes[currentTheme].stdOutConsoleColor
+    readonly property color     commandOutConsoleColor          :   themes[currentTheme].commandOutConsoleColor
+    readonly property color     genericButtonBackColor          :   themes[currentTheme].genericButtonBackColor
+    readonly property color     genericButtonHoverColor         :   themes[currentTheme].genericButtonHoverColor
+    readonly property color     genericButtonTextColor          :   themes[currentTheme].genericButtonTextColor
+    readonly property color     serialMonitorOutputBackColor    :   themes[currentTheme].serialMonitorOutputBackColor
+    readonly property color     dialogBackgroundColor           :   themes[currentTheme].dialogBackgroundColor
+    readonly property color     serialMonitorIn                 :   themes[currentTheme].serialMonitorIn
+    readonly property color     serialMonitorOut                :   themes[currentTheme].serialMonitorOut
+    readonly property color     serialMonitorInfo               :   themes[currentTheme].serialMonitorInfo
 
     readonly property int       headersLeftMargin               :   10
     readonly property int       headersTopMargin                :   20
@@ -40,35 +49,18 @@ QtObject {
     readonly property int       consoleNormalHeight             :   220
     readonly property int       consoleCollapsedHeight          :   52
 
-    readonly property variant   orangeTheme :   {
-        "orangeTheme"    :  {
-            "genericContainerBackground"        :   "#282828" ,
-            "consoleBackgroundColor"            :   "black" ,
-            "controlsHeaderTextColor"           :   "white" ,
-            "panelHeadersBackgroundColor"       :   "#01303f" ,
-            "editorBackgroundColor"             :   "white" ,
-            "editorStandardFontColor"           :   "#2f2f2f" ,
-            "editorModifiedBorderColor"         :   "lightsteelblue" ,
-            "autoCompleteDescriptionColor"      :   "#FFA500" ,
-            "autoCompleteDescriptionFontColor"  :   "#333334" ,
-            "autoCompleteDescriptionFontColor"  :   "#333334" ,
-            "compileButtonBackgroundColor"      :   "#027af7" ,
-            "uploadButtonBackgroundColor"       :   "#027af7" ,
-            "dropdownMenuButtonBackColor"       :   "#00bc8f" ,
-            "dropdownMenuButtonHoverColor"      :   "#00a782" ,
-            "ideMenuItemBackColor"              :   "#ff6e00",
-            "ideMenuItemHoverBackColor"         :   "#ffff00" ,
-            "outputConsoleBackColor"            :   "#ffa500" ,
-            "stdErrConsoleColor"                :   "#ff0700" ,
-            "stdOutConsoleColor"                :   "#ffa500" ,
-            "commandOutConsoleColor"            :   "#00DF00" ,
-            "genericButtonBackColor"            :   "#ff6e00" ,
-            "genericButtonHoverColor"           :   "#ff4f00" ,
-            "genericButtonTextColor"            :   "#ffffff" ,
-            "serialMonitorOutputBackColor"      :   "white"   ,
-            "dialogBackgroundColor"             :   "#01303f"
-        }   ,
+    readonly property variant   themes :   {
         "techTheme"     :   {
+            documentProjectHeaderColor          :   "#FFA500",
+            documentHeaderDefaultColor          :   "#006f98",
+            documentHeaderSelectedHoverColor    :   Qt.lighter(documentHeaderDefaultColor , 1.5),
+            controlXMargin                      :   7 ,
+            controlYMargin                      :   5 ,
+            controlSpacing                      :   6,
+            lineNumeratorOpacity                :   1,
+            lineNumeratorTextColor              :   "white" ,
+//            lineNumeratorBackgroundColor        :   "#006f98",
+            lineNumeratorBackgroundColor        :   "#FFA500",
             "genericContainerBackground"        :   "#282828" ,
             "consoleBackgroundColor"            :   "black" ,
             "controlsHeaderTextColor"           :   "white" ,

@@ -26,5 +26,7 @@
         <file>res/icon/examples.png</file>
         <file>res/icon/logo.png</file>
         <file>res/icon/library.png</file>
+        <file>res/font/ubuntu-mono-r.ttf</file>
+        <file>res/font/inconsolata.otf</file>
     </qresource>
 </RCC>

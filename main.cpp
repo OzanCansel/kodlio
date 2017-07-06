@@ -28,6 +28,8 @@
 #include "arduinoLibManager/librarymanager.h"
 #include "arduinoLibManager/arduinolibdownloader.h"
 #include "http/internetaccessibility.h"
+#include "editor/documentcontent.h"
+#include "filetree.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[]){
@@ -44,6 +46,8 @@ int main(int argc, char *argv[]){
     ProjectTraverse::registerQmlType();
     LibraryManager::registerQmlType();
     InternetAccessibility::registerQmlType();
+    DocumentContent::registerQmlType();
+    FileTree::registerQmlType();
 
     RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
     Compiler                        compiler;

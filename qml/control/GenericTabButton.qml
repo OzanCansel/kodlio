@@ -15,6 +15,7 @@ TabButton {
         color           :   control.hovered ? Theme.genericButtonBackColor : Theme.genericButtonHoverColor
         scale           :   control.pressed ? 0.99 : 1
         border.width    :   control.checked ? 1 : 0
+        radius          :   10
 
         Behavior on scale {
             NumberAnimation{
@@ -29,7 +30,7 @@ TabButton {
         color               :   "white"
         text                :   control.text
         anchors.centerIn    :   back
-        verticalAlignment  :   Text.AlignVCenter
-        horizontalAlignment:   Text.AlignHCenter
+        verticalAlignment   :   Text.AlignVCenter
+        horizontalAlignment :   Text.AlignHCenter
     }
 }

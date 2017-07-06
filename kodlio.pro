@@ -54,8 +54,6 @@ SOURCES += main.cpp \
     cloudapi/cloudresponse.cpp \
     jsonstorage.cpp \
     serialport.cpp \
-    editor/editormanager.cpp \
-    editor/editorstyle.cpp \
     toolchain/toolchain.cpp \
     toolchain/compiler.cpp \
     toolchain/roboskopprocess.cpp \
@@ -119,7 +117,9 @@ SOURCES += main.cpp \
     http/internetaccessibility.cpp \
     exception/unziperror.cpp \
     traverse/arduinolibrarytraverse.cpp \
-    toolchain/avrtoolchainenvironment.cpp
+    toolchain/avrtoolchainenvironment.cpp \
+    editor/documentcontent.cpp \
+    filetree.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -205,7 +205,15 @@ DISTFILES += \
     qml/control/GenericDialog.qml \
     qml/dialog/LibrariesDialog.qml \
     qml/form/LibraryManagerForm.qml \
-    qml/control/GenericTabButton.qml
+    qml/control/GenericTabButton.qml \
+    qml/editor/Document.qml \
+    qml/editor/ArduinoDocument.qml \
+    qml/editor/LineNumerator.qml \
+    qml/editor/FlickableTextArea.qml \
+    qml/project/ArduinoProject.qml \
+    qml/project/Project.qml \
+    qml/control/DocumentHeader.qml \
+    qml/singleton/FontCollection.qml
 
 
 
@@ -228,8 +236,6 @@ HEADERS += \
     cloudapi/cloudresponse.h \
     jsonstorage.h \
     serialport.h \
-    editor/editormanager.h \
-    editor/editorstyle.h \
     toolchain/toolchain.h \
     toolchain/compiler.h \
     toolchain/roboskopprocess.h \
@@ -293,5 +299,7 @@ HEADERS += \
     http/internetaccessibility.h \
     exception/unziperror.h \
     traverse/arduinolibrarytraverse.h \
-    toolchain/avrtoolchainenvironment.h
+    toolchain/avrtoolchainenvironment.h \
+    editor/documentcontent.h \
+    filetree.h
 

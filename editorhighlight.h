@@ -10,7 +10,7 @@ class EditorHighlight : public QQuickItem
 
     Q_OBJECT
     Q_PROPERTY(QQuickTextDocument* document READ document WRITE setDocument)
-    Q_PROPERTY(bool changed READ changed WRITE setChanged NOTIFY onChangedChanged)
+    Q_PROPERTY(bool modified READ modified NOTIFY onModifiedChanged)
 
 public:
 
@@ -20,12 +20,15 @@ public:
 
     QQuickTextDocument*     document();
     void                    setDocument(QQuickTextDocument  *val);
-    bool                    changed();
-    void                    setChanged(bool changed = false);
+    bool                    modified();
+
+private slots:
+
+    void                    contentChanged(bool enabled);
 
 signals:
 
-    void                    onChangedChanged();
+    void                    onModifiedChanged();
 
 private:
 

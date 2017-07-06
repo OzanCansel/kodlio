@@ -54,5 +54,14 @@
         <file>qml/form/LibraryManagerForm.qml</file>
         <file>qml/dialog/LibrariesDialog.qml</file>
         <file>qml/control/GenericTabButton.qml</file>
+        <file>qml/editor/LineNumerator.qml</file>
+        <file>qml/editor/FlickableTextArea.qml</file>
+        <file>qml/editor/Document.qml</file>
+        <file>qml/editor/ArduinoDocument.qml</file>
+        <file>qml/project/Project.qml</file>
+        <file>qml/project/ArduinoProject.qml</file>
+        <file>qml/control/DocumentHeader.qml</file>
+        <file>qml/singleton/FontCollection.qml</file>
+        <file>qml/editor/EmptyDocument.qml</file>
     </qresource>
 </RCC>

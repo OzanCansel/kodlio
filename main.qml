@@ -1,7 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Dialogs 1.2
-import QtQuick.Controls 2.0
-import QtQuick.Layouts 1.0
+import QtQuick.Controls 2.2
+import QtQuick.Layouts 1.3
 import Qt.labs.folderlistmodel 2.1
 import QtQuick.Window 2.2
 import "qml"
@@ -9,14 +9,16 @@ import "qml/singleton"
 import "qml/dialog"
 import "qml/control"
 import "qml/form"
+import "qml/editor"
+import "qml/project"
 
 ApplicationWindow {
     id          :   app
     visible     :   true
-    width       :   height * 16 / 9
-    height      :   Screen.desktopAvailableHeight * 0.75
+    width       :   Math.max(1024 , height * 16 / 9)
+    height      :   Math.max(768 , Screen.desktopAvailableHeight * 0.75)
     visibility  :   Window.Windowed
-    title       :   qsTr("Roboskop IDE")
+    title       :   qsTr("Kodlio")
 
     Component.onCompleted   :   {
         projectManager.compilerErrorOutputEnabled =     true
@@ -157,7 +159,7 @@ ApplicationWindow {
 
                 anchors.fill    :   parent
                 anchors.leftMargin  :   5
-                anchors.topMargin   :   -17
+                anchors.topMargin   :   -9
                 anchors.bottomMargin:   -8
                 radius          :   10
                 border.width    :   0
@@ -322,32 +324,11 @@ ApplicationWindow {
             width                   :   parent.width - compileControlsContainer.width
             z                       :   10
 
-            Rectangle   {
-                id                  :   sketchHeaderContainer
-                y                   :   5
-                height              :   50
-                anchors.left        :   parent.left
-                width               :   sketchName.width + 20
-                anchors.leftMargin  :   5
-                anchors.rightMargin :   5
-                color               :   "#006f98"
-                radius              :   10
-
-                Text {
-                    id                      :   sketchName
-                    x                       :   Theme.headersLeftMargin
-                    text                    :   "Proje Adı : " + projectManager.projectName
-                    font.pointSize          :   16
-                    anchors.verticalCenter  :   parent.verticalCenter
-                    color                   :   "white"
-                }
-            }
-
             CloudStateControl{
+                z                   :   5
                 anchors.right       :   parent.right
                 anchors.rightMargin :   10
-                anchors.top         :   sketchHeaderContainer.top
-                anchors.bottom      :   sketchHeaderContainer.bottom
+                height              :   50
 
                 onLoginClicked      :   {
                     loginDialog.open()
@@ -366,15 +347,14 @@ ApplicationWindow {
                 }
             }
 
-            Row{
+            Item{
 
-                anchors.top     :   sketchHeaderContainer.bottom
-                anchors.bottom  :   outputConsole.top
-                anchors.left    :   parent.left
-                anchors.right   :   parent.right
-                anchors.topMargin   :   5
+                anchors.top         :   parent.top
+                anchors.bottom      :   outputConsole.top
+                anchors.left        :   parent.left
+                anchors.right       :   parent.right
+                anchors.topMargin   :   15
                 z               :   4
-
 
                 FileBrowser{
                     id                      :   fileBrowser
@@ -382,11 +362,8 @@ ApplicationWindow {
                     width                   :   250
                     anchors.top             :   parent.top
                     anchors.bottom          :   parent.bottom
-                    anchors.bottomMargin    :   Theme.internalControlsMargin
                     visible                 :   false
-                    anchors.topMargin       :   Theme.internalControlsMargin
                 }
-
 
                 TextEditor{
                     id              :   editor
@@ -396,6 +373,27 @@ ApplicationWindow {
                     Keys.onPressed  :   {
                         if(event.key == Qt.Key_S && (event.modifiers & Qt.ControlModifier))
                             projectManager.saveFile()
+                    }
+
+                    visible         :   false
+                }
+
+                Rectangle {
+                    id              :   editorOverride
+                    anchors.fill    :   parent
+                    z               :   3
+                    color           :   "transparent"
+
+                    ArduinoProject{
+                        id                      :   proj
+                        anchors.fill            :   parent
+                        anchors.leftMargin      :   Theme.controlXMargin
+                        anchors.rightMargin     :   Theme.controlXMargin
+                        Component.onCompleted   :   {
+                            for(var i = 0; i < 5; i++){
+                                openDocument("/home/arnes/Documents/example12/sketch" + i + ".cpp")
+                            }
+                        }
                     }
                 }
             }

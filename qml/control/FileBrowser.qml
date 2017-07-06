@@ -1,14 +1,30 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
+import Kodlio 1.0
 import "../singleton"
 
 TreeView {
 
+    property string     rootPath    :   ""
+
+    id          :   treeView
+
+
+    headerVisible       :   false
+    backgroundVisible   :   false
+    rootIndex           :   tree.rootIndex
+    model               :   tree.model
+
+    FileTree{
+        id          :   tree
+        rootPath    :   treeView.rootPath
+    }
+
     TableViewColumn {
-        title: "Name"
-        role: "fileName"
-        width: 300
+        title   :   "Name"
+        role    :   "fileName"
+        width   :   300
     }
 
     itemDelegate    :   Rectangle{
@@ -20,23 +36,20 @@ TreeView {
         }
     }
 
+    onCurrentIndexChanged   :   console.log(treeView.currentIndex)
+
+    onDoubleClicked           :   {
+        console.log(tree.fileName(treeView.currentIndex))
+    }
+
     rowDelegate     :   Rectangle{
         color       :   "transparent"
     }
 
     Rectangle{
         anchors.fill    :   parent
-        color           :   "green"
+        color           :   "white"
         z               :   -1
-        radius          :   10
         border.width    :   1
     }
-
-    headerVisible       :   false
-    backgroundVisible   :   false
-
-
-    rootIndex   :   projectManager.rootIndex
-    model       :   projectManager.projectFsModel
-
 }

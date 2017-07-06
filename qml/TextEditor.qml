@@ -187,7 +187,7 @@ Rectangle {
             Repeater    {
                 id          :   lineNumberRepeater
                 model       :   45
-                Item{
+                Item {
                     height      :   textControl.font.pixelSize
                     width       :   parent.width
                     anchors.horizontalCenter    :   parent.horizontalCenter
@@ -304,8 +304,7 @@ Rectangle {
         }
 
 
-        TextArea.flickable  :
-            TextArea    {
+        TextArea.flickable  :   TextArea    {
 
             property bool autoCompleteOpen  :   false
             readOnly        :   projectManager.readOnly

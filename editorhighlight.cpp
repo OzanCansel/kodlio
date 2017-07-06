@@ -2,7 +2,7 @@
 #include <QDebug>
 
 void EditorHighlight::registerQmlType(){
-    qmlRegisterType<EditorHighlight>("Roboskop", 1, 0, "HighlightComponent");
+    qmlRegisterType<EditorHighlight>("Kodlio", 1, 0, "ArduinoHighlighter");
 }
 
 EditorHighlight::EditorHighlight(QQuickItem *parent) : QQuickItem(parent)
@@ -18,14 +18,16 @@ void EditorHighlight::setDocument(QQuickTextDocument *val){
     _document = val;
 
     _highlighter.setDocument(_document->textDocument());
+
+    connect(_document->textDocument() , SIGNAL(modificationChanged(bool)) , this , SLOT(contentChanged(bool)));
 }
 
-bool EditorHighlight::changed(){
-    return _changed;
-}
+bool EditorHighlight::modified(){
+    if(_document != NULL)
+        return _document->textDocument()->isModified();
+    else
+        return false;}
 
-void EditorHighlight::setChanged(bool changed){
-    _changed = changed;
-
-    emit onChangedChanged();
+void EditorHighlight::contentChanged(bool enabled){
+    emit onModifiedChanged();
 }
