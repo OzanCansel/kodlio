@@ -17,6 +17,10 @@ Project {
         header.implicitWidth = header.height * 3
         header.height = headerControls.height
         header.text =   Qt.binding(function(){ return doc.fileName })
+        header.attachedDocument = doc;
+
+        openDocuments.push({    filePath    :   someth , document : doc , header : header   });
+        header.closeTab.connect(closeDocument)
     }
 
     function openProject(path){
@@ -40,7 +44,6 @@ Project {
 
     Component{
         id      :   arduinoDocHeader
-
         DocumentHeader    {
 
         }

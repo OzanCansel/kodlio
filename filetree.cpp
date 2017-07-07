@@ -38,7 +38,7 @@ QString FileTree::fileName(QModelIndex idx){
     QFileInfo   info    =   _model.fileInfo(idx);
 
     if(info.isFile())
-        return info.absolutePath();
+        return info.filePath();
     else
         return QString();
 }

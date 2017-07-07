@@ -1,18 +1,22 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import "../singleton"
+import "../editor"
 
 TabButton {
 
-    id          :   control
-    property alias  backgroundRect  :   back
-    property alias  contentTextItem :   txt
-    property real   minWidth        :   50
-    property bool   coverText       :   true
-    property bool   mainHeader      :   false
+    id          :       control
+    property alias      backgroundRect      :   back
+    property alias      contentTextItem     :   txt
+    property Document   attachedDocument    :   ({})
+    property real       minWidth            :   50
+    property bool       coverText           :   true
+    property bool       mainHeader          :   false
 
-    width               :   Math.max(minWidth , textMetrics.advanceWidth(txt.text) + 20)
+    width               :   Math.max(minWidth , txt.width + 60)
     enabled             :   !mainHeader
+
+    signal closeTab(string filePath);
 
     FontMetrics{
         id              :   textMetrics
@@ -25,7 +29,7 @@ TabButton {
         implicitHeight  :   control.height
         scale           :   1
 
-        Rectangle{
+        Rectangle   {
             id          :   backRect
             anchors.fill    :   parent
             border.width    :   control.checked ? 1 : 0
@@ -66,15 +70,54 @@ TabButton {
         }
     }
 
-    contentItem :   Text    {
-        id                  :   txt
-        font.pointSize      :   12
-        color               :   "white"
-        text                :   control.checked ? "->" + control.text : control.text
-        anchors.centerIn    :   back
-        verticalAlignment   :   Text.AlignVCenter
-        horizontalAlignment :   Text.AlignHCenter
-        font.bold           :   mainHeader
+    contentItem :   Item{
+        id                      :   content
+        width                   :   control.width
+        height                  :   control.height
+
+        Item {
+            id      :   textContainer
+            width   :   parent.width - closeButton.width
+            height  :   parent.height
+
+            Text    {
+                id                  :   txt
+                font.pointSize      :   12
+                color               :   "white"
+                text                :   control.checked ? "->" + control.text : control.text
+                anchors.centerIn    :   parent
+                font.bold           :   mainHeader
+            }
+        }
+
+        Button  {
+
+            id                      :   closeButton
+            anchors.right           :   parent.right
+            anchors.verticalCenter  :   parent.verticalCenter
+            width                   :   mainHeader ? 0 : 20
+            height                  :   20
+            visible                 :   !mainHeader
+
+            background      :   Item {
+                id      :   closeButtonBack
+                height  :   closeButton.height
+                width   :   closeButton.width
+            }
+
+            contentItem :   Item{
+                width       :   closeButton.width
+                height      :   closeButton.height
+                Text{
+                    id                  :   closeButtonText
+                    anchors.centerIn    :   parent
+                    text                :   "x"
+                }
+            }
+
+            z                       :   5
+            onClicked               :   closeTab(attachedDocument.absolutePath)
+        }
     }
 
 

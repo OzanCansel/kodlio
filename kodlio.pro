@@ -119,7 +119,10 @@ SOURCES += main.cpp \
     traverse/arduinolibrarytraverse.cpp \
     toolchain/avrtoolchainenvironment.cpp \
     editor/documentcontent.cpp \
-    filetree.cpp
+    filetree.cpp \
+    traverse/arduinoprojecttraverse.cpp \
+    project/projectwatcher.cpp \
+    project/arduino/arduinoprojectwatcher.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -301,5 +304,8 @@ HEADERS += \
     traverse/arduinolibrarytraverse.h \
     toolchain/avrtoolchainenvironment.h \
     editor/documentcontent.h \
-    filetree.h
+    filetree.h \
+    traverse/arduinoprojecttraverse.h \
+    project/projectwatcher.h \
+    project/arduino/arduinoprojectwatcher.h
 

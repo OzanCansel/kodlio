@@ -16,7 +16,11 @@ TreeView {
     rootIndex           :   tree.rootIndex
     model               :   tree.model
 
-    FileTree{
+    function    getFileName(idx){
+        return tree.fileName(idx)
+    }
+
+    FileTree    {
         id          :   tree
         rootPath    :   treeView.rootPath
     }
@@ -34,12 +38,6 @@ TreeView {
             elide   :   styleData.elideMode
             text    :   styleData.value
         }
-    }
-
-    onCurrentIndexChanged   :   console.log(treeView.currentIndex)
-
-    onDoubleClicked           :   {
-        console.log(tree.fileName(treeView.currentIndex))
     }
 
     rowDelegate     :   Rectangle{

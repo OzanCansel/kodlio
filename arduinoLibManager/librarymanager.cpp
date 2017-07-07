@@ -85,7 +85,6 @@ void LibraryManager::retrieveLocalLibraries(){
 }
 
 void    LibraryManager::filterOnlineLibs(QString name){
-    qDebug() << "Filtering -> " << name;
     foreach (ArduinoLibDescription *desc, _onlineLibs) {
         if(desc->name().contains(name , Qt::CaseInsensitive))
             emit filterOnlineResult(desc->asVariant());

@@ -356,27 +356,18 @@ ApplicationWindow {
                 anchors.topMargin   :   15
                 z               :   4
 
-                FileBrowser{
-                    id                      :   fileBrowser
-                    z                       :   2
-                    width                   :   250
-                    anchors.top             :   parent.top
-                    anchors.bottom          :   parent.bottom
-                    visible                 :   false
-                }
+//                TextEditor{
+//                    id              :   editor
+//                    width           :   parent.width - (fileBrowser.visible ? fileBrowser.width : 0)
+//                    height          :   parent.height
 
-                TextEditor{
-                    id              :   editor
-                    width           :   parent.width - (fileBrowser.visible ? fileBrowser.width : 0)
-                    height          :   parent.height
+//                    Keys.onPressed  :   {
+//                        if(event.key == Qt.Key_S && (event.modifiers & Qt.ControlModifier))
+//                            projectManager.saveFile()
+//                    }
 
-                    Keys.onPressed  :   {
-                        if(event.key == Qt.Key_S && (event.modifiers & Qt.ControlModifier))
-                            projectManager.saveFile()
-                    }
-
-                    visible         :   false
-                }
+//                    visible         :   false
+//                }
 
                 Rectangle {
                     id              :   editorOverride
@@ -386,14 +377,10 @@ ApplicationWindow {
 
                     ArduinoProject{
                         id                      :   proj
+                        projectRoot             :   "/home/arnes/Documents/example12"
                         anchors.fill            :   parent
                         anchors.leftMargin      :   Theme.controlXMargin
                         anchors.rightMargin     :   Theme.controlXMargin
-                        Component.onCompleted   :   {
-                            for(var i = 0; i < 5; i++){
-                                openDocument("/home/arnes/Documents/example12/sketch" + i + ".cpp")
-                            }
-                        }
                     }
                 }
             }
