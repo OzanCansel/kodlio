@@ -1,5 +1,5 @@
-#ifndef FILEINFO_H
-#define FILEINFO_H
+#ifndef TRAVERSEDFILEINFO_H
+#define TRAVERSEDFILEINFO_H
 
 #include <QQuickItem>
 #include <QFileInfo>

@@ -122,7 +122,9 @@ SOURCES += main.cpp \
     filetree.cpp \
     traverse/arduinoprojecttraverse.cpp \
     project/projectwatcher.cpp \
-    project/arduino/arduinoprojectwatcher.cpp
+    project/arduino/arduinoprojectwatcher.cpp \
+    file/fileinfo.cpp \
+    toolchain/avr/avrtoolchain.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -216,7 +218,8 @@ DISTFILES += \
     qml/project/ArduinoProject.qml \
     qml/project/Project.qml \
     qml/control/DocumentHeader.qml \
-    qml/singleton/FontCollection.qml
+    qml/singleton/FontCollection.qml \
+    qml/editor/EmptyDocument.qml
 
 
 
@@ -307,5 +310,7 @@ HEADERS += \
     filetree.h \
     traverse/arduinoprojecttraverse.h \
     project/projectwatcher.h \
-    project/arduino/arduinoprojectwatcher.h
+    project/arduino/arduinoprojectwatcher.h \
+    file/fileinfo.h \
+    toolchain/avr/avrtoolchain.h
 

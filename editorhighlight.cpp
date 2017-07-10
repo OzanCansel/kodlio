@@ -26,7 +26,8 @@ bool EditorHighlight::modified(){
     if(_document != NULL)
         return _document->textDocument()->isModified();
     else
-        return false;}
+        return false;
+}
 
 void EditorHighlight::contentChanged(bool enabled){
     emit onModifiedChanged();

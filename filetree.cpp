@@ -1,4 +1,5 @@
 #include "filetree.h"
+#include "file/fileinfo.h"
 #include <QtQml>
 
 void FileTree::registerQmlType(){
@@ -34,11 +35,8 @@ void FileTree::setRootPath(QString path){
 }
 
 
-QString FileTree::fileName(QModelIndex idx){
+QString FileTree::fileName(QModelIndex idx) {
     QFileInfo   info    =   _model.fileInfo(idx);
 
-    if(info.isFile())
-        return info.filePath();
-    else
-        return QString();
+    return info.filePath();
 }

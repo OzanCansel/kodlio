@@ -26,6 +26,7 @@ Button {
     contentItem :   Text    {
         id                  :   txt
         font.pointSize      :   12
+        font.family         :   FontCollection.buttonFont
         color               :   Theme.genericButtonTextColor
         text                :   control.text
         anchors.centerIn    :   back

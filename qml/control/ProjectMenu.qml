@@ -41,6 +41,7 @@ Menu    {
     DropdownMenuItem    {
         id          :   openProject
         text        :   "Aç"
+        font.family :   FontCollection.menuFont
         width       :   menuItemWidth
         onTriggered :   openProjectDialog.open()
         tooltipText :   "Projeyi açmak için tıklayınız"
@@ -52,6 +53,7 @@ Menu    {
     DropdownMenuItem    {
         id          :   createProject
         text        :   "Yeni Proje"
+        font.family :   FontCollection.menuFont
         width       :   menuItemWidth
         onTriggered :   Global.createProject()
         tooltipText :   "Yeni proje oluşturmak için tıklayınız"
@@ -64,6 +66,7 @@ Menu    {
         id          :   saveFile
         text        :   "Kaydet"
         width       :   menuItemWidth
+        font.family :   FontCollection.menuFont
         onTriggered :   projectManager.saveFile()
         tooltipText :   "Kaydetmek için tıklayınız."
         anchors.horizontalCenter    :   parent.horizontalCenter
@@ -75,6 +78,7 @@ Menu    {
         id          :   createNewClass
         text        :   "Yeni Sınıf Yarat"
         width       :   menuItemWidth
+        font.family :   FontCollection.menuFont
         onTriggered :   Global.createNewClass()
         tooltipText :   "Yeni sınıf yaratmak için tıklayınız"
         anchors.horizontalCenter    :   parent.horizontalCenter

@@ -28,5 +28,6 @@
         <file>res/icon/library.png</file>
         <file>res/font/ubuntu-mono-r.ttf</file>
         <file>res/font/inconsolata.otf</file>
+        <file>res/font/ubuntu-R.ttf</file>
     </qresource>
 </RCC>

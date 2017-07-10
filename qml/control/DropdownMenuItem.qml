@@ -33,6 +33,7 @@ MenuItem {
         id              :   textContent
         text            :   "> " + control.text
         font.pointSize  :   12
+        font.family     :   control.font.family
         color           :   textColor
         y               :   25
     }

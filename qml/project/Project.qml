@@ -10,67 +10,91 @@ Item {
 
     property string     projectName     :   "Isim Yok"
     property string     projectRoot     :   "/home/arnes/workspace/roboskop"
-    property variant    openDocuments   :   []
+    property variant    openedDocuments   :   []
 
     property alias  documentContainer   :   documents
     property alias  headerControls      :   documentTabs
     property alias  documentsContainer  :   documents
-    property alias  browser             :   browser
+    property alias  browser             :   fileBrowser
 
     function openDocument(){
+        //Virtual
     }
 
     function closeDocument(filePath){
         var docInfo = getDocumentInfo(filePath)
-        var idx = openDocuments.indexOf(docInfo)
+        var idx = openedDocuments.indexOf(docInfo)
+
+        //Eger bulunamadiysa
+        if(idx < 0){
+            console.log("Dokuman bulunamadi")
+        }
 
         docInfo.document.destroy()  //Acik olan dokuman kapatiliyor
         docInfo.header.destroy()    //Header siliniyor
-        openDocuments.splice(idx , 1) //Listeden siliniyor
+        openedDocuments.splice(idx , 1) //Listeden siliniyor
     }
 
     function getDocument(path){
-        for(var i = 0; i < openDocuments; i++){
-            var doc = openDocuments[i]
+        for(var i = 0; i < openedDocuments; i++){
+            var doc = openedDocuments[i]
             if(doc.filePath === path)
                 return doc.document
         }
     }
 
     function getDocumentInfo(path){
-        for(var i = 0; i < openDocuments.length; i++){
-            var doc = openDocuments[i]
-            if(doc.filePath === path)
+        for(var i = 0; i < openedDocuments.length; i++){
+            var doc = openedDocuments[i]
+            if(doc.document.fileInfo.filePath() === path)
                 return doc
         }
+
+        return -1
     }
 
-
     function getHeader(path){
-        for(var i = 0; i < openDocuments; i++){
-            var doc = openDocuments[i]
+        for(var i = 0; i < openedDocuments; i++){
+            var doc = openedDocuments[i]
             if(doc.filePath === path)
                 return doc.header
         }
     }
 
     function closeCurrentDocument(){
-        if(documentTabs.currentIndex > 0){
-            documentTabs.currentItem.destroy()
-            documents.itemAt(documents.currentIndex).destroy()
+
+        for(var i =0 ; i < openedDocuments.length; i++){
+            var doc = openedDocuments[i]
+
+            if(doc.header.selected){
+                closeDocument(doc.document.absolutePath)
+            }
         }
+
+//        if(documentTabs.currentIndex > 0){
+//            closeDocument(documentTabs.attachedDocument.absolutePath)
+//        }
     }
 
     function    openProject(){
-
+        //Virtual
     }
 
     function compile(){
-
+        //Virtual
     }
 
     function run(){
+        //Virtual
+    }
 
+    function selectDocument(idx){
+        documentTabs.currentIndex = idx + 1
+    }
+
+    function openCurrentlySelectedFile(){
+        var path = fileBrowser.getFileInfo(fileBrowser.currentIndex)
+        openDocument(path)
     }
 
     Item    {
@@ -87,7 +111,7 @@ Item {
             DocumentHeader{
                 x           :   50
                 height      :   parent.height
-                text        :   "Proje -> " + projectName
+                text        :   projectName
                 mainHeader  :   true
             }
         }
@@ -99,11 +123,15 @@ Item {
             width                   :   250
             anchors.top             :   documentTabs.bottom
             anchors.bottom          :   parent.bottom
-            visible                 :   true
             rootPath                :   projectRoot
             onDoubleClicked         :   {
-                var path = fileBrowser.getFileName(currentIndex)
-                openDocument(path)
+                openCurrentlySelectedFile()
+            }
+            Keys.onEnterPressed     :   {
+                openCurrentlySelectedFile()
+            }
+            Keys.onReturnPressed    :   {
+                openCurrentlySelectedFile()
             }
         }
 
@@ -124,7 +152,7 @@ Item {
                     return documentTabs.currentIndex
             }
 
-            EmptyDocument{
+            EmptyDocument   {
                 id          :   emptyDoc
                 width       :   parent.width
                 height      :   parent.height
@@ -135,9 +163,10 @@ Item {
 
     Shortcut{
         id          :   closeTabShortcut
-        sequence    :   ["Ctrl+W" , StandardKey.Close]
+        sequence    :   "Ctrl+W"
         context     :   Qt.ApplicationShortcut
         onActivated :   {
+            console.log("Close Tab")
             closeCurrentDocument()
         }
     }

@@ -191,7 +191,7 @@ Item {
                 }
             }
 
-            ListView{
+            ListView    {
                 id                  :   list
                 model               :   localSearch ? localLibs : onlineLibs
                 anchors.fill        :   parent
@@ -215,6 +215,7 @@ Item {
                         text                :   name +  " - " + version
                         color               :   "white"
                         font.pixelSize      :   26
+                        font.family         :   FontCollection.listItemFont
                         anchors.centerIn    :   parent
                     }
 

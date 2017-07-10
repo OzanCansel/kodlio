@@ -3,6 +3,7 @@
 
 #include <QQuickItem>
 #include <QFileSystemModel>
+#include "file/fileinfo.h"
 
 class FileTree : public QQuickItem
 {

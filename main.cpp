@@ -30,6 +30,7 @@
 #include "http/internetaccessibility.h"
 #include "editor/documentcontent.h"
 #include "filetree.h"
+#include "file/fileinfo.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
@@ -48,6 +49,7 @@ int main(int argc, char *argv[])    {
     InternetAccessibility::registerQmlType();
     DocumentContent::registerQmlType();
     FileTree::registerQmlType();
+    FileInfo::registerQmlType();
 
     RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
     Compiler                        compiler;

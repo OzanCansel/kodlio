@@ -57,6 +57,7 @@ Item {
             id              :   txt
             text            :   qsTr("text")
             font.pointSize  :   11
+            font.family     :   FontCollection.menuFont
             width           :   parent.width * 0.6
             anchors.verticalCenter  :   parent.verticalCenter
             color           :   "white"

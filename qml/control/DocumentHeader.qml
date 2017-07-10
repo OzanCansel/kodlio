@@ -8,6 +8,7 @@ TabButton {
     id          :       control
     property alias      backgroundRect      :   back
     property alias      contentTextItem     :   txt
+    property alias      selected            :   control.checked
     property Document   attachedDocument    :   ({})
     property real       minWidth            :   50
     property bool       coverText           :   true
@@ -87,6 +88,7 @@ TabButton {
                 text                :   control.checked ? "->" + control.text : control.text
                 anchors.centerIn    :   parent
                 font.bold           :   mainHeader
+                font.family         :   FontCollection.documentHeaderFont
             }
         }
 

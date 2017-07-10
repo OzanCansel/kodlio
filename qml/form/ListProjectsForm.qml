@@ -68,22 +68,23 @@ Item {
         header      :    Item{
             height      :   60
             width       :   projectsList.width
+
             Text {
-                id      :   projectsHeaderText
-                text    :   qsTr("Projelerim")
+                id                  :   projectsHeaderText
+                text                :   qsTr("Projelerim")
+                font.family         :   FontCollection.titleFont
                 anchors.centerIn    :   parent
-                color   :   "white"
-                font.pixelSize  :   30
-                font.bold       :   true
-                z               :   2
+                color               :   "white"
+                font.pixelSize      :   30
+                font.bold           :   true
+                z                   :   2
             }
 
-
             Rectangle{
-                id      :   back
-                anchors.fill    :   parent
-                color   :   "#075688"
-                opacity :   0.6
+                id                  :   back
+                anchors.fill        :   parent
+                color               :   "#075688"
+                opacity             :   0.6
             }
         }
 

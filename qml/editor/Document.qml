@@ -10,8 +10,14 @@ Item {
     readonly property   string fileName :   documentContent.fileName()
 
     property alias      textFlickable   :   textFlickable
+    property alias      fileInfo        :   info
 
     id                  :   doc
+
+    FileInfo{
+        id              :   info
+        file            :   doc.absolutePath
+    }
 
     DocumentContent     {
         id              :   documentContent

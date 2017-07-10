@@ -16,7 +16,7 @@ TreeView {
     rootIndex           :   tree.rootIndex
     model               :   tree.model
 
-    function    getFileName(idx){
+    function    getFileInfo(idx){
         return tree.fileName(idx)
     }
 
@@ -34,9 +34,10 @@ TreeView {
     itemDelegate    :   Rectangle{
         color       :   styleData.selected ? "lightsteelblue" : "transparent"
         Text {
-            id      :   txt
-            elide   :   styleData.elideMode
-            text    :   styleData.value
+            id          :   txt
+            elide       :   styleData.elideMode
+            text        :   styleData.value
+            font.family :   FontCollection.fileTreeFont
         }
     }
 
