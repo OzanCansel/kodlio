@@ -63,12 +63,12 @@ void LibraryManager::retrieveLocalLibraries(){
     _localLibs.clear();
 
     FileTraverse    traverser;
-    QList<TraversedFileInfo> files = traverser.traverseRecursively(ArduinoLibEnvironment().get("installedLibsDir"));
+    QList<TraversedFileInfo> files          =   traverser.traverseRecursively(ArduinoLibEnvironment().get("installedLibsDir"));
     QList<TraversedFileInfo> builtInLibs    =   traverser.traverseRecursively(RoboskopEnvironment::getInstance()->getLibrariesPath());
 
     files.append(builtInLibs);
 
-    foreach(TraversedFileInfo file , files){
+    foreach(TraversedFileInfo file , files) {
 
         //Sadece library.properties dosyalarina bakiliyor
         if(file.info().fileName() != "library.properties")
@@ -80,6 +80,8 @@ void LibraryManager::retrieveLocalLibraries(){
 
         _localLibs.append(desc);
     }
+
+    _localLibs.append(new ArduinoLibDescription(RoboskopEnvironment::getInstance()->getCoreEnvironment() , "Arduino", this));
 
     emit localLibsChanged();
 }
@@ -289,6 +291,10 @@ QList<ArduinoLibDescription*>*   LibraryManager::localLibs(){
 
 QList<ArduinoLibDescription*>* LibraryManager::onlineLibs(){
     return &_onlineLibs;
+}
+
+QList<ArduinoLibDescription*>   LibraryManager::getLocalLibs(){
+    return _localLibs;
 }
 
 /*Slots*/

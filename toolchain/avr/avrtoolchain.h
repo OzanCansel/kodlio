@@ -3,14 +3,18 @@
 
 #include <QQuickItem>
 #include "toolchain/toolchain.h"
+#include "toolchain/toolchainV2.h"
 
 
-class AvrToolchain : public Toolchain
+class AvrToolchain : public ToolchainV2
 {
 
 public:
 
     AvrToolchain(QQuickItem *parent = Q_NULLPTR);
+
+    virtual void    compile(QString folder, CompileOptions *opts);
+    virtual void    run(RunOptions *options);
 
 };
 

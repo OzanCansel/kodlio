@@ -24,6 +24,7 @@ public:
 
     static void     registerQmlType();
     ArduinoLibDescription(QQuickItem *parent = Q_NULLPTR);
+    ArduinoLibDescription(QString rootDir , QString name , QQuickItem *parent = Q_NULLPTR);
     ArduinoLibDescription(const ArduinoLibDescription &other);
     ArduinoLibDescription &operator =(const ArduinoLibDescription &other);
 

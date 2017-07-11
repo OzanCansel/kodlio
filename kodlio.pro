@@ -124,7 +124,8 @@ SOURCES += main.cpp \
     project/projectwatcher.cpp \
     project/arduino/arduinoprojectwatcher.cpp \
     file/fileinfo.cpp \
-    toolchain/avr/avrtoolchain.cpp
+    toolchain/avr/avrtoolchain.cpp \
+    toolchain/avr/avrcompiler.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -312,5 +313,6 @@ HEADERS += \
     project/projectwatcher.h \
     project/arduino/arduinoprojectwatcher.h \
     file/fileinfo.h \
-    toolchain/avr/avrtoolchain.h
+    toolchain/avr/avrtoolchain.h \
+    toolchain/avr/avrcompiler.h
 

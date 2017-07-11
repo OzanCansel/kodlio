@@ -8,9 +8,13 @@ void ArduinoLibDescription::registerQmlType(){
     qmlRegisterType<ArduinoLibDescription>("Kodlio" , 1 , 0 , "ArduinoLibDescription");
 }
 
-ArduinoLibDescription::ArduinoLibDescription(QQuickItem *parent) : QQuickItem(parent)
-{
+ArduinoLibDescription::ArduinoLibDescription(QQuickItem *parent) : QQuickItem(parent){
 
+}
+
+ArduinoLibDescription::ArduinoLibDescription(QString rootDir, QString name, QQuickItem *parent) : QQuickItem(parent)  {
+    _libDir = rootDir;
+    setName(name);
 }
 
 ArduinoLibDescription::ArduinoLibDescription(const ArduinoLibDescription &other){
