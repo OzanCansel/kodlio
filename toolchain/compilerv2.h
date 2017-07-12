@@ -18,7 +18,7 @@ protected:
 
     void        sendStdOutput(QString output);
     void        sendStdError(QString err);
-    void        sendCommandOutput(QString command);
+    void        sendCommandOutput(QString &command);
 
 signals:
 

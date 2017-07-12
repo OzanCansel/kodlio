@@ -5,7 +5,6 @@
 #include <QDir>
 #include "traverse/filetraverse.h"
 #include "traverse/traversedfileinfo.h"
-#include "cpluscompiler.h"
 #include "toolchain/cplusplus/cplusenvironment.h"
 
 GnuToolChain::GnuToolChain(QQuickItem *parent) : ToolchainV2(parent)
@@ -19,8 +18,7 @@ void GnuToolChain::run(RunOptions *options){
 
 void GnuToolChain::compile(QString folder , CompileOptions *opts){
     FileTraverse                traverser;
-    CPlusCompiler               compiler;
-    compiler.setDebugEnabled(true);
+    _compiler.setDebugEnabled(true);
     QList<TraversedFileInfo>    files           =   traverser.traverseRecursively(folder);
     QString                     outputFolder    =   opts->get("buildFolder").toString();
     QString                     appName         =   opts->get("appName").toString();
@@ -45,10 +43,14 @@ void GnuToolChain::compile(QString folder , CompileOptions *opts){
         //Klasordeki tum dosyalar derleniyor
         QString     objCodeOutput   =   QDir(outputFolder).filePath(file.info().fileName()).append(".o");
         objectFiles.append(objCodeOutput);
-        compiler.generateObjectCode(file.info().filePath() ,  objCodeOutput , opts);
+        _compiler.generateObjectCode(file.info().filePath() ,  objCodeOutput , opts);
     }
 
     if(debugEnabled()) qDebug() << "Makine kodu uretiliyor.";
-    compiler.createExecutable(QString(outputFolder).append("/").append(appName) , objectFiles);
+    _compiler.createExecutable(QString(outputFolder).append("/").append(appName) , objectFiles);
 }
 
+
+CompilerV2* GnuToolChain::compiler(){
+    return &_compiler;
+}

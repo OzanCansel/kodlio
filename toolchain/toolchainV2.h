@@ -5,6 +5,7 @@
 #include <QQuickItem>
 #include "compileoptions.h"
 #include "runoptions.h"
+#include "compilerv2.h"
 
 
 class ToolchainV2 : public QQuickItem
@@ -21,6 +22,7 @@ public slots:
 
     virtual void    compile(QString folder ,  CompileOptions* opts);
     virtual void    run(RunOptions*  options);
+    virtual CompilerV2*    compiler();
     void            setDebugEnabled(bool enabled);
     bool            debugEnabled();
 

@@ -245,7 +245,7 @@ QList<ArduinoLibDescription*> Toolchain::specifyLibraryDependencies(QString root
     QStringList                                     localHeaderNames;
 
     foreach (ArduinoLibDescription* desc , *localLibs) {
-        QStringList headers = desc->headerNames();
+        QStringList headers = desc->headerPaths();
 
         //Headerler map ediliyor
         foreach (QString header, headers) {

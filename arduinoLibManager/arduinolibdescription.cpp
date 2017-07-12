@@ -213,7 +213,7 @@ void ArduinoLibDescription::setArchivedFileName(QString val){
     emit archivedFileNameChanged();
 }
 
-QStringList ArduinoLibDescription::headerNames(){
+QStringList ArduinoLibDescription::headerPaths(){
 
     if(_libDir.isEmpty())
         return QStringList();
@@ -225,7 +225,28 @@ QStringList ArduinoLibDescription::headerNames(){
 
     foreach (TraversedFileInfo file, files) {
         if(file.info().fileName().endsWith(".h")){
-            headers.append(file.info().fileName());
+            headers.append(file.info().filePath());
+        }
+    }
+
+    return headers;
+}
+
+QStringList ArduinoLibDescription::headerFolders(){
+
+    if(_libDir.isEmpty())
+        return QStringList();
+
+    QStringList headers;
+    FileTraverse traverser;
+
+    QList<TraversedFileInfo>    files = traverser.traverseRecursively(_libDir);
+
+    foreach (TraversedFileInfo file, files) {
+        if(file.info().fileName().endsWith(".h")){
+            QString folder = file.info().absolutePath();
+            if(!headers.contains(folder))
+                headers.append(folder);
         }
     }
 

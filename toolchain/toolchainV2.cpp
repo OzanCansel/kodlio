@@ -36,3 +36,7 @@ void ToolchainV2::sendStdError(QString &err){
 void ToolchainV2::sendStdOutput(QString &out){
     emit stdOutput(out);
 }
+
+CompilerV2* ToolchainV2::compiler(){
+    return Q_NULLPTR;
+}

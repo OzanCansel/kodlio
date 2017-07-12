@@ -14,7 +14,7 @@ void CompilerV2::sendStdError(QString err){
     emit stdError(err);
 }
 
-void CompilerV2::sendCommandOutput(QString command){
+void CompilerV2::sendCommandOutput(QString &command){
     if(debugEnabled() && !command.isEmpty()) qDebug() << "CompilerV2 command ->" << command;
     emit commandOutput(command);
 }

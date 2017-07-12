@@ -125,7 +125,17 @@ SOURCES += main.cpp \
     project/arduino/arduinoprojectwatcher.cpp \
     file/fileinfo.cpp \
     toolchain/avr/avrtoolchain.cpp \
-    toolchain/avr/avrcompiler.cpp
+    parse/includedheaders.cpp \
+    exception/filecouldnotopen.cpp \
+    toolchain/avr/avrcompilerV2.cpp \
+    exception/boardnotspecified.cpp \
+    exception/incompatibleextension.cpp \
+    toolchain/avr/board/arduinoboard.cpp \
+    toolchain/avr/board/unoboard.cpp \
+    toolchain/avr/board/boardfactory.cpp \
+    toolchain/avr/avrenvironment.cpp \
+    file/fileutil.cpp \
+    exception/filenotexists.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -314,5 +324,15 @@ HEADERS += \
     project/arduino/arduinoprojectwatcher.h \
     file/fileinfo.h \
     toolchain/avr/avrtoolchain.h \
-    toolchain/avr/avrcompiler.h
+    parse/includedheaders.h \
+    exception/filecouldnotopen.h \
+    toolchain/avr/avrcompilerV2.h \
+    exception/boardnotspecified.h \
+    exception/incompatibleextension.h \
+    toolchain/avr/board/arduinoboard.h \
+    toolchain/avr/board/unoboard.h \
+    toolchain/avr/board/boardfactory.h \
+    toolchain/avr/avrenvironment.h \
+    file/fileutil.h \
+    exception/filenotexists.h
 

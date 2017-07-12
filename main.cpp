@@ -38,6 +38,8 @@ int main(int argc, char *argv[])    {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
+    QString str = QString("%0-L%1").arg("deneme").arg("sonuc");
+
 
     //Qml sınıfları ekleniyor
     EditorHighlight::registerQmlType();

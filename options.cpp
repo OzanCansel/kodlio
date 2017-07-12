@@ -13,8 +13,5 @@ void Options::set(QString key, QVariant val){
 }
 
 QVariant Options::get(QString key){
-    if(!_map.contains(key))
-        return QVariant();
-
-    return _map[key];
+    return _map.value(key , QVariant());
 }
