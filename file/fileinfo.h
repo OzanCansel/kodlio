@@ -55,6 +55,7 @@ public slots:
     qint64      size();
     QString     suffix();
     QString     symLinkTarget();
+    QString     dirName();
     void        setFile(QString file);
 
 private:

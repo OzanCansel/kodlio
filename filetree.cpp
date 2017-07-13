@@ -27,6 +27,8 @@ QString FileTree::rootPath(){
 }
 
 void FileTree::setRootPath(QString path){
+    if(path.isEmpty())
+        return;
     _rootPath = path;
     _model.setRootPath(path);
     emit rootPathChanged();

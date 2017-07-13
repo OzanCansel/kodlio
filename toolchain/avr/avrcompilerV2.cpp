@@ -12,17 +12,20 @@
 #include <QFile>
 #include <QFileInfo>
 
+void AvrCompilerV2::registerQmlType(){
+    qmlRegisterType<AvrCompilerV2>("Kodlio" , 1 , 0 , "AvrCompiler");
+}
+
 AvrCompilerV2::AvrCompilerV2(QQuickItem *parent) : CompilerV2(parent)   {
     manager.retrieveLocalLibraries();
     _allowedExtensions << ".cpp" << ".S" << ".s" << ".c" << ".s";
 }
 
 void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList &includes, QString &boardName) {
-    QList<ArduinoLibDescription*>   libraries = manager.getLocalLibs();
     QString     fileExtension = file.right(file.length() - file.lastIndexOf("."));
 
     //Uzantinin dogrulugu kontrol ediliyor
-    if(_allowedExtensions.contains(fileExtension)){
+    if(!_allowedExtensions.contains(fileExtension)){
         QString errorMessage = QString("AvrCompilerV2::compile() %0 uzantisi hatali.").arg(file);
 
         //Hata firlatiliyor
@@ -38,8 +41,10 @@ void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList
     board->setParent(this);
 
     foreach (QString includePath, includes) {
-        includesText.append(QString("-I%0").arg(includePath));
+        includesText.append(QString("-I%0 ").arg(includePath));
     }
+
+    includesText.append(QString("-I%0 ").arg(env.variants(boardName)));
 
     //gcc <parametreler> <includePath> <inputFile> -o <outputFile>
     QString command = QString("%0 %1 %2 %3 -o %4").arg(env.gcc())
@@ -47,18 +52,19 @@ void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList
             .arg(includesText)
             .arg(file)
             .arg(output);
-;
 
+
+    sendCommandOutput(command);
     QProcess    compileProcess;
 
     //Derleme baslatiliyor
     compileProcess.start(command);
-    bool interrupted = compileProcess.waitForFinished();
+    bool interrupted = !compileProcess.waitForFinished();
 
     //Islem tamamlanmadiysa
-    if(interrupted){
+    if(interrupted) {
         QString errorText = QString("%0 derlenirken hata olustu.").arg(QFileInfo(file).fileName());
-        sendCommandOutput(errorText);
+        sendStdError(errorText);
 
         return;
     }

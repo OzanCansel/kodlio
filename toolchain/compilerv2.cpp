@@ -1,4 +1,9 @@
 #include "compilerv2.h"
+#include <QtQml>
+
+void CompilerV2::registerQmlType(){
+    qmlRegisterType<CompilerV2>("Kodlio" , 1 , 0 , "Compiler");
+}
 
 CompilerV2::CompilerV2(QQuickItem *parent) : QQuickItem(parent){
 

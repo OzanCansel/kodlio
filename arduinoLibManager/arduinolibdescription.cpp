@@ -145,12 +145,17 @@ QString ArduinoLibDescription::localDir() const{
 }
 
 QString ArduinoLibDescription::srcDir() const{
-    QDir    dir(localDir().append("/src"));
+    QStringList paths = headerPaths();
 
-    if(dir.exists())
-        return QString(_libDir).append("/src");
-    else
-        return localDir();
+    QString     srcDir = QFileInfo(paths.at(0)).absolutePath();
+
+    foreach (QString path, paths) {
+        QString folder = QFileInfo(path).absolutePath();
+        if(folder.length() < srcDir.length())
+            srcDir = folder;
+    }
+
+    return srcDir;
 }
 
 void ArduinoLibDescription::setName(QString val){
@@ -213,7 +218,7 @@ void ArduinoLibDescription::setArchivedFileName(QString val){
     emit archivedFileNameChanged();
 }
 
-QStringList ArduinoLibDescription::headerPaths(){
+QStringList ArduinoLibDescription::headerPaths() const{
 
     if(_libDir.isEmpty())
         return QStringList();
@@ -237,7 +242,7 @@ QStringList ArduinoLibDescription::headerFolders(){
     if(_libDir.isEmpty())
         return QStringList();
 
-    QStringList headers;
+    QStringList headerFolders;
     FileTraverse traverser;
 
     QList<TraversedFileInfo>    files = traverser.traverseRecursively(_libDir);
@@ -245,10 +250,10 @@ QStringList ArduinoLibDescription::headerFolders(){
     foreach (TraversedFileInfo file, files) {
         if(file.info().fileName().endsWith(".h")){
             QString folder = file.info().absolutePath();
-            if(!headers.contains(folder))
-                headers.append(folder);
+            if(!headerFolders.contains(folder))
+                headerFolders.append(folder);
         }
     }
 
-    return headers;
+    return headerFolders;
 }

@@ -4,6 +4,7 @@ import "../singleton"
 
 Item {
 
+    property int        identity        :   0
     property string     relativePath    :   ""
     property string     absolutePath    :   ""
     property string     type            :   ""
@@ -12,7 +13,13 @@ Item {
     property alias      textFlickable   :   textFlickable
     property alias      fileInfo        :   info
 
+    signal      focused(int identity);
+
     id                  :   doc
+
+    function    save(){
+        documentContent.save()
+    }
 
     FileInfo{
         id              :   info
@@ -22,6 +29,7 @@ Item {
     DocumentContent     {
         id              :   documentContent
         absolutePath    :   doc.absolutePath
+        textDocument    :   textFlickable.textArea.textDocument
     }
 
     LineNumerator       {
@@ -39,11 +47,6 @@ Item {
         anchors.bottom      :   parent.bottom
         anchors.right       :   parent.right
         textArea.text       :   documentContent.content
-    }
-
-    Shortcut    {
-        id                  :   saveShortcut
-        sequence            :   StandardKey.Save
-        onActivated         :   console.log("save")
+        textArea.onActiveFocusChanged   :   focused(identity)
     }
 }

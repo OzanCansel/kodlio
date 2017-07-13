@@ -7,7 +7,16 @@ import "../editor"
 
 Project {
 
-    FileInfo{
+
+    compiler            :       comp
+    allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
+
+
+    AvrCompiler {
+        id  :   comp
+    }
+
+    FileInfo    {
         id      :   file
     }
 
@@ -15,17 +24,21 @@ Project {
 
         file.file = filePath;
 
+        //Dosya uzantisi kontrol ediliyor
+        if(allowedExtensions.indexOf(file.completeSuffix()) === -1)
+            return
+
         //Eger acilmak istenen dosya klasor ise geri donuluyor
         if(!file.isFile())
             return;
 
         //Daha once acilmissa geri donuluyor
-        var docIdx = documentIndex(filePath)
+        var docId = documentIndex(filePath)
 
         //Eger dokuman mevcutsa geri donuluyor
-        if(docIdx >= 0){
+        if(docId >= 0){
             //ve dokumana gecis yapiliyor
-            selectDocument(docIdx)
+            selectDocument(docId)
             return;
         }
 
@@ -33,16 +46,17 @@ Project {
         var doc = documentComponent.createObject(documentsContainer , { width : documentsContainer.width , height : documentsContainer.height , absolutePath : filePath})
         var header = arduinoDocHeader.createObject(headerControls)
 
+        doc.identity        =   documentNumerator.generate()
         doc.width           =   documentsContainer.width
-        doc.height          =   documentsContainer.height
         doc.absolutePath    =   filePath
         header.implicitWidth = header.height * 3
         header.height = headerControls.height
         header.text =   Qt.binding(function(){ return doc.fileName })
         header.attachedDocument = doc;
 
-        openedDocuments.push({ document : doc , header : header   });
+        openedDocuments.push({ identity : doc.identity , document : doc , header : header });
         header.closeTab.connect(closeDocument)
+        doc.focused.connect(selectDocument)
     }
 
     function documentIndex(filePath){
@@ -50,7 +64,7 @@ Project {
             var doc = openedDocuments[i].document;
 
             if(doc.fileInfo.filePath() === filePath){
-                return i
+                return doc.identity
             }
         }
 

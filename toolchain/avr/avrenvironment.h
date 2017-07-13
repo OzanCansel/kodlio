@@ -13,6 +13,7 @@ public:
     QString     gcc();
     QString     gccAr();
     QString     objcopy();
+    QString     variants(QString &boardName);
 };
 
 #endif // AVRENVIRONMENT_H

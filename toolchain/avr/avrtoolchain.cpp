@@ -2,11 +2,20 @@
 #include "parse/includedheaders.h"
 #include "traverse/filetraverse.h"
 #include "exception/boardnotspecified.h"
+#include "exception/filenotexists.h"
+#include "exception/filecouldnotopen.h"
 #include "file/fileutil.h"
+#include "collection/stringlistutil.h"
 #include <QDir>
+#include <QtQml>
+
+void AvrToolchain::registerQmlType(){
+    qmlRegisterType<AvrToolchain>("Kodlio" , 1 , 0 , "AvrToolchain");
+}
 
 AvrToolchain::AvrToolchain(QQuickItem *parent) : ToolchainV2(parent)    {
-
+    map();
+    _compatibleSourceExtensions << ".c" << ".S" << ".cpp";
 }
 
 
@@ -14,26 +23,31 @@ void AvrToolchain::run(RunOptions *options) {
 
 }
 
-void AvrToolchain::compile(QString folder, CompileOptions *opts)    {
-    FileTraverse traverser;
-    QList<TraversedFileInfo> fInfo = traverser.traverseRecursively(folder);
-    QList<ArduinoLibDescription *>  projectLibDependencies;
+void AvrToolchain::compile(QString file, CompileOptions *opts)    {
+
+    QFileInfo   mainFileInfo(file);
     QVariant    buildDirVariant = opts->get("buildDir");
     QString     buildDir;
+    QString     boardBuildDir;
     QVariant    board = opts->get("board");
     QString     boardName;
+    QStringList projectSources;
+    QString     srcDir = mainFileInfo.absolutePath();
+    QList<ArduinoLibDescription*>   projectLibDependencies;
+    QStringList                     discovered;
+    QStringList                     includes;
 
     //Eger board secilmemisse
     if(board.isNull()){
         //Hata firlatiliyor
         BoardNotSpecified("AvrToolchain::compile board secilmemis").raise();
-    }else{
+    }   else    {
         boardName = board.toString();
     }
 
     //Eger build folder belirtilmemisse
     if(buildDirVariant.isNull()){
-        QDir srcDir(folder);
+        QDir srcDir(mainFileInfo.absolutePath());
         QString buildDirName = srcDir.dirName().append("-derleme");
         srcDir.cdUp();
 
@@ -43,57 +57,115 @@ void AvrToolchain::compile(QString folder, CompileOptions *opts)    {
 
         //Build klasorune giriliyor
         srcDir.cd(buildDirName);
+
+        if(!srcDir.exists(boardName))
+            srcDir.mkdir(boardName);
+
         buildDir =   srcDir.absolutePath();
-    }else{
+    }   else   {
         buildDir = buildDirVariant.toString();
     }
 
-    foreach (TraversedFileInfo traversedFile, fInfo) {
-        QFileInfo   fInfo = traversedFile.info();
-        if(fInfo.fileName().endsWith(".h") || fInfo.fileName().endsWith(".cpp")){
-            QString fPath= fInfo.filePath();
-            QList<ArduinoLibDescription*>   dependencies;
+    boardBuildDir = QDir(buildDir).filePath(boardName);
 
-            extractDependencies(fPath , dependencies);
-            mergeDependencies(projectLibDependencies , dependencies);
+    //Kullanilmasi gereken kutuphaneler belirleniyor
+    extractDependencies(file , projectLibDependencies , discovered);
 
-            QStringList includes;
-            QString     objOutPath = QString("%0/%1.o").arg(buildDir).arg(fInfo.fileName());
-            QString     inputFilePath = fInfo.filePath();
+    foreach (ArduinoLibDescription *desc, projectLibDependencies) {
+        QString     output = QString("%0 kütüphanesi kullanılıyor. Dizin : %1").arg(desc->name()).arg(desc->localDir());
+        sendStdOutput(output);
 
-            foreach (ArduinoLibDescription* dependency, dependencies) {
-                includes = dependency->headerFolders();
-            }
-
-            _compiler.generateObjFile(inputFilePath , objOutPath , includes , boardName);
+        foreach (QString includeFolder, desc->headerFolders()) {
+            if(!includes.contains(includeFolder))
+                includes.append(includeFolder);
         }
     }
-}
 
+    //Proje calisma klasoru ekleniyor
+    includes.append(srcDir);
+
+    foreach (QString discoveredFile, discovered) {
+
+        //Headersa eselesen source dosyalari araniyor
+        if(isSourceFile(discoveredFile) && discoveredFile.contains(srcDir))   {
+            projectSources.append(discoveredFile);
+        }
+    }
+
+    //Kutuphaneler derleniyor
+    foreach (ArduinoLibDescription* desc, projectLibDependencies) {
+        compileLib(desc , boardBuildDir , boardName);
+    }
+
+    foreach (QString sourceFile, projectSources) {
+
+        QFileInfo   sourceInfo(sourceFile);
+
+        //<boardBuildDir>/<fileName>.o
+        QString     output = QString("%0/%1.o").arg(boardBuildDir).arg(sourceInfo.fileName());
+        _compiler.generateObjFile(sourceFile , output , includes , boardName);
+    }
+}
 
 CompilerV2*    AvrToolchain::compiler(){
     return &_compiler;
 }
 
-void AvrToolchain::extractDependencies(QString file , QList<ArduinoLibDescription*> &libs){
+void AvrToolchain::extractDependencies(QString file , QList<ArduinoLibDescription*> &libs , QStringList &discoredFiles){
+
+    //Dosya onceden incelenmisse geri donuluyor
+    if(discoredFiles.contains(file)){
+        return;
+    }
+    else    {
+        //Incelenen dosyalara ekleniyor
+        discoredFiles.append(file);
+    }
+
     IncludedHeaders headerParser;
 
-    QString     fileContent = FileUtil::readContent(file);
-    QStringList headers = headerParser.retrieveHeaders(fileContent);
+    QFileInfo   fInfo(file);
+    QString     fileContent;
 
-    foreach (QString header, headers) {
-        bool    headerExists = _headerToLibMap.keys().contains(header);
-        bool    libExists   = headerExists && libs.contains(_headerToLibMap.value(header));
+    try {
+        fileContent = FileUtil::readContent(file);
+    } catch (FileNotExists&){
+        return;
+    }
 
-        ArduinoLibDescription   *lib;
+    QStringList bracketHeaders = headerParser.retrieveBracketHeaders(fileContent);
+    QStringList quotedHeaders = headerParser.retrieveDoubleQuotedHeader(fileContent);
+
+    foreach (QString header, bracketHeaders) {
+        bool    headerExists = _headers.contains(header);
+
+        //Header mevcut degilse atlaniyor
+        if(!headerExists)
+            continue;
+
+        ArduinoLibDescription   *lib = getHeaderMap(header).desc;
+        bool libExists = libs.contains(lib);
+
+        if(libExists)
+            continue;
+
         //Eger header kutuphanelerde mevcut ve kutuphane daha onceden eklenmediyse
-        if(headerExists && !libExists){
-            libs.append(lib);
+        libs.append(lib);
 
-            //Kutuphanenin bagimliklari da kontrol ediliyor
-            foreach (QString headerFile, lib->headerPaths()) {
-                extractDependencies(headerFile , libs);
-            }
+        //Kutuphanenin bagimliklari da kontrol ediliyor
+        foreach (QString headerFile, lib->headerPaths()) {
+            extractDependencies(headerFile , libs , discoredFiles);
+        }
+    }
+
+    foreach (QString quoted, quotedHeaders) {
+        QStringList sources;
+        QString cleaned = QDir::cleanPath(QDir(fInfo.absolutePath()).filePath(quoted));
+        extractDependencies(cleaned , libs , discoredFiles);
+        possibleSourceFiles(cleaned , sources);
+        //Header ile eslesen uyumlu kaynak dosyalari derleniyor. (.cpp , .s , .c gibi)
+        foreach (QString srcFile, sources) {
+            extractDependencies(srcFile , libs , discoredFiles);
         }
     }
 }
@@ -104,8 +176,16 @@ void AvrToolchain::map(){
     QList<ArduinoLibDescription*>   libs = _libManager.getLocalLibs();
 
     foreach (ArduinoLibDescription *libDesc, libs) {
-        foreach (QString headerName, libDesc->headerPaths()) {
-            _headerToLibMap[headerName] = libDesc;
+        foreach (QString headerFPath, libDesc->headerPaths()) {
+            QFileInfo   fInfo(headerFPath);
+
+            HeaderMapInfo   info;
+            info.headerPath = fInfo.filePath();
+            info.headerName = fInfo.fileName();
+            info.desc = libDesc;
+            _headers.append(fInfo.fileName());
+
+            _headerMaps.append(info);
         }
     }
 }
@@ -117,4 +197,83 @@ void AvrToolchain::mergeDependencies(QList<ArduinoLibDescription *> &root, QList
             root.append(lib);
         }
     }
+}
+
+AvrToolchain::HeaderMapInfo   AvrToolchain::getHeaderMap(QString headerName){
+    foreach (HeaderMapInfo info, _headerMaps) {
+        if(info.headerName == headerName)
+            return info;
+    }
+}
+
+void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder , QString &boardName){
+
+    sendInfo(QString("%0 kütüphanesi derleniyor...").arg(desc->name()));
+    FileTraverse    traverser;
+
+    QList<TraversedFileInfo> traversedInfos = traverser.traverseRecursively(desc->srcDir());
+    QStringList     includes;
+    QStringList     discoveredFiles;
+    QList<ArduinoLibDescription *>  dependencies;
+    QString         srcDir = desc->srcDir();
+
+    foreach (TraversedFileInfo traversedFile, traversedInfos) {
+        QFileInfo   fInfo = traversedFile.info();
+
+        QString filePath = fInfo.filePath();
+        if(isSourceFile(filePath) || isHeaderFile(filePath)){
+            extractDependencies(fInfo.filePath() , dependencies , discoveredFiles );
+        }
+    }
+
+    //Include pathler belirleniyor
+    foreach (ArduinoLibDescription *lib, dependencies) {
+        QStringList headerFolders = lib->headerFolders();
+        StringListUtil::merge(includes , headerFolders);
+    }
+
+    //Kutuphanenin ana dizini ekleniyor
+    includes.append(srcDir);
+
+    foreach (QString discovered, discoveredFiles) {
+        if(isSourceFile(discovered) && discovered.contains(srcDir)){
+            QFileInfo   fInfo(discovered);
+
+            //<outputFolder>/<fileName>
+            QString outputPath = QString("%0/%1.o").arg(outputFolder).arg(fInfo.fileName());
+            _compiler.generateObjFile(discovered , outputPath , includes , boardName);
+        }
+    }
+}
+
+bool AvrToolchain::isHeaderFile(QString &fileName){
+    return fileName.endsWith(".h");
+}
+
+bool AvrToolchain::isSourceFile(QString &fileName){
+
+    foreach (QString extension, _compatibleSourceExtensions) {
+        if(fileName.endsWith(extension))
+            return true;
+    }
+
+    return false;
+}
+
+bool AvrToolchain::possibleSourceFiles(QString &headerName , QStringList &sourceFile){
+
+    bool    exists = false;
+
+    foreach (QString extension, _compatibleSourceExtensions) {
+        QString file = QString(headerName).replace(".h" , extension);
+
+        if(QFile(file).exists()){
+            sourceFile.append(file);
+
+            if(!exists)
+                exists = true;
+        }
+    }
+
+    return exists;
 }

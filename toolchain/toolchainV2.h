@@ -31,12 +31,14 @@ protected:
     void    sendStdOutput(QString &out);
     void    sendStdError(QString &err);
     void    sendCommandOutput(QString command);
+    void    sendInfo(QString out);
 
 signals:
 
     void    stdOutput(QString out);
     void    stdError(QString err);
     void    commandOutput(QString command);
+    void    infoOutput(QString command);
 
 private:
 

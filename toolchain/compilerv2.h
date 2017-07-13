@@ -10,6 +10,7 @@ class CompilerV2 : public  QQuickItem
 
 public:
 
+    static void registerQmlType();
     CompilerV2(QQuickItem *parent = Q_NULLPTR);
     void        setDebugEnabled(bool enabled);
     bool        debugEnabled();

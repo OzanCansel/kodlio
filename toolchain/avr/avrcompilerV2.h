@@ -11,6 +11,7 @@ class AvrCompilerV2 : public CompilerV2
 
 public:
 
+    static void registerQmlType();
     AvrCompilerV2(QQuickItem *parent = Q_NULLPTR);
 
 public slots:

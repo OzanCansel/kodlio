@@ -36,8 +36,6 @@ unix    {
 }
 
 SOURCES += main.cpp \
-    editorhighlight.cpp \
-    highlighter.cpp \
     toolchain/avrcompiler.cpp \
     toolchain/unocompiler.cpp \
     directorymanager.cpp \
@@ -135,7 +133,16 @@ SOURCES += main.cpp \
     toolchain/avr/board/boardfactory.cpp \
     toolchain/avr/avrenvironment.cpp \
     file/fileutil.cpp \
-    exception/filenotexists.cpp
+    exception/filenotexists.cpp \
+    collection/stringlistutil.cpp \
+    toolchain/avr/avrcompileoptions.cpp \
+    toolchain/toolchainplugin.cpp \
+    highlight/arduinohighlightitem.cpp \
+    highlight/arduinohighlighter.cpp \
+    highlight/highlightitem.cpp \
+    highlight/highlightplugin.cpp \
+    editor/editorplugin.cpp \
+    arduinoLibManager/librarymanagerplugin.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -230,13 +237,10 @@ DISTFILES += \
     qml/project/Project.qml \
     qml/control/DocumentHeader.qml \
     qml/singleton/FontCollection.qml \
-    qml/editor/EmptyDocument.qml
-
-
+    qml/editor/EmptyDocument.qml \
+    qml/project/DocumentNumerator.qml
 
 HEADERS += \
-    editorhighlight.h \
-    highlighter.h \
     toolchain/avrcompiler.h \
     toolchain/unocompiler.h \
     directorymanager.h \
@@ -334,5 +338,14 @@ HEADERS += \
     toolchain/avr/board/boardfactory.h \
     toolchain/avr/avrenvironment.h \
     file/fileutil.h \
-    exception/filenotexists.h
+    exception/filenotexists.h \
+    collection/stringlistutil.h \
+    toolchain/avr/avrcompileoptions.h \
+    toolchain/toolchainplugin.h \
+    highlight/arduinohighlightitem.h \
+    highlight/arduinohighlighter.h \
+    highlight/highlightitem.h \
+    highlight/highlightplugin.h \
+    editor/editorplugin.h \
+    arduinoLibManager/librarymanagerplugin.h
 

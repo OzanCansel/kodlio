@@ -13,12 +13,12 @@ import "qml/editor"
 import "qml/project"
 
 ApplicationWindow {
-    id          :   app
-    visible     :   true
-    width       :   Math.max(1024 , height * 16 / 9)
-    height      :   Math.max(768 , Screen.desktopAvailableHeight * 0.75)
-    visibility  :   Window.Windowed
-    title       :   qsTr("Kodlio")
+    id              :   app
+    visible         :   true
+    width           :   Math.max(1024 , height * 16 / 9)
+    height          :   Math.max(768 , Screen.desktopAvailableHeight * 0.75)
+    visibility      :   Window.Windowed
+    title           :   qsTr("Kodlio")
 
     Component.onCompleted   :   {
         projectManager.compilerErrorOutputEnabled =     true
@@ -245,13 +245,11 @@ ApplicationWindow {
                     y               :   newFile.y + 10
 
                     onOpenProjectRequired   :   {
-                        projectManager.openProject(projectPath)
-                        projectManager.readOnly     =   false
+                        currentProject.projectRoot = projectPath
                     }
 
                     onCreateProjectRequired :   {
-                        projectManager.createProject(folderPath)
-                        projectManager.openProject(folderPath)
+
                     }
                 }
 
@@ -356,19 +354,6 @@ ApplicationWindow {
                 anchors.topMargin   :   15
                 z               :   4
 
-//                TextEditor{
-//                    id              :   editor
-//                    width           :   parent.width - (fileBrowser.visible ? fileBrowser.width : 0)
-//                    height          :   parent.height
-
-//                    Keys.onPressed  :   {
-//                        if(event.key == Qt.Key_S && (event.modifiers & Qt.ControlModifier))
-//                            projectManager.saveFile()
-//                    }
-
-//                    visible         :   false
-//                }
-
                 Rectangle {
                     id              :   editorOverride
                     anchors.fill    :   parent
@@ -376,8 +361,7 @@ ApplicationWindow {
                     color           :   "transparent"
 
                     ArduinoProject{
-                        id                      :   proj
-                        projectRoot             :   "/home/arnes/Documents/example12"
+                        id                      :   currentProject
                         anchors.fill            :   parent
                         anchors.leftMargin      :   Theme.controlXMargin
                         anchors.rightMargin     :   Theme.controlXMargin

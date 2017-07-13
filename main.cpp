@@ -4,7 +4,7 @@
 #include <QQmlContext>
 #include <QTime>
 #include <QNetworkConfigurationManager>
-#include "editorhighlight.h"
+#include "highlight/arduinohighlightitem.h"
 #include "toolchain/unocompiler.h"
 #include "directorymanager.h"
 #include "projectmanager.h"
@@ -30,7 +30,10 @@
 #include "http/internetaccessibility.h"
 #include "editor/documentcontent.h"
 #include "filetree.h"
-#include "file/fileinfo.h"
+#include "toolchain/toolchainplugin.h"
+#include "highlight/highlightplugin.h"
+#include "editor/editorplugin.h"
+#include "arduinoLibManager/librarymanagerplugin.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
@@ -42,16 +45,19 @@ int main(int argc, char *argv[])    {
 
 
     //Qml sınıfları ekleniyor
-    EditorHighlight::registerQmlType();
     CompileConfiguration::registerQmlType();
     ProgrammerConfiguration::registerQmlType();
     CodeDescriptionInfo::registerQmlType();
     ProjectTraverse::registerQmlType();
-    LibraryManager::registerQmlType();
     InternetAccessibility::registerQmlType();
-    DocumentContent::registerQmlType();
     FileTree::registerQmlType();
     FileInfo::registerQmlType();
+
+    //Plugin
+    EditorPlugin::attach();
+    ToolchainPlugin::attach();
+    HighlightPlugin::attach();
+    LibraryManagerPlugin::attach();
 
     RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
     Compiler                        compiler;

@@ -8,31 +8,56 @@ import "../singleton"
 
 Item {
 
-    property string     projectName     :   "Isim Yok"
-    property string     projectRoot     :   "/home/arnes/workspace/roboskop"
-    property variant    openedDocuments   :   []
+    property string     projectName         :   fInfo.dirName()
+    property string     projectRoot         :   "/home/arnes/Documents/toolchain-example"
+    property variant    openedDocuments     :   []
+    property Compiler   compiler            :   ({})
+    property variant    allowedExtensions   :   []
 
-    property alias  documentContainer   :   documents
-    property alias  headerControls      :   documentTabs
-    property alias  documentsContainer  :   documents
-    property alias  browser             :   fileBrowser
+    property alias  documentContainer       :   documents
+    property alias  headerControls          :   documentTabs
+    property alias  documentsContainer      :   documents
+    property alias  browser                 :   fileBrowser
+    property alias  documentNumerator       :   docNumerator
 
     function openDocument(){
         //Virtual
     }
 
-    function closeDocument(filePath){
-        var docInfo = getDocumentInfo(filePath)
-        var idx = openedDocuments.indexOf(docInfo)
+    function closeDocument(identity){
+        var docInfo =   getDocInfo(identity)
+        var idx     =   openedDocuments.indexOf(docInfo)
 
         //Eger bulunamadiysa
-        if(idx < 0){
+        if(idx < 0) {
             console.log("Dokuman bulunamadi")
         }
 
         docInfo.document.destroy()  //Acik olan dokuman kapatiliyor
         docInfo.header.destroy()    //Header siliniyor
         openedDocuments.splice(idx , 1) //Listeden siliniyor
+
+        var lastIdx = openedDocuments.length - 1;
+
+        //Focus ayarlaniyor
+        selectDocument(openedDocuments[idx].identity)
+    }
+
+    function checkHeadersIndex(){
+
+        //Acik document yoksa
+        if(openedDocuments.length === 0)
+            return
+
+
+        //Eger headerlardan hepsinde focus varsa
+        for(var i = 0; i < openedDocuments.length; i++){
+            if(openedDocuments[i].header.checked)
+                return // geri donuluyor
+        }
+
+        //Hicbiri secilmemisse otomatik olarak seciliyor
+        selectDocument(openedDocuments[0].identity)
     }
 
     function getDocument(path){
@@ -41,6 +66,12 @@ Item {
             if(doc.filePath === path)
                 return doc.document
         }
+    }
+
+    function getDocInfo(identity){
+        for(var i = 0; i < openedDocuments.length; i++)
+            if(openedDocuments[i].identity === identity)
+                return openedDocuments[i]
     }
 
     function getDocumentInfo(path){
@@ -62,18 +93,24 @@ Item {
     }
 
     function closeCurrentDocument(){
-
         for(var i =0 ; i < openedDocuments.length; i++){
             var doc = openedDocuments[i]
 
             if(doc.header.selected){
-                closeDocument(doc.document.absolutePath)
+                closeDocument(doc.document.identity)
             }
         }
+    }
 
-//        if(documentTabs.currentIndex > 0){
-//            closeDocument(documentTabs.attachedDocument.absolutePath)
-//        }
+    function saveCurrentDocument(){
+        for(var i =0 ; i < openedDocuments.length; i++){
+            var doc = openedDocuments[i]
+
+            //Kaydediliyor
+            if(doc.header.selected){
+                doc.document.save()
+            }
+        }
     }
 
     function    openProject(){
@@ -88,13 +125,26 @@ Item {
         //Virtual
     }
 
-    function selectDocument(idx){
-        documentTabs.currentIndex = idx + 1
+    function selectDocument(identity){
+        for(var i = 0; i < openedDocuments.length; i++){
+            if(openedDocuments[i].identity === identity){
+                openedDocuments[i].header.checked = true
+            }
+        }
     }
 
     function openCurrentlySelectedFile(){
         var path = fileBrowser.getFileInfo(fileBrowser.currentIndex)
         openDocument(path)
+    }
+
+    FileInfo{
+        id      :   fInfo
+        file    :   projectRoot
+    }
+
+    DocumentNumerator{
+        id      :   docNumerator
     }
 
     Item    {
@@ -124,6 +174,7 @@ Item {
             anchors.top             :   documentTabs.bottom
             anchors.bottom          :   parent.bottom
             rootPath                :   projectRoot
+
             onDoubleClicked         :   {
                 openCurrentlySelectedFile()
             }
@@ -153,10 +204,11 @@ Item {
             }
 
             EmptyDocument   {
-                id          :   emptyDoc
-                width       :   parent.width
-                height      :   parent.height
-                visible     :   documents.count <= 1
+                id              :   emptyDoc
+                width           :   parent.width
+                height          :   parent.height
+                visible         :   documents.count <= 1
+                projectOpened   :   projectRoot !== ""
             }
         }
     }
@@ -166,8 +218,14 @@ Item {
         sequence    :   "Ctrl+W"
         context     :   Qt.ApplicationShortcut
         onActivated :   {
-            console.log("Close Tab")
             closeCurrentDocument()
         }
+    }
+
+
+    Shortcut    {
+        id                  :   saveShortcut
+        sequence            :   StandardKey.Save
+        onActivated         :   saveCurrentDocument()
     }
 }

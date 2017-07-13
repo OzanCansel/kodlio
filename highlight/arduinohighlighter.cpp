@@ -1,10 +1,10 @@
-#include "highlighter.h"
+#include "arduinohighlighter.h"
 #include <QTextDocument>
 #include <QTextCursor>
 #include <QDebug>
 
 //! [0]
-Highlighter::Highlighter(QTextDocument *parent)
+ArduinoHighlighter::ArduinoHighlighter(QTextDocument *parent)
     : QSyntaxHighlighter(parent)
 {
     HighlightingRule rule;
@@ -81,7 +81,7 @@ Highlighter::Highlighter(QTextDocument *parent)
 //! [6]
 
 //! [7]
-void Highlighter::highlightBlock(const QString &text)
+void ArduinoHighlighter::highlightBlock(const QString &text)
 {
     foreach (const HighlightingRule &rule, highlightingRules) {
         QRegExp expression(rule.pattern);
@@ -127,30 +127,30 @@ void Highlighter::highlightBlock(const QString &text)
 }
 //! [11]
 
-void Highlighter::setClassColor(QColor col){
+void ArduinoHighlighter::setClassColor(QColor col){
     classFormat.setForeground(col);
 }
 
-void Highlighter::setKeywordColor(QColor col){
+void ArduinoHighlighter::setKeywordColor(QColor col){
     keywordFormat.setForeground(col);
 }
 
-void Highlighter::setSingleLineColor(QColor col){
+void ArduinoHighlighter::setSingleLineColor(QColor col){
     singleLineCommentFormat.setForeground(col);
 }
 
-void Highlighter::setMultilineColor(QColor col){
+void ArduinoHighlighter::setMultilineColor(QColor col){
     multiLineCommentFormat.setForeground(col);
 }
 
-void Highlighter::setQuatationColor(QColor col){
+void ArduinoHighlighter::setQuatationColor(QColor col){
     quotationFormat.setForeground(col);
 }
 
-void Highlighter::setFunctionColor(QColor col){
+void ArduinoHighlighter::setFunctionColor(QColor col){
     functionFormat.setForeground(col);
 }
 
-void Highlighter::setIncludeColor(QColor col){
+void ArduinoHighlighter::setIncludeColor(QColor col){
     includeFormat.setForeground(col);
 }

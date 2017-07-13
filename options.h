@@ -11,6 +11,7 @@ class Options : public QQuickItem
 
 public:
 
+    static void     registerQmlType();
     Options(QQuickItem *parent = Q_NULLPTR);
 
 public slots:

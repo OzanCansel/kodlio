@@ -94,5 +94,7 @@ bool    DocumentContent::save(){
 
     doc.close();
 
+    _doc->textDocument()->setModified(false);
+
     return true;
 }

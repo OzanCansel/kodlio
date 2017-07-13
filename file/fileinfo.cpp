@@ -16,7 +16,7 @@ FileInfo::FileInfo(QFileInfo &info , QQuickItem *parent) : QQuickItem(parent)
 }
 
 FileInfo::~FileInfo(){
-    qDebug() << "Destructing << " << filePath();
+
 }
 
 FileInfo::FileInfo(const FileInfo &other)   {
@@ -147,4 +147,11 @@ void FileInfo::setFile(QString file){
     _info.setFile(file);
 
     emit filePathChanged();
+}
+
+QString FileInfo::dirName(){
+    if(_info.isDir())
+        return _info.fileName();
+    else
+        return _info.absoluteDir().dirName();
 }

@@ -26,15 +26,23 @@ bool ToolchainV2::debugEnabled(){
 }
 
 void ToolchainV2::sendCommandOutput(QString command){
+    if(debugEnabled()) qDebug() << command;
     emit commandOutput(command);
 }
 
 void ToolchainV2::sendStdError(QString &err){
+    if(debugEnabled()) qDebug() << err;
     emit stdError(err);
 }
 
 void ToolchainV2::sendStdOutput(QString &out){
+    if(debugEnabled()) qDebug() << out;
     emit stdOutput(out);
+}
+
+void ToolchainV2::sendInfo(QString out){
+    if(debugEnabled())  qDebug() << out;
+    emit infoOutput(out);
 }
 
 CompilerV2* ToolchainV2::compiler(){

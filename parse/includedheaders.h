@@ -9,7 +9,8 @@ class IncludedHeaders : public QQuickItem
 public:
 
     IncludedHeaders(QQuickItem *parent = Q_NULLPTR);
-    QStringList     retrieveHeaders(QString &fileContent);
+    QStringList     retrieveBracketHeaders(QString &fileContent);
+    QStringList     retrieveDoubleQuotedHeader(QString &fileContent);
 
 };
 

@@ -12,8 +12,8 @@ Cloud::Cloud()
 {
 
     _manager = new QNetworkAccessManager(this);
-    _url = QString("http://160.153.230.248/api");
-//    _url    =   QString("http://localhost:3000/api");
+//    _url = QString("http://160.153.230.248/api");
+    _url    =   QString("http://localhost:3000/api");
     _storage = new JsonStorage("cloud-mem.json" , this);
     loadUserInfo();
 

@@ -1,5 +1,9 @@
 #include "options.h"
 
+void Options::registerQmlType(){
+    qmlRegisterType<Options>("Kodlio" , 1 , 0 , "Options");
+}
+
 Options::Options(QQuickItem *parent) : QQuickItem(parent){
 
 }

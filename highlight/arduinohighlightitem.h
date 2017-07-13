@@ -3,9 +3,9 @@
 
 #include <QQuickItem>
 #include <QQuickTextDocument>
-#include "highlighter.h"
+#include "arduinohighlighter.h"
 
-class EditorHighlight : public QQuickItem
+class ArduinoHighlightItem : public QQuickItem
 {
 
     Q_OBJECT
@@ -15,8 +15,7 @@ class EditorHighlight : public QQuickItem
 public:
 
     static void     registerQmlType();
-
-    EditorHighlight(QQuickItem *parent = Q_NULLPTR);
+    ArduinoHighlightItem(QQuickItem *parent = Q_NULLPTR);
 
     QQuickTextDocument*     document();
     void                    setDocument(QQuickTextDocument  *val);
@@ -35,7 +34,7 @@ private:
     bool                    _changed;
 
     QQuickTextDocument*     _document;
-    Highlighter             _highlighter;
+    ArduinoHighlighter             _highlighter;
 
 };
 

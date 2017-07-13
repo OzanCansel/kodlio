@@ -63,5 +63,6 @@
         <file>qml/control/DocumentHeader.qml</file>
         <file>qml/singleton/FontCollection.qml</file>
         <file>qml/editor/EmptyDocument.qml</file>
+        <file>qml/project/DocumentNumerator.qml</file>
     </qresource>
 </RCC>

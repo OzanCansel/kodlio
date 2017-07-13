@@ -29,13 +29,13 @@ Item {
 
             Row{
                 width                   :   childrenRect.width
+                visible                 :   !projectOpened
                 height                  :   childrenRect.height
 
                 Text {
                     id                  :   documentText
                     text                :   "- Sol üstteki "
                     font.family         :   FontCollection.messageFont
-                    visible             :   !projectOpened
                 }
 
                 Image {
@@ -75,12 +75,11 @@ Item {
                     text                :   " simgesine tiklayin ve 'Yeni Proje' tuşuna basarak proje oluşturun"
                     font.family         :   FontCollection.messageFont
                 }
-
             }
 
             Text {
                 id                  :   documentText3
-                text                :   "- Sol bölümdeki dosyalardan birine tıklayın"
+                text                :   "- Sol bölümdeki dosyalardan birine çift tıklayın"
                 font.family         :   FontCollection.messageFont
                 visible             :   projectOpened
             }

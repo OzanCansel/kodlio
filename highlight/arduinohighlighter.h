@@ -59,13 +59,13 @@ class QTextDocument;
 QT_END_NAMESPACE
 
 //! [0]
-class Highlighter : public QSyntaxHighlighter
+class ArduinoHighlighter : public QSyntaxHighlighter
 {
     Q_OBJECT
 
 public:
 
-    Highlighter(QTextDocument *parent = 0);
+    ArduinoHighlighter(QTextDocument *parent = 0);
 
     void    setKeywordColor(QColor col);
     void    setClassColor(QColor col);

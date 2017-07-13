@@ -1,11 +1,14 @@
 #include "avrenvironment.h"
 
-AvrEnvironment::AvrEnvironment(QQuickItem *parent) : Environment(parent)
-{
+AvrEnvironment::AvrEnvironment(QQuickItem *parent) : Environment(parent)    {
     set("g++" , sdkDir().append("/tools/avr/bin/avr-g++"));
     set("gcc" , sdkDir().append("/tools/avr/bin/avr-gcc"));
     set("gcc-ar" , sdkDir().append("/tools/avr/bin/avr-gcc-ar"));
     set("objcopy" , sdkDir().append("/tools/avr/bin/avr-objcopy"));
+    set("arduino-core" , sdkDir().append("/arduino/avr/cores/arduino"));
+    set("avr-includes" , sdkDir().append("/tools/avr/avr/include"));
+    set("variants-root" , sdkDir().append("/arduino/avr/variants"));
+    set("variants-uno" , get("variants-root" , true).append("/standard"));
 }
 
 QString AvrEnvironment::gPlusPlus(){
@@ -22,4 +25,8 @@ QString AvrEnvironment::gccAr(){
 
 QString AvrEnvironment::objcopy(){
     return get("objcopy");
+}
+
+QString AvrEnvironment::variants(QString &boardName){
+    return get(QString("variants-%0").arg(boardName) , true);
 }

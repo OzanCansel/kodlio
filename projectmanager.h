@@ -9,7 +9,7 @@
 #include "directorymanager.h"
 #include "thread/compileworker.h"
 #include "thread/uploadworker.h"
-#include "highlighter.h"
+#include "highlight/arduinohighlighter.h"
 #include "cloudapi/cloud.h"
 #include "thread/compileworkerv2.h"
 #include "thread/compileanduploadworkerv2.h"
@@ -99,7 +99,7 @@ private:
     QString             _projectBuildDir;
     QString             _projectName;
     bool                _readOnly;
-    Highlighter         _highlighter;
+    ArduinoHighlighter         _highlighter;
     QString         getDefaultBuildPath(QString path);
 
 };
