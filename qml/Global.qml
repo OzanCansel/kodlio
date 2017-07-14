@@ -1,14 +1,15 @@
 pragma Singleton
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-import Roboskop 1.0
-import "../control"
-import "../dialog"
-import "../"
+import Kodlio 1.0
 
 Item {
 
-    property Toast      toast
+
+    readonly property string    consoleInfoMessage      :   "console-info"
+    readonly property string    consoleOutputMessage    :   "console-output"
+    readonly property string    consoleErrorMessage     :   "console-error-message"
+
     property string     selectedPort        :   ""
     property Dialog     dialog              :   Dialog  { }
     property Dialog     createProjectDialog :   Dialog  { }
@@ -19,7 +20,19 @@ Item {
 
     signal  listSerialPorts()
 
-    function displayMessage(str){
+    function consoleInfo(output){
+        message(consoleInfoMessage , [output])
+    }
+
+    function consoleStdError(output){
+        message(consoleErrorMessage , [output])
+    }
+
+    function consoleStdOut(output){
+        message(consoleOutputMessage , [output])
+    }
+
+    function displayMessage(str)    {
         if(toast)   {
             toast.displayMessage(str)
         }

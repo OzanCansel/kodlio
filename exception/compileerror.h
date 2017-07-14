@@ -8,12 +8,15 @@ class CompileError : public QException
 
 public:
 
-    CompileError(QString err);
+    CompileError(QString _err);
 
+    QString     err();
     void    raise() const { throw *this; }
     CompileError    *clone() const { return new CompileError(*this); }
 
-    QString     err;
+private:
+
+    QString     _err;
 
 };
 

@@ -1,10 +1,12 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
+import QtQuick.Controls 1.4
 import Kodlio 1.0
 import "../control"
 import "../editor"
 import "../singleton"
+import "../"
 
 Item {
 
@@ -12,6 +14,10 @@ Item {
     property string     projectRoot         :   "/home/arnes/Documents/toolchain-example"
     property variant    openedDocuments     :   []
     property Compiler   compiler            :   ({})
+    property Toolchain  toolchain           :   ({})
+    property ProjectWatcher watcher         :   ({})
+    property OutputConsole  consoleOut      :   ({})
+    property Runner     runner              :   ({})
     property variant    allowedExtensions   :   []
 
     property alias  documentContainer       :   documents
@@ -19,6 +25,15 @@ Item {
     property alias  documentsContainer      :   documents
     property alias  browser                 :   fileBrowser
     property alias  documentNumerator       :   docNumerator
+
+    onProjectRootChanged    :   {
+        while(openedDocuments.length > 0)
+            closeCurrentDocument()
+    }
+
+    function compile(){
+        //Virtual
+    }
 
     function openDocument(){
         //Virtual
@@ -31,6 +46,8 @@ Item {
         //Eger bulunamadiysa
         if(idx < 0) {
             console.log("Dokuman bulunamadi")
+
+            return
         }
 
         docInfo.document.destroy()  //Acik olan dokuman kapatiliyor
@@ -117,10 +134,6 @@ Item {
         //Virtual
     }
 
-    function compile(){
-        //Virtual
-    }
-
     function run(){
         //Virtual
     }
@@ -139,8 +152,9 @@ Item {
     }
 
     FileInfo{
-        id      :   fInfo
-        file    :   projectRoot
+        id              :   fInfo
+        file            :   projectRoot
+        onFileChanged   :   projectName = fInfo.dirName()
     }
 
     DocumentNumerator{
@@ -148,6 +162,7 @@ Item {
     }
 
     Item    {
+
         id              :   documentsContainer
         anchors.fill    :   parent
 
@@ -166,53 +181,65 @@ Item {
             }
         }
 
-
-        FileBrowser {
-            id                      :   fileBrowser
-            z                       :   2
-            width                   :   250
-            anchors.top             :   documentTabs.bottom
-            anchors.bottom          :   parent.bottom
-            rootPath                :   projectRoot
-
-            onDoubleClicked         :   {
-                openCurrentlySelectedFile()
-            }
-            Keys.onEnterPressed     :   {
-                openCurrentlySelectedFile()
-            }
-            Keys.onReturnPressed    :   {
-                openCurrentlySelectedFile()
-            }
-        }
-
-        StackLayout {
-            id              :   documents
+        SplitView{
+            id      :   splitView
             anchors.top     :   documentTabs.bottom
-            anchors.topMargin   :   0
             anchors.bottom  :   parent.bottom
-            anchors.left    :   fileBrowser.right
+            anchors.left    :   parent.left
             anchors.right   :   parent.right
 
-            currentIndex    :   {
-                if(documentTabs.count > 1 && documentTabs.currentIndex === 0){
-                    documentTabs.currentIndex = 1
-                    return 1
+
+            FileBrowser {
+                id                      :   fileBrowser
+                z                       :   2
+                anchors.top             :   parent.top
+                anchors.bottom          :   parent.bottom
+                width                   :   250
+                rootPath                :   projectRoot
+                Layout.minimumWidth     :   200
+
+                onDoubleClicked         :   {
+                    openCurrentlySelectedFile()
                 }
-                else
-                    return documentTabs.currentIndex
+                onClicked               :   {
+                    console.log("clicked")
+                }
+
+                Keys.onEnterPressed     :   {
+                    openCurrentlySelectedFile()
+                }
+                Keys.onReturnPressed    :   {
+                    openCurrentlySelectedFile()
+                }
             }
 
-            EmptyDocument   {
-                id              :   emptyDoc
-                width           :   parent.width
-                height          :   parent.height
-                visible         :   documents.count <= 1
-                projectOpened   :   projectRoot !== ""
+            StackLayout {
+                id                  :   documents
+                anchors.top         :   parent.top
+                anchors.bottom      :   parent.bottom
+                Layout.minimumWidth :   400
+
+                currentIndex    :   {
+                    if(documentTabs.count > 1 && documentTabs.currentIndex === 0){
+                        documentTabs.currentIndex = 1
+                        return 1
+                    }
+                    else
+                        return documentTabs.currentIndex
+                }
+
+                EmptyDocument   {
+                    id              :   emptyDoc
+                    width           :   parent.width
+                    height          :   parent.height
+                    visible         :   documents.count <= 1
+                    projectOpened   :   projectRoot !== ""
+                }
             }
         }
     }
 
+    //Kisayol
     Shortcut{
         id          :   closeTabShortcut
         sequence    :   "Ctrl+W"
@@ -227,5 +254,32 @@ Item {
         id                  :   saveShortcut
         sequence            :   StandardKey.Save
         onActivated         :   saveCurrentDocument()
+    }
+
+    Connections{
+        target  :   compiler
+        onCommandOutput :   console.log("Project : " + output)
+        onInfoOutput    :   {
+            Global.consoleInfo(output)
+        }
+    }
+
+    Connections {
+
+        target          :   toolchain
+
+        onInfoOutput    :   consoleOut.infoOutput(output)
+        onStdOutput     :   consoleOut.standartOutput(output)
+        onStdError      :   consoleOut.errorOutput(output)
+        onCommandOutput :   consoleOut.commandOutput(output)
+
+    }
+
+    Connections{
+        target          :   runner
+        onInfoOutput    :   consoleOut.infoOutput(output)
+        onStdOutput     :   consoleOut.standartOutput(output)
+        onStdErr        :   consoleOut.errorOutput(output)
+        onCommandOutput :   consoleOut.commandOutput(output)
     }
 }

@@ -62,7 +62,6 @@ SOURCES += main.cpp \
     texttemplate/texttemplate.cpp \
     texttemplate/classheadertemplate.cpp \
     texttemplate/classcpptemplate.cpp \
-    thread/compileworkerv2.cpp \
     thread/compileanduploadworkerv2.cpp \
     exception/compileerror.cpp \
     parse/functionparser.cpp \
@@ -117,7 +116,7 @@ SOURCES += main.cpp \
     traverse/arduinolibrarytraverse.cpp \
     toolchain/avrtoolchainenvironment.cpp \
     editor/documentcontent.cpp \
-    filetree.cpp \
+    file/filetree.cpp \
     traverse/arduinoprojecttraverse.cpp \
     project/projectwatcher.cpp \
     project/arduino/arduinoprojectwatcher.cpp \
@@ -142,7 +141,22 @@ SOURCES += main.cpp \
     highlight/highlightitem.cpp \
     highlight/highlightplugin.cpp \
     editor/editorplugin.cpp \
-    arduinoLibManager/librarymanagerplugin.cpp
+    arduinoLibManager/librarymanagerplugin.cpp \
+    project/projectplugin.cpp \
+    http/httpplugin.cpp \
+    traverse/traverseplugin.cpp \
+    file/fileplugin.cpp \
+    eventcontext.cpp \
+    thread/avr/avrtoolchainthread.cpp \
+    thread/threadplugin.cpp \
+    thread/avr/compileworkerV2.cpp \
+    toolchain/runner.cpp \
+    toolchain/avr/avrrunner.cpp \
+    exception/optionkeynotexists.cpp \
+    exception/runerror.cpp \
+    toolchain/avr/avrrunoptions.cpp \
+    thread/avr/runworker.cpp \
+    thread/avr/avrtoolchainworker.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -198,7 +212,7 @@ DISTFILES += \
     qml/control/IdeMenuItem.qml \
     qml/control/ProjectMenu.qml \
     qml/singleton/Theme.qml \
-    qml/singleton/Global.qml \
+    qml/Global.qml \
     qml/singleton/Enum.qml \
     qml/control/DropdownMenuItem.qml \
     qml/form/SerialMonitorForm.qml \
@@ -238,7 +252,9 @@ DISTFILES += \
     qml/control/DocumentHeader.qml \
     qml/singleton/FontCollection.qml \
     qml/editor/EmptyDocument.qml \
-    qml/project/DocumentNumerator.qml
+    qml/project/DocumentNumerator.qml \
+    qml/singleton/EventLabels.qml \
+    qml/project/ArduinoContextMenu.qml
 
 HEADERS += \
     toolchain/avrcompiler.h \
@@ -267,7 +283,6 @@ HEADERS += \
     texttemplate/texttemplate.h \
     texttemplate/classheadertemplate.h \
     texttemplate/classcpptemplate.h \
-    thread/compileworkerv2.h \
     thread/compileanduploadworkerv2.h \
     exception/compileerror.h \
     parse/functionparser.h \
@@ -322,7 +337,7 @@ HEADERS += \
     traverse/arduinolibrarytraverse.h \
     toolchain/avrtoolchainenvironment.h \
     editor/documentcontent.h \
-    filetree.h \
+    file/filetree.h \
     traverse/arduinoprojecttraverse.h \
     project/projectwatcher.h \
     project/arduino/arduinoprojectwatcher.h \
@@ -347,5 +362,20 @@ HEADERS += \
     highlight/highlightitem.h \
     highlight/highlightplugin.h \
     editor/editorplugin.h \
-    arduinoLibManager/librarymanagerplugin.h
+    arduinoLibManager/librarymanagerplugin.h \
+    project/projectplugin.h \
+    http/httpplugin.h \
+    traverse/traverseplugin.h \
+    file/fileplugin.h \
+    eventcontext.h \
+    thread/avr/avrtoolchainthread.h \
+    thread/threadplugin.h \
+    thread/avr/compileworkerV2.h \
+    toolchain/runner.h \
+    toolchain/avr/avrrunner.h \
+    exception/optionkeynotexists.h \
+    exception/runerror.h \
+    toolchain/avr/avrrunoptions.h \
+    thread/avr/runworker.h \
+    thread/avr/avrtoolchainworker.h
 

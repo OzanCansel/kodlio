@@ -11,7 +11,6 @@
 #include "thread/uploadworker.h"
 #include "highlight/arduinohighlighter.h"
 #include "cloudapi/cloud.h"
-#include "thread/compileworkerv2.h"
 #include "thread/compileanduploadworkerv2.h"
 
 class ProjectManager : public QQuickItem
@@ -91,7 +90,6 @@ private:
     DirectoryManager    *_directoryManager;
     AvrCompiler         *_compiler;
     Toolchain           *_toolchain;
-    CompileWorkerV2     *_compileWorker;
     CompileAndUploadWorkerV2        *_uploadWorker;
     QQuickTextDocument  *_document;
     QFileSystemModel    *_model;

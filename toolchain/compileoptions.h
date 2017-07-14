@@ -8,6 +8,8 @@
 class CompileOptions : public Options
 {
 
+    Q_OBJECT
+
 public:
 
     static void     registerQmlType();

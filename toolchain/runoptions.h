@@ -3,10 +3,15 @@
 
 #include "options.h"
 
-class RunOptions : Options
+class RunOptions : public Options
 {
 
+    Q_OBJECT
+
 public:
+
+    static void     registerQmlType();
+    RunOptions(QQuickItem *parent = Q_NULLPTR);
 
 };
 

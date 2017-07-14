@@ -1,7 +1,8 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-import "singleton"
 import "control"
+import "singleton"
+import "../"
 
 Rectangle {
 
@@ -18,10 +19,30 @@ Rectangle {
         consoleTextContainer.height  =   Qt.binding(function(){ return collapsed ? Theme.consoleCollapsedHeight : Theme.consoleNormalHeight; })
     }
 
+    Connections{
+        target      :   eventContext
+        onMessage   :   {
+            if(message === EventLabels.consoleOutputMessage)
+                infoOutput(args[0])
+            else if(message === EventLabels.consoleErrorMessage)
+                standartOutput(args[0])
+            else if(message === EventLabels.consoleInfoMessage)
+                standartOutput(args[0])
+        }
+    }
+
     function    checkFlags(){
         if(clearFlag){
             consoleText.clear()
             clearFlag   =   false
+        }
+    }
+
+    function    infoOutput(text){
+        checkFlags();
+        var     texts = text.split("\n")
+        for(var i = 0; i < texts.length; i++){
+            consoleText.append("<span style=\"color : "  + Theme.commandOutConsoleColor + " \">" + texts[i] + "</span>")
         }
     }
 

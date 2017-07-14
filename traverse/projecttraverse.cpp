@@ -3,7 +3,7 @@
 #include <QtQml>
 
 void ProjectTraverse::registerQmlType(){
-    qmlRegisterType<ProjectTraverse>("Roboskop", 1, 0, "ProjectTraverse");
+    qmlRegisterType<ProjectTraverse>("Kodlio", 1, 0, "ProjectTraverse");
 }
 
 ProjectTraverse::ProjectTraverse(QQuickItem *parent) : QQuickItem(parent){

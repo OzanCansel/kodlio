@@ -6,11 +6,13 @@
 
 class ProjectWatcher : public QQuickItem
 {
+
     Q_OBJECT
     Q_PROPERTY(QString rootDir READ rootDir WRITE setRootDir NOTIFY rootDirChanged)
 
 public:
 
+    static void registerQmlType();
     ProjectWatcher(QQuickItem *parent = Q_NULLPTR);
     QString     rootDir();
     void        setRootDir(QString dir);

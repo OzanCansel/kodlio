@@ -5,9 +5,16 @@
 
 class ArduinoProjectWatcher : public ProjectWatcher {
 
+    Q_OBJECT
+
 public:
 
+    static void registerQmlType();
     ArduinoProjectWatcher(QQuickItem *parent = Q_NULLPTR);
+
+public slots:
+
+    QString     retrieveMainFile();
 
 };
 

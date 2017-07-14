@@ -66,10 +66,10 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
         stdOutput("sketch.cpp derleniyor...");
         _compiler->compileCppFile(buildCppFolder.filePath("sketch.cpp") , buildFolder.filePath("sketch.cpp.o") , includes);
     }   catch(CompileError err) {
-        if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() sketch.cpp derlenirken hata oluştu. -> " << err.err;
+        if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() sketch.cpp derlenirken hata oluştu. -> " << err.err();
 
         emit compileEnd(false);
-        return err.err;
+        return err.err();
     }
 
     int     fIdx = 1;
@@ -80,10 +80,10 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
             if(_debugEnabled)   qDebug() << dependency->name() << " derleniyor...";
         compileLib(dependency->srcDir() , objOutputPath);
         }catch(CompileError &err){
-            if(_debugEnabled)   qDebug() << "ToolChain::compileFolderRecursively()-compileLib() Derleme aşamasında hata oluştu. -> " << err.err;
+            if(_debugEnabled)   qDebug() << "ToolChain::compileFolderRecursively()-compileLib() Derleme aşamasında hata oluştu. -> " << err.err();
 
             emit compileEnd(false);
-            return err.err;
+            return err.err();
         }
     }
 
@@ -116,10 +116,10 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
 
         }   catch(CompileError &err){
 
-            if(_debugEnabled)   qDebug() << "ToolChain::compileFolderRecursively() Derleme aşamasında hata oluştu. -> " << err.err;
+            if(_debugEnabled)   qDebug() << "ToolChain::compileFolderRecursively() Derleme aşamasında hata oluştu. -> " << err.err();
 
             emit compileEnd(false);
-            return err.err;
+            return err.err();
         }
 
         double progress = (fIdx / (double)buildCppFolder.entryList().length()) * 0.5;
@@ -139,10 +139,10 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
         try{
             _compiler->archiveObjFiles(f , archiveFPath);
         }   catch(CompileError err){
-            if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() Arşivleme aşamasında hata oluştu. -> " << err.err;
+            if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() Arşivleme aşamasında hata oluştu. -> " << err.err();
 
             emit compileEnd(false);
-            return err.err;
+            return err.err();
         }
 
         double progress = (fIdx / (double)objFiles.length()) * 0.4 + 0.5;
@@ -156,10 +156,10 @@ QString Toolchain::compileFolderRecursively(QString rootPath, QString outputPath
         emit compileProgress(1.0);
     }
     catch(CompileError err){
-        if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() Linking aşamasında hata olluştu. -> " << err.err;
+        if(_debugEnabled)   qDebug() << "Toolchain::compileFolderRecursively() Linking aşamasında hata olluştu. -> " << err.err();
 
         emit compileEnd(false);
-        return err.err;
+        return err.err();
     }
 
     emit stdOutput("Derleme bitiriliyor...");

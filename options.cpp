@@ -1,4 +1,5 @@
 #include "options.h"
+#include "exception/optionkeynotexists.h"
 
 void Options::registerQmlType(){
     qmlRegisterType<Options>("Kodlio" , 1 , 0 , "Options");
@@ -16,6 +17,9 @@ void Options::set(QString key, QVariant val){
     _map[key]   =   val;
 }
 
-QVariant Options::get(QString key){
-    return _map.value(key , QVariant());
+QVariant Options::get(QString key, bool ensureExists){
+    if(ensureExists && !_map.keys().contains(key))
+        OptionKeyNotExists(key).raise();
+
+    return _map.value(key);
 }

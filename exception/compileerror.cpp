@@ -1,5 +1,9 @@
 #include "compileerror.h"
 
 CompileError::CompileError(QString err){
-    this->err = err;
+    this->_err = err;
+}
+
+QString CompileError::err(){
+    return _err;
 }

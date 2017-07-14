@@ -21,8 +21,6 @@ ApplicationWindow {
     title           :   qsTr("Kodlio")
 
     Component.onCompleted   :   {
-        projectManager.compilerErrorOutputEnabled =     true
-        projectManager.compilerOutputEnabled      =     true
         serialPort.setDebugEnabled(true)
         Global.dialog               =   serialMonitorDialog
         Global.createProjectDialog  =   createProjectDialog
@@ -34,6 +32,12 @@ ApplicationWindow {
     Connections{
         target  :   Global
         onListSerialPorts   :   serialPortPopup.open()
+    }
+
+    Connections{
+        target              :   compileControlBar
+        onCompileRequired   :   currentProject.compile()
+        onUploadRequired    :   currentProject.run()
     }
 
     LoginDialog{
@@ -360,8 +364,9 @@ ApplicationWindow {
                     z               :   3
                     color           :   "transparent"
 
-                    ArduinoProject{
+                    ArduinoProject  {
                         id                      :   currentProject
+                        consoleOut              :   outputConsole
                         anchors.fill            :   parent
                         anchors.leftMargin      :   Theme.controlXMargin
                         anchors.rightMargin     :   Theme.controlXMargin
@@ -370,10 +375,10 @@ ApplicationWindow {
             }
 
             OutputConsole{
-                id              :   outputConsole
-                width           :   parent.width
-                height          :   20
-                anchors.bottom  :   parent.bottom
+                id                  :   outputConsole
+                width               :   parent.width
+                height              :   20
+                anchors.bottom      :   parent.bottom
             }
 
             GenericProgressBar{

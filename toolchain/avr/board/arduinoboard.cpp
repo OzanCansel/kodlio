@@ -20,3 +20,11 @@ QString ArduinoBoard::eepParams(){
 QString ArduinoBoard::hexParams(){
     return "-O ihex -R .eeprom";
 }
+
+ArduinoBoard::AvrDudeConfParams ArduinoBoard::avrDudeConfParams(){
+    AvrDudeConfParams   params;
+
+    params.baudRate = "115200";
+    params.params = "-v -patmega328p -carduino";
+    return params;
+}

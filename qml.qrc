@@ -1,6 +1,8 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
+        <file>qml/Global.qml</file>
+        <file>qml/qmldir</file>
         <file>qtquickcontrols2.conf</file>
         <file>qml/AppMenu.qml</file>
         <file>qml/OutputConsole.qml</file>
@@ -22,7 +24,6 @@
         <file>qml/control/ProjectMenu.qml</file>
         <file>qml/singleton/Theme.qml</file>
         <file>qml/singleton/qmldir</file>
-        <file>qml/singleton/Global.qml</file>
         <file>qml/singleton/Enum.qml</file>
         <file>qml/control/DropdownMenuItem.qml</file>
         <file>qml/form/SerialMonitorForm.qml</file>
@@ -64,5 +65,6 @@
         <file>qml/singleton/FontCollection.qml</file>
         <file>qml/editor/EmptyDocument.qml</file>
         <file>qml/project/DocumentNumerator.qml</file>
+        <file>qml/singleton/EventLabels.qml</file>
     </qresource>
 </RCC>

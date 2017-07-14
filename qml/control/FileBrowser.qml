@@ -16,6 +16,8 @@ TreeView {
     rootIndex           :   tree.rootIndex
     model               :   tree.model
 
+    signal  dirRightClicked(string path);
+
     function    getFileInfo(idx){
         return tree.fileName(idx)
     }
@@ -28,7 +30,10 @@ TreeView {
     TableViewColumn {
         title   :   "Name"
         role    :   "fileName"
-        width   :   300
+    }
+
+    FileInfo{
+        id      :   info
     }
 
     itemDelegate    :   Rectangle{
@@ -40,6 +45,21 @@ TreeView {
             font.family :   FontCollection.fileTreeFont
         }
     }
+
+    MouseArea {
+         anchors.fill: parent
+         acceptedButtons: Qt.RightButton
+         onClicked: {
+             var index = parent.indexAt(mouse.x, mouse.y)
+             if (index.valid) {
+                 var file = getFileInfo(index)
+                 info.file = file
+                 if(info.isDir())
+                     dirRightClicked(file)
+                 console.log("show context menu for row: " + getFileInfo(index))
+             }
+         }
+     }
 
     rowDelegate     :   Rectangle{
         color       :   "transparent"

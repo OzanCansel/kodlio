@@ -18,7 +18,7 @@ public slots:
 
     void        generateObjFile(QString &file , QString &output , QStringList &includes , QString &boardName);
     void        archiveFiles(QStringList &objFiles , QString &output);
-    void        generateHex(QString &objFile , QString &archiveFile, QString &buildFolder);
+    QString     generateHex(QString &objFile , QString &archiveFile, QString &buildFolder);
     void        run(RunOptions *opts);
 
 private:

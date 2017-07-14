@@ -30,21 +30,41 @@ void ToolchainV2::sendCommandOutput(QString command){
     emit commandOutput(command);
 }
 
-void ToolchainV2::sendStdError(QString &err){
+void ToolchainV2::sendStdError(QString err){
     if(debugEnabled()) qDebug() << err;
     emit stdError(err);
 }
 
-void ToolchainV2::sendStdOutput(QString &out){
+void ToolchainV2::sendStdOutput(QString out){
     if(debugEnabled()) qDebug() << out;
     emit stdOutput(out);
 }
 
 void ToolchainV2::sendInfo(QString out){
-    if(debugEnabled())  qDebug() << out;
+    if(debugEnabled())  qDebug() << "Info -> " << out;
     emit infoOutput(out);
 }
 
+void ToolchainV2::sendCompileSuccess(){
+    emit compileSuccess();
+}
+
+void ToolchainV2::sendCompileError(){
+    emit compileError();
+}
+
+void ToolchainV2::sendRunSuccess(){
+    emit    runSuccess();
+}
+
+void ToolchainV2::sendRunError(){
+    emit runError();
+}
+
 CompilerV2* ToolchainV2::compiler(){
+    return Q_NULLPTR;
+}
+
+Runner* ToolchainV2::runner(){
     return Q_NULLPTR;
 }

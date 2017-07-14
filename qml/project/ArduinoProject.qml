@@ -8,16 +8,59 @@ import "../editor"
 Project {
 
 
-    compiler            :       comp
+    compiler            :       avrToolchain.compiler()
+    toolchain           :       avrToolchain
+    watcher             :       projectWatcher
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
 
-
-    AvrCompiler {
-        id  :   comp
+    browser.onDirRightClicked   :   {
+        //<file>
+        console.log("Context menu for -> " + file)
     }
 
     FileInfo    {
         id      :   file
+    }
+
+    AvrToolchain{
+        id      :   avrToolchain
+    }
+
+    ArduinoProjectWatcher{
+        id      :   projectWatcher
+        rootDir :   projectRoot
+    }
+
+    AvrCompileOptions{
+        id      :   options
+        board   :   "uno"
+    }
+
+    AvrToolchainThread{
+        id          :   toolchainThread
+        toolchain   :   avrToolchain
+        runner      :   avrRunner
+    }
+
+    AvrRunOptions{
+        id          :   runOpts
+        board       :   "uno"
+        port        :   "/dev/ttyACM0"
+        hexFile     :   avrToolchain.lastHexFile()
+    }
+
+    AvrRunner{
+        id          :   avrRunner
+    }
+
+    function compile(){
+        var mainFile = projectWatcher.retrieveMainFile()
+        toolchainThread.compile(mainFile , options)
+    }
+
+    function run(){
+        runOpts.hexFile = avrToolchain.lastHexFile()
+        toolchainThread.run(runOpts)
     }
 
     function openDocument(filePath){
@@ -73,14 +116,6 @@ Project {
 
     function openProject(path){
 
-    }
-
-    function compile(){
-        //template
-    }
-
-    function run(){
-        //
     }
 
     Component{

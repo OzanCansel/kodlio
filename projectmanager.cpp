@@ -17,13 +17,13 @@ ProjectManager::ProjectManager(DirectoryManager *man, Toolchain *toolchain , QQu
     _compiler->setErrorOutputEnabled(true);
     _compiler->setStandardOutputEnabled(true);
 
-    _compileWorker = new CompileWorkerV2(_toolchain);
+//    _compileWorker = new CompileWorkerV2(_toolchain);
     _uploadWorker = new CompileAndUploadWorkerV2(_toolchain);
-    _compileWorker ->moveToThread(&compilingThread);
+//    _compileWorker ->moveToThread(&compilingThread);
     _uploadWorker->moveToThread(&uploadThread);
 
-    connect(this , SIGNAL(compileProjectSignal(QString,QString,QStringList)) , _compileWorker , SLOT(doWork(QString,QString,QStringList)));
-    connect(this , SIGNAL(compileAndUploadProjectSignal(QString,QString)) , _uploadWorker , SLOT(doWork(QString,QString)));
+//    connect(this , SIGNAL(compileProjectSignal(QString,QString,QStringList)) , _compileWorker , SLOT(doWork(QString,QString,QStringList)));
+//    connect(this , SIGNAL(compileAndUploadProjectSignal(QString,QString)) , _uploadWorker , SLOT(doWork(QString,QString)));
 
     compilingThread.start();
     uploadThread.start();

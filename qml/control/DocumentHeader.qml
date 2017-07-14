@@ -17,7 +17,7 @@ TabButton {
     width               :   Math.max(minWidth , txt.width + 60)
     enabled             :   !mainHeader
 
-    signal closeTab(string filePath);
+    signal closeTab(int identity);
 
     FontMetrics{
         id              :   textMetrics
@@ -118,7 +118,7 @@ TabButton {
             }
 
             z                       :   5
-            onClicked               :   closeTab(attachedDocument.absolutePath)
+            onClicked               :   closeTab(attachedDocument.identity)
         }
     }
 

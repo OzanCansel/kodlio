@@ -76,3 +76,10 @@ QList<FunctionUsageParsed>  FunctionParser::extractFunctions(QString &text){
 QString FunctionParser::group(QString str){
     return QString("(").append(str).append(")");
 }
+
+bool FunctionParser::functionExists(QString &text, QString &signature, QString &funcName){
+    QRegularExpression  expr(QString("%0(\\s)+%1(\\s)*\\((\\s)*\\)(\\s)*\\{"));
+    QRegularExpressionMatch match = expr.match(text);
+
+    return match.hasMatch();
+}

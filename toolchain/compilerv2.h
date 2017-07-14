@@ -20,12 +20,14 @@ protected:
     void        sendStdOutput(QString output);
     void        sendStdError(QString err);
     void        sendCommandOutput(QString &command);
+    void        sendInfo(QString info);
 
 signals:
 
     void        stdOutput(QString   output);
-    void        stdError(QString error);
-    void        commandOutput(QString command);
+    void        stdError(QString output);
+    void        commandOutput(QString output);
+    void        infoOutput(QString output);
 
 private:\
 

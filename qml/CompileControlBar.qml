@@ -7,6 +7,9 @@ Rectangle {
 
     color           :  "transparent"
 
+    signal compileRequired()
+    signal uploadRequired()
+
     Column{
 
         width           :   parent.width
@@ -17,8 +20,7 @@ Rectangle {
 
         IdeMenuItem{
             mouseArea.onClicked :   {
-                projectManager.saveFile()
-                projectManager.compileProject()
+                compileRequired()
             }
             width               :   parent.width
             height              :   48
@@ -30,15 +32,15 @@ Rectangle {
         IdeMenuItem{
             mouseArea.onClicked :   {
 
-                if(Global.selectedPort == "" || Global.selectedPort === "Seçilmedi"){
-                    Global.displayMessage("Yüklenecek portu seçmediniz.")
-                    Global.openSerialPortsList()
-                    return
-                }
+                uploadRequired()
 
-                projectManager.saveFile()
-                projectManager.compileAndUploadProject("")
-                Global.dialog.close()
+//                if(Global.selectedPort == "" || Global.selectedPort === "Seçilmedi"){
+//                    Global.displayMessage("Yüklenecek portu seçmediniz.")
+//                    Global.openSerialPortsList()
+//                    return
+//                }
+
+//                Global.dialog.close()
             }
             width               :   parent.width
             height              :   48

@@ -4,6 +4,7 @@
 #include "exception/boardnotspecified.h"
 #include "exception/filenotexists.h"
 #include "exception/filecouldnotopen.h"
+#include "exception/compileerror.h"
 #include "file/fileutil.h"
 #include "collection/stringlistutil.h"
 #include <QDir>
@@ -15,20 +16,22 @@ void AvrToolchain::registerQmlType(){
 
 AvrToolchain::AvrToolchain(QQuickItem *parent) : ToolchainV2(parent)    {
     map();
+    //    _compiler.moveToThread(&_compilerThread);
     _compatibleSourceExtensions << ".c" << ".S" << ".cpp";
 }
 
 
 void AvrToolchain::run(RunOptions *options) {
-
+    //calistiriliyor
+    _runner.run(options);
 }
 
 void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
     QFileInfo   mainFileInfo(file);
     QVariant    buildDirVariant = opts->get("buildDir");
-    QString     buildDir;
-    QString     boardBuildDir;
+    QString     buildDirPath;
+    QString     boardBuildDirPath;
     QVariant    board = opts->get("board");
     QString     boardName;
     QStringList projectSources;
@@ -61,19 +64,19 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         if(!srcDir.exists(boardName))
             srcDir.mkdir(boardName);
 
-        buildDir =   srcDir.absolutePath();
+        buildDirPath =   srcDir.absolutePath();
     }   else   {
-        buildDir = buildDirVariant.toString();
+        buildDirPath = buildDirVariant.toString();
     }
 
-    boardBuildDir = QDir(buildDir).filePath(boardName);
+    boardBuildDirPath = QDir(buildDirPath).filePath(boardName);
 
     //Kullanilmasi gereken kutuphaneler belirleniyor
     extractDependencies(file , projectLibDependencies , discovered);
 
     foreach (ArduinoLibDescription *desc, projectLibDependencies) {
         QString     output = QString("%0 kütüphanesi kullanılıyor. Dizin : %1").arg(desc->name()).arg(desc->localDir());
-        sendStdOutput(output);
+        sendInfo(output);
 
         foreach (QString includeFolder, desc->headerFolders()) {
             if(!includes.contains(includeFolder))
@@ -92,19 +95,69 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         }
     }
 
+    sendInfo("Kütüphaneler derleniyor...");
     //Kutuphaneler derleniyor
     foreach (ArduinoLibDescription* desc, projectLibDependencies) {
-        compileLib(desc , boardBuildDir , boardName);
+        try{
+        compileLib(desc , boardBuildDirPath , boardName);
+        }catch(CompileError &err){
+            sendStdError("");
+            sendCompileError();
+        }
     }
 
+    sendInfo("Dosyalar derleniyor");
     foreach (QString sourceFile, projectSources) {
 
         QFileInfo   sourceInfo(sourceFile);
 
+        sendInfo(QString("%0 derleniyor").arg(QDir(srcDir).relativeFilePath(sourceInfo.filePath())));
         //<boardBuildDir>/<fileName>.o
-        QString     output = QString("%0/%1.o").arg(boardBuildDir).arg(sourceInfo.fileName());
+        QString     output = QString("%0/%1.o").arg(boardBuildDirPath).arg(sourceInfo.fileName());
+
+        try{
         _compiler.generateObjFile(sourceFile , output , includes , boardName);
+        }catch (CompileError &err){
+            sendStdError(err.err());
+            sendCompileError();
+
+            return;
+        }
     }
+
+    QDir    boardBuildDir(boardBuildDirPath);
+    QStringList objFiles;
+    QString archivedLibPath = boardBuildDir.filePath("archive.a");
+    QString mainObjFile = boardBuildDir.filePath(QString("%0.o").arg(mainFileInfo.fileName()));
+    QStringList l;
+
+    foreach (QFileInfo fInfo, boardBuildDir.entryInfoList(l, QDir::Files)) {
+        //Ana dosya haric arsivleniyor
+        if(fInfo.fileName().endsWith(".o") && fInfo.fileName() != mainObjFile)
+            objFiles.append(fInfo.filePath());
+    }
+
+    sendInfo("Arşivleniyor...");
+    try{
+        _compiler.archiveFiles(objFiles , archivedLibPath);
+    }catch(CompileError&){
+        sendStdError("Kütüphaneler arşivlenirken hata oluştu.");
+        sendCompileError();
+
+        return;
+    }
+
+    sendInfo("Hex dosyası üretiliyor...");
+    try{
+        _lastHexFile = _compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath);
+    }catch(CompileError&){
+        sendStdError("Hex dosyasi üretilirken hata oluştu.");
+        sendCompileError();
+
+        return;
+    }
+
+    sendCompileSuccess();
 }
 
 CompilerV2*    AvrToolchain::compiler(){
@@ -276,4 +329,12 @@ bool AvrToolchain::possibleSourceFiles(QString &headerName , QStringList &source
     }
 
     return exists;
+}
+
+Runner* AvrToolchain::runner(){
+    return &_runner;
+}
+
+QString AvrToolchain::lastHexFile(){
+    return _lastHexFile;
 }

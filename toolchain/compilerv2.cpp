@@ -24,6 +24,11 @@ void CompilerV2::sendCommandOutput(QString &command){
     emit commandOutput(command);
 }
 
+void CompilerV2::sendInfo(QString info){
+    if(debugEnabled() && !info.isEmpty()) qDebug() << "CompilerV2 info ->" << info;
+    emit infoOutput(info);
+}
+
 void CompilerV2::setDebugEnabled(bool enabled){
     _debugEnabled = enabled;
 }

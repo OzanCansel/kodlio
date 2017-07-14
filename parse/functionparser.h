@@ -18,6 +18,7 @@ public:
 public slots:
 
     QList<FunctionUsageParsed>  extractFunctions(QString &text);
+    bool    functionExists(QString &content , QString &signature , QString &funcName);
 
 private:
 

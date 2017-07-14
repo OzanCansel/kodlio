@@ -1,4 +1,9 @@
 #include "projectwatcher.h"
+#include <QtQml>
+
+void ProjectWatcher::registerQmlType(){
+    qmlRegisterType<ProjectWatcher>("Kodlio" , 1 , 0 , "ProjectWatcher");
+}
 
 ProjectWatcher::ProjectWatcher(QQuickItem *parent) : QQuickItem(parent)
 {

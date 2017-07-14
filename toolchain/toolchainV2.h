@@ -6,7 +6,7 @@
 #include "compileoptions.h"
 #include "runoptions.h"
 #include "compilerv2.h"
-
+#include "runner.h"
 
 class ToolchainV2 : public QQuickItem
 {
@@ -20,25 +20,34 @@ public:
 
 public slots:
 
-    virtual void    compile(QString folder ,  CompileOptions* opts);
-    virtual void    run(RunOptions*  options);
-    virtual CompilerV2*    compiler();
-    void            setDebugEnabled(bool enabled);
-    bool            debugEnabled();
+    virtual void            compile(QString file ,  CompileOptions* opts);
+    virtual void            run(RunOptions*  options);
+    virtual CompilerV2*     compiler();
+    virtual Runner*         runner();
+    void                    setDebugEnabled(bool enabled);
+    bool                    debugEnabled();
 
 protected:
 
-    void    sendStdOutput(QString &out);
-    void    sendStdError(QString &err);
+    void    sendStdOutput(QString out);
+    void    sendStdError(QString err);
     void    sendCommandOutput(QString command);
     void    sendInfo(QString out);
+    void    sendCompileSuccess();
+    void    sendCompileError();
+    void    sendRunSuccess();
+    void    sendRunError();
 
 signals:
 
-    void    stdOutput(QString out);
-    void    stdError(QString err);
-    void    commandOutput(QString command);
-    void    infoOutput(QString command);
+    void    stdOutput(QString output);
+    void    stdError(QString output);
+    void    commandOutput(QString output);
+    void    infoOutput(QString output);
+    void    compileError();
+    void    compileSuccess();
+    void    runSuccess();
+    void    runError();
 
 private:
 

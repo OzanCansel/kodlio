@@ -29,11 +29,16 @@
 #include "arduinoLibManager/arduinolibdownloader.h"
 #include "http/internetaccessibility.h"
 #include "editor/documentcontent.h"
-#include "filetree.h"
 #include "toolchain/toolchainplugin.h"
 #include "highlight/highlightplugin.h"
 #include "editor/editorplugin.h"
 #include "arduinoLibManager/librarymanagerplugin.h"
+#include "project/projectplugin.h"
+#include "http/httpplugin.h"
+#include "traverse/traverseplugin.h"
+#include "file/fileplugin.h"
+#include "thread/threadplugin.h"
+#include "eventcontext.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
@@ -45,54 +50,57 @@ int main(int argc, char *argv[])    {
 
 
     //Qml sınıfları ekleniyor
-    CompileConfiguration::registerQmlType();
-    ProgrammerConfiguration::registerQmlType();
-    CodeDescriptionInfo::registerQmlType();
-    ProjectTraverse::registerQmlType();
-    InternetAccessibility::registerQmlType();
-    FileTree::registerQmlType();
-    FileInfo::registerQmlType();
+    //    CompileConfiguration::registerQmlType();
+    //    ProgrammerConfiguration::registerQmlType();
+    //    CodeDescriptionInfo::registerQmlType();
+    //    ProjectTraverse::registerQmlType();
+    //    InternetAccessibility::registerQmlType();
+    //    FileTree::registerQmlType();
+    //    FileInfo::registerQmlType();
 
     //Plugin
     EditorPlugin::attach();
     ToolchainPlugin::attach();
     HighlightPlugin::attach();
     LibraryManagerPlugin::attach();
+    ProjectPlugin::attach();
+    HttpPlugin::attach();
+    TraversePlugin::attach();
+    FilePlugin::attach();
+    ThreadPlugin::attach();
 
-    RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
-    Compiler                        compiler;
-    Programmer                      programmer;
-    Toolchain                       toolchain(&compiler , &programmer);
-    DirectoryManager                dirMan;
-    ProjectManager                  manager(&dirMan , &toolchain);
-    Cloud                           cloud;
-    SerialPort                      sPort;
-    ParseHelper                     parseHelper;
-    CompilerErrorParser             errParser;
-    OsInfo                          osInfo;
-    EditorSettings                  settings;
-    CodeDescriptionGenerator        descGen;
-
-    QString tempProjPath    =   QDir(QCoreApplication::applicationDirPath()).filePath("temp");
-    if(!manager.projectExists(tempProjPath))    manager.createProject(tempProjPath);
-    manager.openProject(tempProjPath);
+    //    RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
+    //    Compiler                        compiler;
+    //    Programmer                      programmer;
+    //    Toolchain                       toolchain(&compiler , &programmer);
+    //    DirectoryManager                dirMan;
+    //    ProjectManager                  manager(&dirMan , &toolchain);
+    //    Cloud                           cloud;
+        SerialPort                      sPort;
+    //    ParseHelper                     parseHelper;
+    //    CompilerErrorParser             errParser;
+        OsInfo                          osInfo;
+    //    EditorSettings                  settings;
+    //    CodeDescriptionGenerator        descGen;
 
     QQmlApplicationEngine engine;
+    EventContext        eventContext;
     QQmlContext *context = engine.rootContext();
 
-    context->setContextProperty("projectManager" , &manager);
-    context->setContextProperty("cloudApi" , &cloud);
-    context->setContextProperty("fileSys" , &dirMan);
-    context->setContextProperty("serialPort" , &sPort);
-    context->setContextProperty("compiler" , &compiler);
-    context->setContextProperty("programmer", &programmer);
-    context->setContextProperty("toolchain" , &toolchain);
-    context->setContextProperty("descriptionGenerator" , &descGen);
-    context->setContextProperty("parseHelper" , &parseHelper);
-    context->setContextProperty("compilerErrorParser" , &errParser);
-    context->setContextProperty("osInfo" , &osInfo);
-    context->setContextProperty("settings" , &settings);
-    context->setContextProperty("environment" , env);
+    context->setContextProperty("eventContext" , &eventContext);
+    //    context->setContextProperty("projectManager" , &manager);
+    //    context->setContextProperty("cloudApi" , &cloud);
+    //    context->setContextProperty("fileSys" , &dirMan);
+        context->setContextProperty("serialPort" , &sPort);
+    //    context->setContextProperty("compiler" , &compiler);
+    //    context->setContextProperty("programmer", &programmer);
+    //    context->setContextProperty("toolchain" , &toolchain);
+    //    context->setContextProperty("descriptionGenerator" , &descGen);
+    //    context->setContextProperty("parseHelper" , &parseHelper);
+    //    context->setContextProperty("compilerErrorParser" , &errParser);
+        context->setContextProperty("osInfo" , &osInfo);
+    //    context->setContextProperty("settings" , &settings);
+    //    context->setContextProperty("environment" , env);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

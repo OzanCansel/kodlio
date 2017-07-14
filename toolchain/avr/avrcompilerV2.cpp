@@ -102,7 +102,7 @@ void AvrCompilerV2::archiveFiles(QStringList &objFiles, QString &output){
     }
 }
 
-void AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString &buildFolder){
+QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString &buildFolder){
     QString elfFilePath = QString(buildFolder).append("/output.elf");
     QString eepFilePath = QString(buildFolder).append("/output.eep");
     QString hexFilePath = QString(buildFolder).append("/output.hex");
@@ -126,13 +126,15 @@ void AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString 
 
     //Elf uretiliyor
     process.start(generateElfCommand);
-    interrupted = process.waitForFinished();
+    interrupted = !process.waitForFinished();
 
     //Islem tamamlanamadiysa
     if(interrupted || process.exitCode() != 0){
         QString     err(".elf dosyasi uretilirken hata !");
+        QString     actualError = process.readAllStandardError();
         sendStdError(err);
-        CompileError(err).raise();
+        sendStdError(actualError);
+        CompileError(actualError).raise();
     }
 
     //<objcopy> <params> <inputElf> <outputEep>
@@ -144,7 +146,7 @@ void AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString 
     sendCommandOutput(generateEepCommand);
     //Eep uretiliyor
     process.start(generateEepCommand);
-    interrupted = process.waitForFinished();
+    interrupted = !process.waitForFinished();
 
     if(interrupted || process.exitCode() != 0){
         QString     err(".eep dosyasi uretilirken hata !");
@@ -160,7 +162,7 @@ void AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString 
 
     //Hex uretiliyor
     process.start(generateHexCommand);
-    interrupted = process.waitForFinished();
+    interrupted = !process.waitForFinished();
 
     //Hata
     if(interrupted || process.exitCode() != 0){
@@ -168,4 +170,7 @@ void AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString 
         sendStdError(err);
         CompileError(err).raise();
     }
+
+
+    return hexFilePath;
 }
