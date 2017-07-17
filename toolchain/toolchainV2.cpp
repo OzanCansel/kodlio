@@ -53,14 +53,6 @@ void ToolchainV2::sendCompileError(){
     emit compileError();
 }
 
-void ToolchainV2::sendRunSuccess(){
-    emit    runSuccess();
-}
-
-void ToolchainV2::sendRunError(){
-    emit runError();
-}
-
 CompilerV2* ToolchainV2::compiler(){
     return Q_NULLPTR;
 }

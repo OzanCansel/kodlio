@@ -68,7 +68,7 @@ ApplicationWindow {
         standardButtons :   StandardButton.Yes | StandardButton.No
     }
 
-    GenericMessageDialog{
+    GenericMessageDialog    {
         id              :   logoutDialog
         title           :   "Çıkış Yap"
         message         :   "'" + cloudApi.userName + "' çıkış yapmak istediğinize emin misin ?"
@@ -287,11 +287,6 @@ ApplicationWindow {
                     SerialPortListForm  {
                         id              :   serialPortListF
                         implicitWidth   :   150
-
-                        onPortSelected  :   {
-                            serialPortPopup.close()
-                            Global.selectedPort = serialPortListF.selectedPort
-                        }
 
                         Keys.onEscapePressed    :   {
                         }

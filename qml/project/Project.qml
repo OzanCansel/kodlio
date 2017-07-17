@@ -3,6 +3,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtQuick.Controls 1.4
 import Kodlio 1.0
+import "../animation"
 import "../control"
 import "../editor"
 import "../singleton"
@@ -151,6 +152,13 @@ Item {
         openDocument(path)
     }
 
+
+    RunAnimation{
+        z           :   3
+        x           :   parent.width / 2 - width / 2
+        y           :   parent.height / 2 - height / 2
+        rotation    :   135
+    }
     FileInfo{
         id              :   fInfo
         file            :   projectRoot
@@ -159,6 +167,17 @@ Item {
 
     DocumentNumerator{
         id      :   docNumerator
+    }
+
+    Image {
+        id      :   successIcon
+        source  :   "/res/icon/success-icon.png"
+        width   :   128
+        fillMode:   Image.PreserveAspectFit
+        visible :   compileSuccesAnimation2.running
+        x       :   documentsContainer.width * 0.45
+        opacity :   compileSuccesAnimation2.running ? 1 : 0
+        z       :   5
     }
 
     Item    {
@@ -256,6 +275,36 @@ Item {
         onActivated         :   saveCurrentDocument()
     }
 
+    SequentialAnimation{
+
+        id          :   compileSuccesAnimation2
+
+        ScriptAction{
+            script  :   {
+                successIcon.opacity = 1
+            }
+        }
+
+        NumberAnimation {
+            target      :   successIcon
+            property    :   "y"
+            from        :   documents.height * 0.1
+            to          :   documents.height * 0.5
+            duration    :   850
+            easing.type : Easing.OutBounce
+        }
+
+
+        NumberAnimation {
+            target      :   successIcon
+            property    :   "opacity"
+            duration    :   500
+            from        :   1
+            to          :   0
+            easing.type: Easing.InOutQuad
+        }
+    }
+
     Connections{
         target  :   compiler
         onCommandOutput :   console.log("Project : " + output)
@@ -272,14 +321,19 @@ Item {
         onStdOutput     :   consoleOut.standartOutput(output)
         onStdError      :   consoleOut.errorOutput(output)
         onCommandOutput :   consoleOut.commandOutput(output)
+        onCompileSuccess:   {
 
+            console.log("compile success")
+            compileSuccesAnimation2.restart()
+        }
     }
 
     Connections{
-        target          :   runner
-        onInfoOutput    :   consoleOut.infoOutput(output)
-        onStdOutput     :   consoleOut.standartOutput(output)
-        onStdErr        :   consoleOut.errorOutput(output)
-        onCommandOutput :   consoleOut.commandOutput(output)
+        target              :   runner
+        onInfoOutput        :   consoleOut.infoOutput(output)
+        onStdOutput         :   consoleOut.standartOutput(output)
+        onStdErr            :   consoleOut.errorOutput(output)
+        onCommandOutput     :   consoleOut.commandOutput(output)
+        onSuccessfullyRan   :   compileSuccesAnimation2.restart()
     }
 }

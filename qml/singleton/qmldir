@@ -4,3 +4,4 @@ singleton Color 1.0 Color.qml
 singleton Common 1.0 Common.qml
 singleton FontCollection 1.0 FontCollection.qml
 singleton EventLabels 1.0 EventLabels.qml
+singleton SerialOption 1.0 SerialOption.qml

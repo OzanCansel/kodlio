@@ -13,6 +13,8 @@ class OsInfo : public QQuickItem
 public:
 
     static QString  osName();
+    static bool     isWindows();
+    static bool     isLinux();
     QString     os();
 
 signals:

@@ -15,6 +15,7 @@ void Runner::run(RunOptions *opts){
 }
 
 void Runner::successfullyRan(){
+    if(debugEnabled())  qDebug() << "Runner successfully ran";
     emit runIsSuccessful();
 }
 

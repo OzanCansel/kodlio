@@ -18,7 +18,7 @@ public slots:
 
     void            set(QString key , QVariantMap val);
     void            set(QString key, QVariant val);
-    QVariant        get(QString key , bool ensureExists = false);
+    QVariant        get(QString key , bool ensureExists = false) const;
 
 protected:
 

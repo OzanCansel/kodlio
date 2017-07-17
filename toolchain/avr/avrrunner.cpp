@@ -46,6 +46,11 @@ void AvrRunner::run( RunOptions *opts){
 
         //Hata firlatiliyor
         RunError(err).raise();
+    }else{
+        //AvrDude error olarak yaziyor outputunu
+        QString output = process.readAllStandardError();
+
+        sendStdOutput(output);
     }
 
     //Calistirildi

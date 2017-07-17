@@ -35,8 +35,6 @@ protected:
     void    sendInfo(QString out);
     void    sendCompileSuccess();
     void    sendCompileError();
-    void    sendRunSuccess();
-    void    sendRunError();
 
 signals:
 
@@ -46,8 +44,6 @@ signals:
     void    infoOutput(QString output);
     void    compileError();
     void    compileSuccess();
-    void    runSuccess();
-    void    runError();
 
 private:
 

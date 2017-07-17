@@ -17,7 +17,7 @@ void Options::set(QString key, QVariant val){
     _map[key]   =   val;
 }
 
-QVariant Options::get(QString key, bool ensureExists){
+QVariant Options::get(QString key, bool ensureExists) const{
     if(ensureExists && !_map.keys().contains(key))
         OptionKeyNotExists(key).raise();
 

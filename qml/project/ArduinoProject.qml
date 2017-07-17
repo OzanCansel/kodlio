@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Kodlio 1.0
+import "../singleton"
 import "../control"
 import "../editor"
 
@@ -11,6 +12,7 @@ Project {
     compiler            :       avrToolchain.compiler()
     toolchain           :       avrToolchain
     watcher             :       projectWatcher
+    runner              :       avrRunner
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
 
     browser.onDirRightClicked   :   {
@@ -45,7 +47,7 @@ Project {
     AvrRunOptions{
         id          :   runOpts
         board       :   "uno"
-        port        :   "/dev/ttyACM0"
+        port        :   SerialOption.option.portName
         hexFile     :   avrToolchain.lastHexFile()
     }
 

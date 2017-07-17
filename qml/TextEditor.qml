@@ -497,16 +497,6 @@ Rectangle {
     }
 
     Image {
-        id      :   successIcon
-        source  :   "/res/icon/success-icon.png"
-        width   :   128
-        fillMode:   Image.PreserveAspectFit
-        visible :   compileSuccesAnimation2.running
-        x       :   textEditorCont.width * 0.45
-        opacity :   compileSuccesAnimation2.running ? 1 : 0
-    }
-
-    Image {
         id      :   failureIcon
         source  :   "/res/icon/failure.png"
         width   :   128
@@ -553,38 +543,6 @@ Rectangle {
         }
 
     }
-
-    SequentialAnimation{
-
-        id          :   compileSuccesAnimation2
-
-        ScriptAction{
-            script  :   {
-                successIcon.opacity = 1
-            }
-        }
-
-        NumberAnimation {
-            target  :   successIcon
-            property:   "y"
-            from    :   textEditorCont.height * 0.1
-            to      :   textEditorCont.height * 0.5
-            duration:   850
-            easing.type: Easing.OutBounce
-        }
-
-
-        NumberAnimation {
-            target      :   successIcon
-            property    :   "opacity"
-            duration    :   500
-            from        :   1
-            to          :   0
-            easing.type: Easing.InOutQuad
-        }
-    }
-
-
 
     SequentialAnimation{
 

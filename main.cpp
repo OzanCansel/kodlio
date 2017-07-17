@@ -10,7 +10,6 @@
 #include "projectmanager.h"
 #include "sdkextractor.h"
 #include "cloudapi/cloud.h"
-#include "serialport.h"
 #include "toolchain/toolchain.h"
 #include "toolchain/compiler.h"
 #include "roboskopenvironment.h"
@@ -39,15 +38,13 @@
 #include "file/fileplugin.h"
 #include "thread/threadplugin.h"
 #include "eventcontext.h"
+#include "serial/serialplugin.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-
-    QString str = QString("%0-L%1").arg("deneme").arg("sonuc");
-
 
     //Qml sınıfları ekleniyor
     //    CompileConfiguration::registerQmlType();
@@ -68,6 +65,7 @@ int main(int argc, char *argv[])    {
     TraversePlugin::attach();
     FilePlugin::attach();
     ThreadPlugin::attach();
+    SerialPlugin::attach();
 
     //    RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
     //    Compiler                        compiler;
@@ -76,11 +74,10 @@ int main(int argc, char *argv[])    {
     //    DirectoryManager                dirMan;
     //    ProjectManager                  manager(&dirMan , &toolchain);
     //    Cloud                           cloud;
-        SerialPort                      sPort;
     //    ParseHelper                     parseHelper;
     //    CompilerErrorParser             errParser;
         OsInfo                          osInfo;
-    //    EditorSettings                  settings;
+        EditorSettings                  settings;
     //    CodeDescriptionGenerator        descGen;
 
     QQmlApplicationEngine engine;
@@ -91,7 +88,7 @@ int main(int argc, char *argv[])    {
     //    context->setContextProperty("projectManager" , &manager);
     //    context->setContextProperty("cloudApi" , &cloud);
     //    context->setContextProperty("fileSys" , &dirMan);
-        context->setContextProperty("serialPort" , &sPort);
+//        context->setContextProperty("serialPort" , &sPort);
     //    context->setContextProperty("compiler" , &compiler);
     //    context->setContextProperty("programmer", &programmer);
     //    context->setContextProperty("toolchain" , &toolchain);
@@ -99,7 +96,7 @@ int main(int argc, char *argv[])    {
     //    context->setContextProperty("parseHelper" , &parseHelper);
     //    context->setContextProperty("compilerErrorParser" , &errParser);
         context->setContextProperty("osInfo" , &osInfo);
-    //    context->setContextProperty("settings" , &settings);
+        context->setContextProperty("settings" , &settings);
     //    context->setContextProperty("environment" , env);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 

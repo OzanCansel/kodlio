@@ -3,53 +3,33 @@ import "../singleton"
 
 Item {
 
-    property string selectedPort    :   getCurrentPortName()
-
-    signal  portSelected(string port)
+    property string     selectedPort    :   getCurrentPortName()
+    property variant    ports           :   SerialOption.scanner.ports
 
     function refresh(){
-        var ports = serialPort.listSerialPort()
-        var selectedZero =  serialPortList.currentIndex < 1
-
-        //Model temizleniyor
-        lModel.clear()
-
-        lModel.append({"name"   :   "Seçilmedi"})
-        for(var i = 0 ; i < ports.length ; i++){
-            lModel.append({"name"   :   ports[i] })
-        }
-
-        if(selectedZero){
-            serialPortList.currentIndex = lModel.count - 1
-
-            programmer.configuration.portName = osInfo.os !== "windows" ? "/dev/" + form.getCurrentPortName() : form.getCurrentPortName()
-            portSelected(getCurrentPortName())
-        }
-    }
-
-    function getCurrentPortName(){
-        return lModel.get(serialPortList.currentIndex).name
+        SerialOption.scanner.refresh()
     }
 
     id              :   form
-    implicitHeight  :   lModel.count * 50
+    implicitHeight  :  ports.length * 50
 
-    ListModel{
-        id      :   lModel
-    }
+    ListView    {
 
-    ListView{
         id      :   serialPortList
         width   :   parent.implicitWidth
         height  :   parent.implicitHeight
+        model   :   ports
+        onCurrentItemChanged    :   {
+            SerialOption.option.portName = currentIndex >= 0 ? ports[currentIndex].portName : ""
+        }
 
-        delegate:   Item{
+        delegate:   Item    {
             height  :   50
             width   :   parent.width
 
             Text {
-                id      :   portName
-                text    :   ">" + name
+                id      :   portNameText
+                text    :   ">" + ports[index].portName
                 anchors.centerIn    :   parent
                 z       :   2
                 color   :   "white"
@@ -60,8 +40,7 @@ Item {
                 anchors.fill    :   parent
                 onClicked       :   {
                     serialPortList.currentIndex = index;
-                    programmer.configuration.portName = osInfo.os !== "windows" ? "/dev/" + form.getCurrentPortName() : form.getCurrentPortName()
-                    portSelected(form.getCurrentPortName())
+                    //                     SerialOption.option.portName = index >= 0 ? ports[index].portName : ""
                 }
                 hoverEnabled    :   true
                 z               :   2
@@ -74,7 +53,6 @@ Item {
                 anchors.fill:   parent
                 z           :   0
             }
-
         }
 
         highlight   :   Rectangle   {
@@ -82,7 +60,5 @@ Item {
             radius  :   4
             border.width    :   1
         }
-
-        model  :   lModel
     }
 }

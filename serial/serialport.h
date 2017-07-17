@@ -13,6 +13,7 @@ class SerialPort : public QObject
 
 public:
 
+    static void registerQmlType();
     SerialPort(QObject *parent = Q_NULLPTR);
     Q_PROPERTY(int baudRate READ baudRate WRITE setBaudRate NOTIFY baudRateChanged)
 
@@ -23,7 +24,7 @@ signals:
 
 public slots:
 
-    QStringList listSerialPort();
+    QStringList     listSerialPort();
     bool            connectToArduino(QString port);
     void            send(QByteArray arr);
     void            send(QString txt);
@@ -34,16 +35,16 @@ public slots:
 
 private slots:
 
-    void            serialPortIncome();
+    void                serialPortIncome();
 
 private:
 
-    QSerialPort _port;
+    QSerialPort         _port;
     QHash<int , int>    _baudRateHash;
     QList<int>          _vendorIdFilter;
 
-    bool        _debugEnabled;
-    int         _baudRate;
+    bool                _debugEnabled;
+    int                 _baudRate;
 
 };
 

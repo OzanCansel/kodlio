@@ -66,5 +66,7 @@
         <file>qml/editor/EmptyDocument.qml</file>
         <file>qml/project/DocumentNumerator.qml</file>
         <file>qml/singleton/EventLabels.qml</file>
+        <file>qml/singleton/SerialOption.qml</file>
+        <file>qml/animation/RunAnimation.qml</file>
     </qresource>
 </RCC>

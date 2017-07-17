@@ -29,3 +29,17 @@ QString OsInfo::osName(){
 QString OsInfo::os(){
     return osName();
 }
+
+bool OsInfo::isLinux(){
+#if defined(Q_OS_LINUX)
+    return true;
+#endif
+    return false;
+}
+
+bool OsInfo::isWindows(){
+#if defined(Q_OS_WIN)
+    return true;
+#endif
+    return false;
+}

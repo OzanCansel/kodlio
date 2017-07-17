@@ -51,7 +51,7 @@ SOURCES += main.cpp \
     cloudapi/cloud.cpp \
     cloudapi/cloudresponse.cpp \
     jsonstorage.cpp \
-    serialport.cpp \
+    serial/serialport.cpp \
     toolchain/toolchain.cpp \
     toolchain/compiler.cpp \
     toolchain/roboskopprocess.cpp \
@@ -156,7 +156,10 @@ SOURCES += main.cpp \
     exception/runerror.cpp \
     toolchain/avr/avrrunoptions.cpp \
     thread/avr/runworker.cpp \
-    thread/avr/avrtoolchainworker.cpp
+    thread/avr/avrtoolchainworker.cpp \
+    serial/serialoptions.cpp \
+    serial/serialplugin.cpp \
+    serial/serialportscanner.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -254,7 +257,9 @@ DISTFILES += \
     qml/editor/EmptyDocument.qml \
     qml/project/DocumentNumerator.qml \
     qml/singleton/EventLabels.qml \
-    qml/project/ArduinoContextMenu.qml
+    qml/project/ArduinoContextMenu.qml \
+    qml/singleton/SerialOption.qml \
+    qml/animation/RunAnimation.qml
 
 HEADERS += \
     toolchain/avrcompiler.h \
@@ -272,7 +277,7 @@ HEADERS += \
     cloudapi/cloud.h \
     cloudapi/cloudresponse.h \
     jsonstorage.h \
-    serialport.h \
+    serial/serialport.h \
     toolchain/toolchain.h \
     toolchain/compiler.h \
     toolchain/roboskopprocess.h \
@@ -377,5 +382,8 @@ HEADERS += \
     exception/runerror.h \
     toolchain/avr/avrrunoptions.h \
     thread/avr/runworker.h \
-    thread/avr/avrtoolchainworker.h
+    thread/avr/avrtoolchainworker.h \
+    serial/serialoptions.h \
+    serial/serialplugin.h \
+    serial/serialportscanner.h
 

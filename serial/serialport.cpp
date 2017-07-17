@@ -1,5 +1,10 @@
 #include "serialport.h"
 #include <QDebug>
+#include <QtQml>
+
+void SerialPort::registerQmlType(){
+    qmlRegisterType<SerialPort>("Kodlio" , 1 , 0 , "SerialPort");
+}
 
 SerialPort::SerialPort(QObject  *parent) : QObject(parent)
 {
@@ -31,7 +36,6 @@ QStringList SerialPort::listSerialPort(){
         if(_debugEnabled){
             qDebug() << inf.portName() << " Vendor ID : "  << inf.vendorIdentifier() << " Product ID" << inf.productIdentifier();
         }
-
     }
 
     return l;
