@@ -26,7 +26,8 @@ protected:
     void    sendInfo(QString output);
     void    sendStdOutput(QString output);
     void    sendStdErr(QString output);
-    void    successfullyRan();
+    void    sendRunSuccess();
+    void    sendRunError();
 
 signals:
 
@@ -34,7 +35,8 @@ signals:
     void    infoOutput(QString output);
     void    stdOutput(QString output);
     void    stdErr(QString output);
-    void    runIsSuccessful();
+    void    runSuccess();
+    void    runError();
 
 private:
 

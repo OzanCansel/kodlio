@@ -15,7 +15,6 @@ AvrToolchainThread::AvrToolchainThread(QQuickItem *parent) : QQuickItem(parent) 
     connect(this , SIGNAL(runSignal(RunOptions*)), _worker , SLOT(run(RunOptions*)));
 
     backgroundThread.start();
-//    QTimer::singleShot(0 , _worker , SLOT(hello()));
 }
 
 void AvrToolchainThread::compile(QString file, CompileOptions *opts){

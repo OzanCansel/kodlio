@@ -68,5 +68,6 @@
         <file>qml/singleton/EventLabels.qml</file>
         <file>qml/singleton/SerialOption.qml</file>
         <file>qml/animation/RunAnimation.qml</file>
+        <file>qml/animation/ShowAndFadeAnimation.qml</file>
     </qresource>
 </RCC>

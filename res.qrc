@@ -29,5 +29,8 @@
         <file>res/font/ubuntu-mono-r.ttf</file>
         <file>res/font/inconsolata.otf</file>
         <file>res/font/ubuntu-R.ttf</file>
+        <file>res/icon/upload-animation.png</file>
+        <file>res/icon/compile-error.png</file>
+        <file>res/icon/run-error.png</file>
     </qresource>
 </RCC>

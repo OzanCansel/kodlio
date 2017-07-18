@@ -19,6 +19,8 @@ Item {
     property ProjectWatcher watcher         :   ({})
     property OutputConsole  consoleOut      :   ({})
     property Runner     runner              :   ({})
+    property GenericProgressBar progress    :   ({})
+    property ErrorParser    parser          :   ({})
     property variant    allowedExtensions   :   []
 
     property alias  documentContainer       :   documents
@@ -26,6 +28,8 @@ Item {
     property alias  documentsContainer      :   documents
     property alias  browser                 :   fileBrowser
     property alias  documentNumerator       :   docNumerator
+
+    id                      :   project
 
     onProjectRootChanged    :   {
         while(openedDocuments.length > 0)
@@ -152,13 +156,10 @@ Item {
         openDocument(path)
     }
 
-
-    RunAnimation{
-        z           :   3
-        x           :   parent.width / 2 - width / 2
-        y           :   parent.height / 2 - height / 2
-        rotation    :   135
+    ErrorParser {
+        compiler    :   project.compiler
     }
+
     FileInfo{
         id              :   fInfo
         file            :   projectRoot
@@ -169,15 +170,45 @@ Item {
         id      :   docNumerator
     }
 
+    Item{
+        id                          :   centerPointItem
+        anchors.centerIn            :   parent
+    }
+
     Image {
-        id      :   successIcon
-        source  :   "/res/icon/success-icon.png"
-        width   :   128
-        fillMode:   Image.PreserveAspectFit
-        visible :   compileSuccesAnimation2.running
-        x       :   documentsContainer.width * 0.45
-        opacity :   compileSuccesAnimation2.running ? 1 : 0
-        z       :   5
+        id                          :   successIcon
+        source                      :   "/res/icon/success-icon.png"
+        width                       :   128
+        fillMode                    :   Image.PreserveAspectFit
+        anchors.centerIn            :   centerPointItem
+        z                           :   5
+    }
+
+    Image {
+        id                          :   uploadIconImg
+        source                      :   "/res/icon/upload-animation.png"
+        width                       :   128
+        fillMode                    :   Image.PreserveAspectFit
+        anchors.centerIn            :   centerPointItem
+        z                           :   5
+    }
+
+    Image{
+        id                          :   compileErrorIcon
+        source                      :   "/res/icon/compile-error.png"
+        width                       :   128
+        fillMode                    :   Image.PreserveAspectFit
+        anchors.centerIn            :   centerPointItem
+        z                           :   5
+    }
+
+    Image{
+        id                          :   runErrorIcon
+        source                      :   "/res/icon/run-error.png"
+        width                       :   128
+        fillMode                    :   Image.PreserveAspectFit
+        anchors.centerIn            :   centerPointItem
+        z                           :   5
     }
 
     Item    {
@@ -200,7 +231,7 @@ Item {
             }
         }
 
-        SplitView{
+        SplitView   {
             id      :   splitView
             anchors.top     :   documentTabs.bottom
             anchors.bottom  :   parent.bottom
@@ -275,8 +306,8 @@ Item {
         onActivated         :   saveCurrentDocument()
     }
 
+    //Animations
     SequentialAnimation{
-
         id          :   compileSuccesAnimation2
 
         ScriptAction{
@@ -305,6 +336,26 @@ Item {
         }
     }
 
+    ShowAndFadeAnimation{
+        id              :   compileSuccessAnimation
+        animationTarget :   successIcon
+    }
+
+    ShowAndFadeAnimation{
+        id              :   runSuccessAnimation
+        animationTarget :   uploadIconImg
+    }
+
+    ShowAndFadeAnimation{
+        id              :   runErrorAnimation
+        animationTarget :   runErrorIcon
+    }
+
+    ShowAndFadeAnimation{
+        id              :   compileErrorAnimation
+        animationTarget :   compileErrorIcon
+    }
+
     Connections{
         target  :   compiler
         onCommandOutput :   console.log("Project : " + output)
@@ -321,11 +372,9 @@ Item {
         onStdOutput     :   consoleOut.standartOutput(output)
         onStdError      :   consoleOut.errorOutput(output)
         onCommandOutput :   consoleOut.commandOutput(output)
-        onCompileSuccess:   {
-
-            console.log("compile success")
-            compileSuccesAnimation2.restart()
-        }
+        onProgress      :   progress.progress = value
+        onCompileSuccess:   compileSuccessAnimation.restart()
+        onCompileError  :   compileErrorAnimation.restart()
     }
 
     Connections{
@@ -334,6 +383,15 @@ Item {
         onStdOutput         :   consoleOut.standartOutput(output)
         onStdErr            :   consoleOut.errorOutput(output)
         onCommandOutput     :   consoleOut.commandOutput(output)
-        onSuccessfullyRan   :   compileSuccesAnimation2.restart()
+        onRunSuccess        :   runSuccessAnimation.restart()
+        onRunError          :   runErrorAnimation.restart()
+    }
+
+    Connections{
+        target              :   parser
+        onErrorOccurred       :   {
+            //<error>.file .row .column .message
+            console.log("Err -> " + error.message)
+        }
     }
 }

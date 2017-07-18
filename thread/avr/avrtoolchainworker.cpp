@@ -1,4 +1,5 @@
 #include "avrtoolchainworker.h"
+#include "exception/runerror.h"
 
 AvrToolchainWorker::AvrToolchainWorker(QObject *parent) : QObject(parent)
 {
@@ -18,7 +19,11 @@ void AvrToolchainWorker::run(RunOptions *opts){
     if(_runner == Q_NULLPTR)
         return;
 
-    _runner->run(opts);
+    try{
+        _runner->run(opts);
+    }   catch(RunError &err){
+
+    }
 }
 
 void AvrToolchainWorker::setToolchain(AvrToolchain *toolchain){

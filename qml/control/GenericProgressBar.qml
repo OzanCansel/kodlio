@@ -9,23 +9,22 @@ Item {
     readonly property real   progressBarPortion     :   0.4
     readonly property real   progressBarWidth       :   0.9
     property bool   progressClear                   :   false
-    property int    progressVelocity                :   120
+    property int    progressVelocity                :   width * 0.7
 
     id          :   genericProgressBar
     visible     :   false
 
     onProgressChanged   :   {
-
         progressClear   =   false
-
         if(progress !== 0)
             visible         =   true
-
         if(progress === 1)
             hideAnimation.restart()
         else
             hideAnimation.stop();
 
+        if(progress === -1)
+            hideAnimation.restart()
     }
 
     Text {
@@ -73,8 +72,10 @@ Item {
         }
     }
 
-    SequentialAnimation{
+    SequentialAnimation {
+
         id                  :   hideAnimation
+
         PauseAnimation {
             duration        :   hiddenTimeout
         }

@@ -53,6 +53,13 @@ void ToolchainV2::sendCompileError(){
     emit compileError();
 }
 
+void ToolchainV2::sendProgress(double val){
+    if(val > 1)
+        val = 1;
+    if(debugEnabled())  qDebug() << "ToolchainV2 -> " << val;
+    emit progress(val);
+}
+
 CompilerV2* ToolchainV2::compiler(){
     return Q_NULLPTR;
 }

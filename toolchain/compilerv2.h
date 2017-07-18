@@ -21,6 +21,7 @@ protected:
     void        sendStdError(QString err);
     void        sendCommandOutput(QString &command);
     void        sendInfo(QString info);
+    void        sendCompileError();
 
 signals:
 
@@ -28,8 +29,9 @@ signals:
     void        stdError(QString output);
     void        commandOutput(QString output);
     void        infoOutput(QString output);
+    void        compileError();
 
-private:\
+private:
 
     bool        _debugEnabled;
 

@@ -29,6 +29,11 @@ void CompilerV2::sendInfo(QString info){
     emit infoOutput(info);
 }
 
+void CompilerV2::sendCompileError(){
+    if(debugEnabled())  qDebug() << "CompilerV2 compileError()";
+    emit compileError();
+}
+
 void CompilerV2::setDebugEnabled(bool enabled){
     _debugEnabled = enabled;
 }

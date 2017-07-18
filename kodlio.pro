@@ -159,7 +159,11 @@ SOURCES += main.cpp \
     thread/avr/avrtoolchainworker.cpp \
     serial/serialoptions.cpp \
     serial/serialplugin.cpp \
-    serial/serialportscanner.cpp
+    serial/serialportscanner.cpp \
+    exception/portnamenotspecified.cpp \
+    parse/errorparser.cpp \
+    parse/avr/avrerrorparser.cpp \
+    parse/parserplugin.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -259,7 +263,8 @@ DISTFILES += \
     qml/singleton/EventLabels.qml \
     qml/project/ArduinoContextMenu.qml \
     qml/singleton/SerialOption.qml \
-    qml/animation/RunAnimation.qml
+    qml/animation/RunAnimation.qml \
+    qml/animation/ShowAndFadeAnimation.qml
 
 HEADERS += \
     toolchain/avrcompiler.h \
@@ -385,5 +390,9 @@ HEADERS += \
     thread/avr/avrtoolchainworker.h \
     serial/serialoptions.h \
     serial/serialplugin.h \
-    serial/serialportscanner.h
+    serial/serialportscanner.h \
+    exception/portnamenotspecified.h \
+    parse/errorparser.h \
+    parse/avr/avrerrorparser.h \
+    parse/parserplugin.h
 

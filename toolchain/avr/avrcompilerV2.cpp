@@ -65,6 +65,7 @@ void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList
     if(interrupted) {
         QString errorText = QString("%0 derlenirken hata olustu.").arg(QFileInfo(file).fileName());
         sendStdError(errorText);
+        sendCompileError();
 
         return;
     }
@@ -73,6 +74,7 @@ void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList
     if(compileProcess.exitCode() != 0){
         QString err = compileProcess.readAllStandardError();
         sendStdError(err);
+        sendCompileError();
         CompileError(err).raise();
     }
 }
@@ -96,6 +98,7 @@ void AvrCompilerV2::archiveFiles(QStringList &objFiles, QString &output){
         if(archiveProcess.exitCode() != 0){
             QString     err = archiveProcess.readAllStandardError();
             sendStdError(QString("%0 arsivlenirken hata -> ").arg(objFile).arg(err));
+            sendCompileError();
             //Hata firlatiliyor
             CompileError(err).raise();
         }
@@ -134,6 +137,7 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
         QString     actualError = process.readAllStandardError();
         sendStdError(err);
         sendStdError(actualError);
+        sendCompileError();
         CompileError(actualError).raise();
     }
 
@@ -151,6 +155,7 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
     if(interrupted || process.exitCode() != 0){
         QString     err(".eep dosyasi uretilirken hata !");
         sendStdError(err);
+        sendCompileError();
         CompileError(err).raise();
     }
 
@@ -168,9 +173,9 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
     if(interrupted || process.exitCode() != 0){
         QString     err(".hex dosyasi uretilirken hata !");
         sendStdError(err);
+        sendCompileError();
         CompileError(err).raise();
     }
-
 
     return hexFilePath;
 }

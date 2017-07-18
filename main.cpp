@@ -39,21 +39,13 @@
 #include "thread/threadplugin.h"
 #include "eventcontext.h"
 #include "serial/serialplugin.h"
+#include "parse/parserplugin.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
 
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
-
-    //Qml sınıfları ekleniyor
-    //    CompileConfiguration::registerQmlType();
-    //    ProgrammerConfiguration::registerQmlType();
-    //    CodeDescriptionInfo::registerQmlType();
-    //    ProjectTraverse::registerQmlType();
-    //    InternetAccessibility::registerQmlType();
-    //    FileTree::registerQmlType();
-    //    FileInfo::registerQmlType();
 
     //Plugin
     EditorPlugin::attach();
@@ -66,6 +58,7 @@ int main(int argc, char *argv[])    {
     FilePlugin::attach();
     ThreadPlugin::attach();
     SerialPlugin::attach();
+    ParserPlugin::attach();
 
     //    RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
     //    Compiler                        compiler;

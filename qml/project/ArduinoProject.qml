@@ -13,11 +13,17 @@ Project {
     toolchain           :       avrToolchain
     watcher             :       projectWatcher
     runner              :       avrRunner
+    parser              :       errParser
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
 
     browser.onDirRightClicked   :   {
         //<file>
         console.log("Context menu for -> " + file)
+    }
+
+    AvrErrorParser{
+        id          :   errParser
+        compiler    :   parent.compiler
     }
 
     FileInfo    {

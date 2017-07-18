@@ -14,9 +14,15 @@ void Runner::run(RunOptions *opts){
 
 }
 
-void Runner::successfullyRan(){
+void Runner::sendRunSuccess(){
     if(debugEnabled())  qDebug() << "Runner successfully ran";
-    emit runIsSuccessful();
+    emit runSuccess();
+}
+
+
+void Runner::sendRunError(){
+    if(debugEnabled())  qDebug() << "Runner sendRunError()";
+    emit runError();
 }
 
 void Runner::sendCommandOutput(QString output){

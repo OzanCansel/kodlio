@@ -365,6 +365,7 @@ ApplicationWindow {
                         anchors.fill            :   parent
                         anchors.leftMargin      :   Theme.controlXMargin
                         anchors.rightMargin     :   Theme.controlXMargin
+                        progress                :   compileProgressBar
                     }
                 }
             }

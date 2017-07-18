@@ -39,6 +39,10 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     QList<ArduinoLibDescription*>   projectLibDependencies;
     QStringList                     discovered;
     QStringList                     includes;
+    double      progress = 0;
+
+    //Progress baslatiliyor
+    sendProgress(0);
 
     //Eger board secilmemisse
     if(board.isNull()){
@@ -95,16 +99,30 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         }
     }
 
+    progress += PROGRESS_EXTRACT_DEPENDENCIES;
+    sendProgress(progress);
+
+    double  libProgressStep =  PROGRESS_COMPILE_LIB_TOTAL_PORTION / (double)projectLibDependencies.length();
+    double  compileProgressStep =   PROGRESS_COMPILE_SOURCE_TOTAL_PORTION / (double) projectSources.length();
+    double  archiveProgressstep = PROGRESS_ARCHIVE_TOTAL_PORTION / (double) projectSources.length();
+
     sendInfo("Kütüphaneler derleniyor...");
     //Kutuphaneler derleniyor
     foreach (ArduinoLibDescription* desc, projectLibDependencies) {
         try{
         compileLib(desc , boardBuildDirPath , boardName);
+        progress += libProgressStep;
+        sendProgress(progress);
         }catch(CompileError &err){
             sendStdError("");
             sendCompileError();
+            sendProgress(-1);
+            return;
         }
     }
+
+    progress = PROGRESS_EXTRACT_DEPENDENCIES + PROGRESS_COMPILE_LIB_TOTAL_PORTION;
+    sendProgress(progress);
 
     sendInfo("Dosyalar derleniyor");
     foreach (QString sourceFile, projectSources) {
@@ -117,13 +135,18 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
         try{
         _compiler.generateObjFile(sourceFile , output , includes , boardName);
+        progress += compileProgressStep;
+        sendProgress(progress);
         }catch (CompileError &err){
             sendStdError(err.err());
             sendCompileError();
-
+            sendProgress(-1);
             return;
         }
     }
+
+    progress = PROGRESS_EXTRACT_DEPENDENCIES + PROGRESS_COMPILE_LIB_TOTAL_PORTION + PROGRESS_COMPILE_SOURCE_TOTAL_PORTION;
+    sendProgress(progress);
 
     QDir    boardBuildDir(boardBuildDirPath);
     QStringList objFiles;
@@ -140,12 +163,17 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     sendInfo("Arşivleniyor...");
     try{
         _compiler.archiveFiles(objFiles , archivedLibPath);
+        progress += archiveProgressstep;
+        sendProgress(progress);
     }catch(CompileError&){
         sendStdError("Kütüphaneler arşivlenirken hata oluştu.");
         sendCompileError();
 
         return;
     }
+
+    progress = PROGRESS_EXTRACT_DEPENDENCIES + PROGRESS_COMPILE_LIB_TOTAL_PORTION + PROGRESS_COMPILE_SOURCE_TOTAL_PORTION + PROGRESS_ARCHIVE_TOTAL_PORTION;
+    sendProgress(progress);
 
     sendInfo("Hex dosyası üretiliyor...");
     try{
@@ -157,6 +185,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         return;
     }
 
+    sendProgress(1);
     sendCompileSuccess();
 }
 

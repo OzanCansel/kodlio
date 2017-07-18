@@ -8,6 +8,11 @@
 #include "avrcompilerV2.h"
 #include "avrrunner.h"
 
+#define PROGRESS_EXTRACT_DEPENDENCIES           0.1
+#define PROGRESS_COMPILE_LIB_TOTAL_PORTION      0.3
+#define PROGRESS_COMPILE_SOURCE_TOTAL_PORTION   0.4
+#define PROGRESS_ARCHIVE_TOTAL_PORTION          0.2
+
 class AvrToolchain : public ToolchainV2
 {
 
