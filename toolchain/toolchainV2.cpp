@@ -60,6 +60,11 @@ void ToolchainV2::sendProgress(double val){
     emit progress(val);
 }
 
+void ToolchainV2::sendBuildStarted(){
+    if(debugEnabled())   qDebug() << "ToolchainV2 -> Build started.";
+    emit buildStarted();
+}
+
 CompilerV2* ToolchainV2::compiler(){
     return Q_NULLPTR;
 }

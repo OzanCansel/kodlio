@@ -42,6 +42,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     double      progress = 0;
 
     //Progress baslatiliyor
+    sendBuildStarted();
     sendProgress(0);
 
     //Eger board secilmemisse
@@ -177,7 +178,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
     sendInfo("Hex dosyası üretiliyor...");
     try{
-        _lastHexFile = _compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath);
+        setCompiledHexFile(_compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath));
     }catch(CompileError&){
         sendStdError("Hex dosyasi üretilirken hata oluştu.");
         sendCompileError();
@@ -360,10 +361,16 @@ bool AvrToolchain::possibleSourceFiles(QString &headerName , QStringList &source
     return exists;
 }
 
-Runner* AvrToolchain::runner(){
-    return &_runner;
+QString AvrToolchain::compiledHexFile(){
+    return _lastHexFile;
 }
 
-QString AvrToolchain::lastHexFile(){
-    return _lastHexFile;
+void AvrToolchain::setCompiledHexFile(QString path){
+    _lastHexFile = path;
+
+    emit compiledHexFileChanged();
+}
+
+Runner* AvrToolchain::runner(){
+    return &_runner;
 }

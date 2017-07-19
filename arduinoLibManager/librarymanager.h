@@ -38,7 +38,7 @@ public slots:
     void            installLibs(QVariantList    libs);
     void            removeLibs(QVariantList     libs);
 
-private slots:\
+private slots:
 
     void    downloadStarted();
     void    downloadProgress(double progress);
@@ -60,6 +60,7 @@ signals:
     void    libRemovedSuccessfully(ArduinoLibDescription *desc);
     void    libRemoveErrorOcurred();
     void    retrieveOnlineLibsInternetError();
+    void    libNotRemovable();
 
 
 private:

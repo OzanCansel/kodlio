@@ -32,5 +32,6 @@
         <file>res/icon/upload-animation.png</file>
         <file>res/icon/compile-error.png</file>
         <file>res/icon/run-error.png</file>
+        <file>res/icon/lock-icon.png</file>
     </qresource>
 </RCC>

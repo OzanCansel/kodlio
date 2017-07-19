@@ -2,6 +2,7 @@ import QtQuick 2.7
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Kodlio 1.0
+import "../dialog"
 import "../singleton"
 import "../control"
 import "../editor"
@@ -9,6 +10,7 @@ import "../editor"
 Project {
 
 
+    id                  :   arduinoProject
     compiler            :       avrToolchain.compiler()
     toolchain           :       avrToolchain
     watcher             :       projectWatcher
@@ -17,8 +19,26 @@ Project {
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
 
     browser.onDirRightClicked   :   {
-        //<file>
-        console.log("Context menu for -> " + file)
+        //<path>
+        console.log("Context menu for -> " + path)
+        var point = browser.mapToItem(arduinoProject , mouse.x , mouse.y)
+        contextMenu.x       =   point.x
+        contextMenu.y       =   point.y
+        contextMenu.filePath = path
+        contextMenu.open()
+    }
+
+    ArduinoContextMenu  {
+        id          :   contextMenu
+        z           :   10
+        onCreateFile:   {
+            createFileDialog.basePath = basePath
+            createFileDialog.open()
+        }
+    }
+
+    CreateFileDialog{
+        id          :   createFileDialog
     }
 
     AvrErrorParser{
@@ -27,7 +47,7 @@ Project {
     }
 
     FileInfo    {
-        id      :   file
+        id      :   fInfo
     }
 
     AvrToolchain{
@@ -39,26 +59,31 @@ Project {
         rootDir :   projectRoot
     }
 
-    AvrCompileOptions{
+    AvrCompileOptions   {
         id      :   options
         board   :   "uno"
     }
 
-    AvrToolchainThread{
+    AvrToolchainThread  {
         id          :   toolchainThread
         toolchain   :   avrToolchain
         runner      :   avrRunner
     }
 
-    AvrRunOptions{
+    AvrRunOptions   {
         id          :   runOpts
         board       :   "uno"
         port        :   SerialOption.option.portName
-        hexFile     :   avrToolchain.lastHexFile()
+        hexFile     :   avrToolchain.compiledHexFile
     }
 
-    AvrRunner{
+    AvrRunner   {
         id          :   avrRunner
+        onRunSuccess:   runOpts
+
+        Component.onCompleted   :   {
+            SerialOption.option.uploading = Qt.binding(function(){  return avrRunner.runnerState === AvrRunner.Spawning })
+        }
     }
 
     function compile(){
@@ -67,20 +92,29 @@ Project {
     }
 
     function run(){
-        runOpts.hexFile = avrToolchain.lastHexFile()
+        if(runOpts.hexFile === ""){
+            displayMessage("Proje derlenmedi.")
+            return
+        }
+
+        if(runOpts.port === ""){
+            displayMessage("Yüklenecek portu seçiniz.")
+            return
+        }
+
         toolchainThread.run(runOpts)
     }
 
     function openDocument(filePath){
 
-        file.file = filePath;
+        fInfo.file = filePath;
 
         //Dosya uzantisi kontrol ediliyor
-        if(allowedExtensions.indexOf(file.completeSuffix()) === -1)
+        if(allowedExtensions.indexOf(fInfo.completeSuffix()) === -1)
             return
 
         //Eger acilmak istenen dosya klasor ise geri donuluyor
-        if(!file.isFile())
+        if(!fInfo.isFile())
             return;
 
         //Daha once acilmissa geri donuluyor

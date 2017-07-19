@@ -54,19 +54,26 @@ Item {
             Global.displayMessage(message)
             Global.consoleErrorOutput(message)
         }
-        onLibInstalledSuccessfully          :   Global.displayMessage(desc.name + " basariyla yuklendi.")
-        onLibRemovedSuccessfully            :   Global.displayMessage(desc.name + " basariyla silindi.")
-        onLibRemoveErrorOcurred             :   Global.displayMessage(desc.name + " silinirken hata olustu !")
-        onRetrieveOnlineLibsInternetError   :   Global.displayMessage("Kutuphaneler alinamadi, internet baglantisini kontrol ediniz.")
+        onLibInstalledSuccessfully          :   toast.displayMessage(desc.name + " basariyla yuklendi.")
+        onLibRemovedSuccessfully            :   toast.displayMessage(desc.name + " basariyla silindi.")
+        onLibRemoveErrorOcurred             :   toast.displayMessage(desc.name + " silinirken hata olustu !")
+        onRetrieveOnlineLibsInternetError   :   toast.displayMessage("Kutuphaneler alinamadi, internet baglantisini kontrol ediniz.")
         onOnlineLibsChanged                 :   filterOnline()
         onLocalLibsChanged                  :   filterLocal()
         onFilterLocalResult                 :   localLibs.append(item)
         onFilterOnlineResult                :   onlineLibs.append(item)
+        onLibNotRemovable                   :   toast.displayError("Bu kütüphane silinemez.")
 
         Component.onCompleted               :   {
             libManager.retrieveOnlineLibraries()
             libManager.retrieveLocalLibraries()
         }
+    }
+
+    Toast{
+        id              :   toast
+        container       :   parent
+        textColor       :   "white"
     }
 
     GenericMessageDialog{
@@ -203,8 +210,9 @@ Item {
                 Keys.onUpPressed    :   list.decrementCurrentIndex()
 
                 delegate    :   Item{
-                    readonly property string libName       :   name
-                    readonly property string libVersion    :   version
+                    readonly property string libName        :   name
+                    readonly property string libVersion     :   version
+                    readonly property bool removable        :   isRemovable
 
                     id                      :   libListItem
                     width                   :   list.width
@@ -219,10 +227,21 @@ Item {
                         anchors.centerIn    :   parent
                     }
 
+                    Image{
+                        id                      :   fixed
+                        anchors.left            :   tx.right
+                        anchors.leftMargin      :   15
+                        anchors.verticalCenter  :   parent.verticalCenter
+                        source                  :   "/res/icon/lock-icon.png"
+                        fillMode                :   Image.PreserveAspectFit
+                        height                  :   parent.height * 0.6
+                        visible                 :   !libListItem.removable && localSearch
+                        mipmap                  :   true
+                    }
+
                     MouseArea{
                         anchors.fill        :   parent
                         onClicked           :   {
-
                             list.currentIndex = index
                             list.forceActiveFocus()
 

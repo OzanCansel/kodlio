@@ -7,6 +7,7 @@ import "../animation"
 import "../control"
 import "../editor"
 import "../singleton"
+import "../dialog"
 import "../"
 
 Item {
@@ -30,6 +31,8 @@ Item {
     property alias  documentNumerator       :   docNumerator
 
     id                      :   project
+
+    signal  showToast(string msg)
 
     onProjectRootChanged    :   {
         while(openedDocuments.length > 0)
@@ -135,6 +138,10 @@ Item {
         }
     }
 
+    function    displayMessage(msg){
+        showToast(msg)
+    }
+
     function    openProject(){
         //Virtual
     }
@@ -156,11 +163,23 @@ Item {
         openDocument(path)
     }
 
+    function    clearErrors(){
+        for(var i = 0; i < openedDocuments.length; i++){
+            openedDocuments[i].document.clearErrors();
+            openedDocuments[i].header.hasError  =   false
+        }
+    }
+
+    CreateFileDialog{
+        id          :   createFileDialog
+        visible     :   true
+    }
+
     ErrorParser {
         compiler    :   project.compiler
     }
 
-    FileInfo{
+    FileInfo    {
         id              :   fInfo
         file            :   projectRoot
         onFileChanged   :   projectName = fInfo.dirName()
@@ -254,6 +273,8 @@ Item {
                 onClicked               :   {
                     console.log("clicked")
                 }
+
+                onDirRightClicked       :   console.log("Right clicck")
 
                 Keys.onEnterPressed     :   {
                     openCurrentlySelectedFile()
@@ -375,6 +396,7 @@ Item {
         onProgress      :   progress.progress = value
         onCompileSuccess:   compileSuccessAnimation.restart()
         onCompileError  :   compileErrorAnimation.restart()
+        onBuildStarted  :   clearErrors()
     }
 
     Connections{
@@ -388,10 +410,25 @@ Item {
     }
 
     Connections{
-        target              :   parser
-        onErrorOccurred       :   {
+        target                  :   parser
+        onErrorOccurred         :   {
             //<error>.file .row .column .message
             console.log("Err -> " + error.message)
+            var     sourcePath  = error.file
+            var     docInfo     =   getDocumentInfo(sourcePath)
+            var isProjectSource = sourcePath.indexOf(projectRoot) > -1
+
+            //Eger dokuman bulunduysa
+            if(docInfo !== -1){
+                docInfo.document.error(error)
+            }   else    {
+                openDocument(sourcePath)
+                docInfo = getDocumentInfo(sourcePath)
+            }
+
+            docInfo.document.error(error)
+            docInfo.header.hasError = true
+            if(!isProjectSource)    docInfo.document.isReadOnly = true;
         }
     }
 }

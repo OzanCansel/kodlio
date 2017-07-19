@@ -9,6 +9,7 @@ Item {
     SerialOptions{
         id      :   options
         onPortNameChanged   :   console.log("Port Changed -> " + portName)
+        onUploadingChanged  :   console.log("Uploading -> " + uploading)
     }
 
     SerialPortScanner{

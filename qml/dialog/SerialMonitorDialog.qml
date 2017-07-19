@@ -22,14 +22,6 @@ Dialog {
 
     contentItem :   SerialMonitorForm{
         id      :   form
-    }
-
-    onOpened    :   {
-        form.clear()
-        form.connect(Global.selectedPort)
-    }
-
-    onClosed    :   {
-        serialPort.close()
+        isOpen  :   serialMonitorDialog.visible
     }
 }

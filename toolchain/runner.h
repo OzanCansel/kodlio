@@ -8,13 +8,22 @@ class Runner : public QQuickItem
 {
 
     Q_OBJECT
+    Q_PROPERTY(RunnerState runnerState READ runnerState NOTIFY runnerStateChanged)
 
 public:
+
+    enum    RunnerState{
+        None,
+        Spawning,
+        Started
+    };
+    Q_ENUMS(RunnerState)
 
     static void     registerQmlType();
     Runner(QQuickItem *parent = Q_NULLPTR);
     void            setDebugEnabled(bool enabled);
     bool            debugEnabled();
+    RunnerState     runnerState();
 
 public slots:
 
@@ -28,6 +37,7 @@ protected:
     void    sendStdErr(QString output);
     void    sendRunSuccess();
     void    sendRunError();
+    void    setRunnerState(RunnerState state);
 
 signals:
 
@@ -37,10 +47,12 @@ signals:
     void    stdErr(QString output);
     void    runSuccess();
     void    runError();
+    void    runnerStateChanged();
 
 private:
 
-    bool    _debugEnabled;
+    RunnerState _state;
+    bool        _debugEnabled;
 
 };
 

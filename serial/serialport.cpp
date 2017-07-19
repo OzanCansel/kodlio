@@ -43,6 +43,8 @@ QStringList SerialPort::listSerialPort(){
 
 bool SerialPort::connectToArduino(QString port){
 
+    if(_debugEnabled)   qDebug() << "SerialPort arduinoya baglaniliyor";
+
     if(_port.isOpen())
         _port.close();
 
@@ -54,11 +56,7 @@ bool SerialPort::connectToArduino(QString port){
         qDebug() << port << " ile bağlantı kuruldu.";
     }
 
-    _port.setBaudRate(QSerialPort::Baud9600);
-    _port.setDataBits(QSerialPort::Data8);
-    _port.setParity(QSerialPort::NoParity);
-    _port.setStopBits(QSerialPort::OneStop);
-    _port.setFlowControl(QSerialPort::NoFlowControl);
+    applyConf();
 
     return true;
 }
@@ -107,6 +105,27 @@ int SerialPort::baudRate(){
     return _baudRate;
 }
 
+bool SerialPort::open(){
+    return _port.isOpen();
+}
+
+void SerialPort::setOpen(bool val){
+    if(val && !_port.isOpen()){
+        connectToArduino(portName());
+    }else if(!val){
+        close();
+    }
+
+    emit openChanged();
+}
+
+void SerialPort::applyConf(){
+    _port.setBaudRate(_baudRate);
+    _port.setDataBits(QSerialPort::Data8);
+    _port.setParity(QSerialPort::NoParity);
+    _port.setStopBits(QSerialPort::OneStop);
+    _port.setFlowControl(QSerialPort::NoFlowControl);
+}
 
 //PRIVATE SLOT
 void SerialPort::serialPortIncome(){
@@ -119,3 +138,12 @@ void SerialPort::serialPortIncome(){
     emit textIncome(read);
 }
 
+void SerialPort::setPortName(QString val){
+    _portName = val;
+
+    emit portNameChanged();
+}
+
+QString SerialPort::portName(){
+    return _portName;
+}

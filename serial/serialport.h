@@ -10,17 +10,26 @@ class SerialPort : public QObject
 {
 
     Q_OBJECT
+    Q_PROPERTY(int baudRate READ baudRate WRITE setBaudRate NOTIFY baudRateChanged)
+    Q_PROPERTY(bool open READ open WRITE setOpen NOTIFY openChanged)
+    Q_PROPERTY(QString portName READ portName WRITE setPortName NOTIFY portNameChanged)
 
 public:
 
     static void registerQmlType();
     SerialPort(QObject *parent = Q_NULLPTR);
-    Q_PROPERTY(int baudRate READ baudRate WRITE setBaudRate NOTIFY baudRateChanged)
+
+    bool            open();
+    void            setOpen(bool val);
+    QString         portName();
+    void            setPortName(QString val);
 
 signals:
 
     void            textIncome(QString text);
     void            baudRateChanged();
+    void            openChanged();
+    void            portNameChanged();
 
 public slots:
 
@@ -45,6 +54,8 @@ private:
 
     bool                _debugEnabled;
     int                 _baudRate;
+    QString             _portName;
+    void                applyConf();
 
 };
 

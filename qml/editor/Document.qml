@@ -8,6 +8,7 @@ Item {
     property string     relativePath    :   ""
     property string     absolutePath    :   ""
     property string     type            :   ""
+    property bool       isReadOnly      :   false
     readonly property   string fileName :   documentContent.fileName()
 
     property alias      textFlickable   :   textFlickable
@@ -19,6 +20,18 @@ Item {
 
     function    save(){
         documentContent.save()
+    }
+
+    function    error(errObj){
+        var     row = errObj.row
+        var     column = errObj.column
+        var     message = errObj.message
+
+        lineNumerator.newError(row)
+    }
+
+    function    clearErrors(){
+        lineNumerator.clearErrors()
     }
 
     FileInfo{
@@ -48,5 +61,7 @@ Item {
         anchors.right       :   parent.right
         textArea.text       :   documentContent.content
         textArea.onActiveFocusChanged   :   focused(identity)
+        textArea.readOnly   :   doc.isReadOnly
+        textArea.font.family:   FontCollection.editorFont
     }
 }

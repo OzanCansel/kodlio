@@ -19,15 +19,18 @@ class ArduinoLibDescription : public  QQuickItem
     Q_PROPERTY(QString url READ url NOTIFY urlChanged)
     Q_PROPERTY(QString archivedFileName READ archivedFileName NOTIFY archivedFileNameChanged)
     Q_PROPERTY(QString localDir READ localDir NOTIFY localDirChanged)
+    Q_PROPERTY(bool    isRemovable READ isRemovable NOTIFY isRemovableChanged)
 
 public:
 
     static void     registerQmlType();
     ArduinoLibDescription(QQuickItem *parent = Q_NULLPTR);
-    ArduinoLibDescription(QString rootDir , QString name , QQuickItem *parent = Q_NULLPTR);
+    ArduinoLibDescription(QString rootDir , QString name , bool isRemovable = false, QQuickItem *parent = Q_NULLPTR);
     ArduinoLibDescription(const ArduinoLibDescription &other);
     ArduinoLibDescription &operator =(const ArduinoLibDescription &other);
 
+    bool        isRemovable();
+    void        setRemovable(bool val);
     void        deserialize(QJsonObject &obj);
     void        deserialize(QString &fileName);
     QVariantMap asVariant();
@@ -60,6 +63,7 @@ signals:
     void        urlChanged();
     void        archivedFileNameChanged();
     void        localDirChanged();
+    void        isRemovableChanged();
 
 protected:
 
@@ -87,6 +91,7 @@ private:
     QString     _url;
     QString     _archivedFileName;
     QString     _libDir;
+    bool        _isRemovable;
 
 };
 

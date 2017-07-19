@@ -11,7 +11,36 @@ Item {
     }
 
     id              :   form
-    implicitHeight  :  ports.length * 50
+    implicitHeight  :  Math.max(50 , ports.length * 50)
+
+    Item    {
+        visible :   !ports.length
+        height  :   50
+        width   :   parent.width
+
+        Text {
+            id      :   portNameText
+            text    :   "Port Yok"
+            anchors.centerIn    :   parent
+            z       :   2
+            color   :   "white"
+        }
+
+        MouseArea{
+            id              :   area
+            anchors.fill    :   parent
+            hoverEnabled    :   true
+            z               :   2
+        }
+
+        Image {
+            id          :   backImg
+            source      :   area.containsMouse || area.pressed ? "/res/icon/backgroundpattern-highlight.png" : "/res/icon/backgroundpattern.png"
+            fillMode    :   Image.Tile
+            anchors.fill:   parent
+            z           :   0
+        }
+    }
 
     ListView    {
 
@@ -23,7 +52,7 @@ Item {
             SerialOption.option.portName = currentIndex >= 0 ? ports[currentIndex].portName : ""
         }
 
-        delegate:   Item    {
+        delegate:       Item    {
             height  :   50
             width   :   parent.width
 

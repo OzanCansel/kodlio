@@ -17,7 +17,7 @@ class AvrToolchain : public ToolchainV2
 {
 
     Q_OBJECT
-
+    Q_PROPERTY(QString compiledHexFile READ compiledHexFile WRITE setCompiledHexFile NOTIFY compiledHexFileChanged)
 
 public:
 
@@ -36,13 +36,15 @@ public:
     void                    mergeDependencies(QList<ArduinoLibDescription*> &root , QList<ArduinoLibDescription*> &merged);
     virtual void            run(RunOptions *options);
     void                    map();
+    QString                 compiledHexFile();
+    void                    setCompiledHexFile(QString path);
     HeaderMapInfo           getHeaderMap(QString headerName);
     virtual CompilerV2*     compiler();
     virtual Runner*         runner();
 
-public slots:
+signals:
 
-    QString                 lastHexFile();
+    void                    compiledHexFileChanged();
 
 private:
 
@@ -58,7 +60,6 @@ private:
     bool            isHeaderFile(QString &fileName);
     bool            isSourceFile(QString &fileName);
     bool            possibleSourceFiles(QString &headerName , QStringList &sourceFile);
-
 };
 
 #endif // AVRTOOLCHAIN_H

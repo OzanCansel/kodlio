@@ -17,6 +17,10 @@ QString SerialOptions::portName() const{
     return get("portName").toString();
 }
 
+bool SerialOptions::uploading(){
+    return _uploading;
+}
+
 void SerialOptions::setBaudRate(QString val){
     set("baudRate" , QVariant(val));
     emit baudRateChanged();
@@ -30,4 +34,10 @@ void SerialOptions::setPortName(QString val){
     set("portName" , QVariant(val));
 
     emit portNameChanged();
+}
+
+void SerialOptions::setUploading(bool val){
+    _uploading = val;
+
+    emit uploadingChanged();
 }

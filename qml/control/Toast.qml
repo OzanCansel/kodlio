@@ -1,10 +1,15 @@
 import QtQuick 2.2
+import "../animation"
+import "../singleton"
 
 Item {
 
     //Widthh
     readonly property real rectWidthMultiplier      :   1.7
     readonly property real borderWidth              :   0.03
+    readonly property int  info                     :   0
+    readonly property int  warning                  :   1
+    readonly property int  error                    :   2
 
     //Height
     readonly property real rectHeightMultiplier :   3
@@ -34,69 +39,65 @@ Item {
 
         toastObj.message    =   message
         toastObj.z          =   10
+        toastObj.type       =   info
     }
+
+    function    displayError(message){
+        display(message , error)
+    }
+
+    function    displayWarning(message){
+        display(message,  warning)
+    }
+
+    function    display(message , type){
+        var toastObj = toastComponent.createObject(container)
+
+        toastObj.message    =   message
+        toastObj.z          =   10
+        toastObj.type       =   type
+    }
+
+//    Timer{
+//        repeat  :   true
+//        interval    :   2000
+//        running     :   true
+//        onTriggered :   {
+//            var type = Math.floor(Math.random() * 2.99)
+//            display("Kutuphaneler yuklenirken hata olustu." , type)
+//        }
+//    }
 
     Component   {
         id          :   toastComponent
 
         Rectangle   {
             property string     message     :   "Mesaj Yok"
+            property int        type        :   0
+            readonly property variant    backgroundColors   :   ["#bbf5bb" , "#ffeaa7" , "#f67975"]
+            readonly property variant    fontColors         :   ["#30875c" , "#735f22" , "#fee2ee"]
             id          :   toastItem
             width       :   text.contentWidth * rectWidthMultiplier
             height      :   text.contentHeight * rectHeightMultiplier
             y           :   container.height - height - (container.height * 0.1)
-            color       :   "transparent"
+            color       :   backgroundColors[type]
             clip        :   true
-            Image {
-                id          :   img
-                source      :   "/res/icon/backgroundpattern.png"
-                fillMode    :   Image.Tile
-                anchors.fill:   parent
-                z           :   0
-            }
-            radius      :   height * loader.toastRadius
-            border.width:   loader.hasBorder ? height * borderWidth  : 0
-            border.color:   loader.borderColor
+            radius      :   5
+            border.color:   "#b05652"
+            border.width:   1
             anchors.horizontalCenter:   parent.horizontalCenter
 
             Text    {
                 id                  :   text
                 anchors.centerIn    :   parent
                 font.pointSize      :   16
+                font.family         :   FontCollection.toastFont
+                font.bold           :   true
                 text                :   message
-                color               :   loader.textColor
+                color               :   toastItem.fontColors[toastItem.type]
             }
 
-            states      :   [
-                State{
-                    name    :   "hide"
-                    PropertyChanges {
-                        target      :   toastItem
-                        opacity     :   0
-                        y           :   toastItem.parent.height + toastItem.height
-                    }
-                }
-            ]
-
-            Behavior on opacity{
-                NumberAnimation{
-                    duration    :   loader.disappearDuration
-
-                    onRunningChanged    :   {
-                        if(!running){
-                            toastItem.destroy()
-                        }
-                    }
-                }
-            }
-
-            Behavior on y   {
-                NumberAnimation {
-                    duration    :   loader.disappearDuration
-                }
-            }
-
-            NumberAnimation{
+            NumberAnimation {
                 id          :   easingAnimation
                 properties  :   "y"
                 target      :   toastItem
@@ -106,16 +107,40 @@ Item {
                 easing.type :   Easing.InOutBack
             }
 
-            Timer{
-                interval        :   loader.showDuration
-                running         :   true
-                onTriggered     :   {
-                    toastItem.state = "hide"
+            SequentialAnimation{
+                id          :   showAndFade
+                running     :   true
+
+                NumberAnimation{
+                    target      :   toastItem
+                    property    :   "scale"
+                    from        :   0.5
+                    to          :   1
+                    duration    :   250
+                    easing.type :   Easing.InCirc
+                }
+
+                PauseAnimation {
+                    duration    :   1200
+                }
+
+                NumberAnimation{
+                    target      :   toastItem
+                    property    :   "opacity"
+                    from        :   1
+                    to          :   0
+                    duration    :   1000
+                }
+
+                ScriptAction    {
+                    script      :   {
+                        toastItem.destroy()
+                    }
                 }
             }
 
             Component.onCompleted: {
-                easingAnimation.running =   true
+                showAndFade.running =   true
             }
         }
     }

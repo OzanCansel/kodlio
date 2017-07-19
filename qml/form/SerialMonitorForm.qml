@@ -1,9 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import Kodlio 1.0
+import "../"
 import "../singleton"
 import "../control"
 
 Item {
+
+    property bool       isOpen      :   true
 
     function connect(port) {
         var connected = serialPort.connectToArduino(port)
@@ -39,6 +43,20 @@ Item {
         arduinoIncome.clear()
     }
 
+    SerialPort{
+        id          :   serialPort
+        baudRate    :   9600
+        onTextIncome:   arduinoIn(text)
+        portName    :   SerialOption.option.portName
+        open        :   isOpen && portName && !SerialOption.option.uploading
+        onOpenChanged :   {
+            if(open)
+                outputInfo(portName + " ile baglanti kuruldu.")
+            else
+                outputInfo(portName + " ile baglanti kapatildi")
+        }
+    }
+
     ListModel{
         id          :   comboboxItems
         ListElement{    value :   "yazi"; key   :   "Yazı"}
@@ -49,7 +67,8 @@ Item {
 
     id              :   form
 
-    Item{
+    Item    {
+
         id                  :   controls
         width               :   parent.width
         height              :   50
@@ -102,10 +121,10 @@ Item {
             id              :   reconnectbutton
             width           :   120
             height          :   parent.height
-            text            :   "Bağlan"
+            text            :   "Temizle"
             anchors.right   :   parent.right
             onClicked       :   {
-                serialPort.open(Global.selectedPort)
+                arduinoIncome.clear()
             }
         }
     }
@@ -150,11 +169,7 @@ Item {
         ScrollBar.vertical  :   ScrollBar   {   }
     }
 
-    Connections {
-        target          :   serialPort
-        onTextIncome    :   {
-            //<text>
-            arduinoIn(text)
-        }
+    Connections{
+        target              :   SerialOption.option
     }
 }

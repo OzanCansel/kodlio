@@ -9,11 +9,12 @@ void ArduinoLibDescription::registerQmlType(){
 }
 
 ArduinoLibDescription::ArduinoLibDescription(QQuickItem *parent) : QQuickItem(parent){
-
+    _isRemovable = false;
 }
 
-ArduinoLibDescription::ArduinoLibDescription(QString rootDir, QString name, QQuickItem *parent) : QQuickItem(parent)  {
+ArduinoLibDescription::ArduinoLibDescription(QString rootDir, QString name, bool isRemovable , QQuickItem *parent) : QQuickItem(parent)  {
     _libDir = rootDir;
+    setRemovable(isRemovable);
     setName(name);
 }
 
@@ -96,6 +97,7 @@ QVariantMap ArduinoLibDescription::asVariant(){
     map["category"]     =   category();
     map["url"]          =   url();
     map["archivedFileName"] =   archivedFileName();
+    map["isRemovable"]  =   isRemovable();
 
     return map;
 }
@@ -256,4 +258,14 @@ QStringList ArduinoLibDescription::headerFolders(){
     }
 
     return headerFolders;
+}
+
+bool ArduinoLibDescription::isRemovable(){
+    return _isRemovable;
+}
+
+void ArduinoLibDescription::setRemovable(bool val){
+    _isRemovable = val;
+
+    emit isRemovableChanged();
 }

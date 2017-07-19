@@ -7,7 +7,7 @@ void Runner::registerQmlType(){
 
 Runner::Runner(QQuickItem *parent) : QQuickItem(parent)
 {
-
+    setRunnerState(None);
 }
 
 void Runner::run(RunOptions *opts){
@@ -51,4 +51,14 @@ void Runner::setDebugEnabled(bool enabled){
 
 bool Runner::debugEnabled(){
     return _debugEnabled;
+}
+
+Runner::RunnerState Runner::runnerState(){
+    return _state;
+}
+
+void Runner::setRunnerState(RunnerState state){
+    _state = state;
+
+    emit runnerStateChanged();
 }

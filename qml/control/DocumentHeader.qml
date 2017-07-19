@@ -13,6 +13,7 @@ TabButton {
     property real       minWidth            :   50
     property bool       coverText           :   true
     property bool       mainHeader          :   false
+    property bool       hasError            :   false
 
     width               :   Math.max(minWidth , txt.width + 60)
     enabled             :   !mainHeader
@@ -36,6 +37,8 @@ TabButton {
             border.width    :   control.checked ? 1 : 0
             color           :   {
                 if(mainHeader)  return Theme.documentProjectHeaderColor
+
+                if(hasError)    return "red"
 
                 return control.hovered || control.checked ? Theme.documentHeaderSelectedHoverColor : Theme.documentHeaderDefaultColor
             }
@@ -75,6 +78,7 @@ TabButton {
         id                      :   content
         width                   :   control.width
         height                  :   control.height
+        clip                    :   true
 
         Item {
             id      :   textContainer

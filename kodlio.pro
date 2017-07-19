@@ -163,7 +163,8 @@ SOURCES += main.cpp \
     exception/portnamenotspecified.cpp \
     parse/errorparser.cpp \
     parse/avr/avrerrorparser.cpp \
-    parse/parserplugin.cpp
+    parse/parserplugin.cpp \
+    file/file.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -264,7 +265,9 @@ DISTFILES += \
     qml/project/ArduinoContextMenu.qml \
     qml/singleton/SerialOption.qml \
     qml/animation/RunAnimation.qml \
-    qml/animation/ShowAndFadeAnimation.qml
+    qml/animation/ShowAndFadeAnimation.qml \
+    qml/dialog/CreateFileDialog.qml \
+    qml/form/CreateFileForm.qml
 
 HEADERS += \
     toolchain/avrcompiler.h \
@@ -394,5 +397,6 @@ HEADERS += \
     exception/portnamenotspecified.h \
     parse/errorparser.h \
     parse/avr/avrerrorparser.h \
-    parse/parserplugin.h
+    parse/parserplugin.h \
+    file/file.h
 

@@ -4,8 +4,9 @@ import "../singleton"
 Item {
     property FlickableTextArea  target          :   ({})
     readonly property int startNumber           :   calculateStartLineIdx()
-    readonly property int lineCount             :   calculateLineCount()
+    property int lineCount                      :   calculateLineCount()
     readonly property int endNumber             :   startNumber + lineCount
+    property variant  errors                    :   []
 
     function    calculateStartLineIdx(){
         //1 den buyuk
@@ -16,7 +17,23 @@ Item {
         return Math.floor(target.height / metrics.height)
     }
 
-    id          :   luneNumerator
+    function    newError(row){
+        errors.push(row)
+        lineCount = 0
+        lineCount = Qt.binding(calculateLineCount)
+    }
+
+    function    clearErrors(){
+        while(errors.length > 0) errors.pop()
+        lineCount = 0
+        lineCount = Qt.binding(calculateLineCount)
+    }
+
+    function    hasError(line){
+        return errors.indexOf(line) > -1
+    }
+
+    id          :   lineNumerator
 
     FontMetrics {
         id              :   metrics
@@ -33,17 +50,29 @@ Item {
         clip                :   true
 
         Repeater{
+            id          :   lineCountRepeater
             model       :   lineCount
-            Item{
+            Item    {
+                readonly property  int lineNumber       :   index + startNumber
+                property bool       hasError            :   lineNumerator.hasError(lineNumber)
+
                 id      :   lineNumberItem
                 height  :   metrics.height
                 width   :   parent.width
+
                 Text {
-                    id                  :   lineNumber
-                    text                :   index + startNumber
+                    id                  :   lineNumberText
+                    text                :   lineNumberItem.lineNumber
                     font                :   metrics.font
                     anchors.centerIn    :   parent
                     color               :   Theme.lineNumeratorTextColor
+                    z                   :   2
+                }
+
+                Rectangle{
+                    id                  :   errorRect
+                    color               :   lineNumberItem.hasError ? "red" : "transparent"
+                    anchors.fill        :   parent
                 }
             }
         }

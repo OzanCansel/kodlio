@@ -62,12 +62,6 @@ Item {
                 radius  :   parent.radius
                 color   :   "#17a81a"
                 z       :   3
-
-                Behavior on width {
-                    SmoothedAnimation{
-                        velocity    :   progressVelocity
-                    }
-                }
             }
         }
     }

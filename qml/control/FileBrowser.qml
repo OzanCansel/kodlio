@@ -16,7 +16,7 @@ TreeView {
     rootIndex           :   tree.rootIndex
     model               :   tree.model
 
-    signal  dirRightClicked(string path);
+    signal  dirRightClicked(string path , variant mouse);
 
     function    getFileInfo(idx){
         return tree.fileName(idx)
@@ -53,10 +53,7 @@ TreeView {
              var index = parent.indexAt(mouse.x, mouse.y)
              if (index.valid) {
                  var file = getFileInfo(index)
-                 info.file = file
-                 if(info.isDir())
-                     dirRightClicked(file)
-                 console.log("show context menu for row: " + getFileInfo(index))
+                 treeView.dirRightClicked(file , mouse)
              }
          }
      }

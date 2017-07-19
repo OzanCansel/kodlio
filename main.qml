@@ -361,6 +361,7 @@ ApplicationWindow {
 
                     ArduinoProject  {
                         id                      :   currentProject
+                        onShowToast             :   toast.displayMessage(msg)
                         consoleOut              :   outputConsole
                         anchors.fill            :   parent
                         anchors.leftMargin      :   Theme.controlXMargin

@@ -66,8 +66,6 @@ void LibraryManager::retrieveLocalLibraries(){
     QList<TraversedFileInfo> files          =   traverser.traverseRecursively(ArduinoLibEnvironment().get("installedLibsDir"));
     QList<TraversedFileInfo> builtInLibs    =   traverser.traverseRecursively(RoboskopEnvironment::getInstance()->getLibrariesPath());
 
-    files.append(builtInLibs);
-
     foreach(TraversedFileInfo file , files) {
 
         //Sadece library.properties dosyalarina bakiliyor
@@ -77,11 +75,26 @@ void LibraryManager::retrieveLocalLibraries(){
         ArduinoLibDescription   *desc = new ArduinoLibDescription(this);
         QString     fPath   =   file.info().filePath();
         desc->deserialize(fPath);
+        desc->setRemovable(true);
 
         _localLibs.append(desc);
     }
 
-    _localLibs.append(new ArduinoLibDescription(RoboskopEnvironment::getInstance()->getCoreEnvironment() , "Arduino", this));
+    foreach(TraversedFileInfo file , builtInLibs) {
+
+        //Sadece library.properties dosyalarina bakiliyor
+        if(file.info().fileName() != "library.properties")
+            continue;
+
+        ArduinoLibDescription   *desc = new ArduinoLibDescription(this);
+        QString     fPath   =   file.info().filePath();
+        desc->deserialize(fPath);
+        desc->setRemovable(false);
+
+        _localLibs.append(desc);
+    }
+
+    _localLibs.append(new ArduinoLibDescription(RoboskopEnvironment::getInstance()->getCoreEnvironment() , "Arduino", false , this));
 
     emit localLibsChanged();
 }
@@ -188,6 +201,12 @@ void LibraryManager::removeLibs(QVariantList libs){
 
         //Kutuphane bilgileri aliniyor
         ArduinoLibDescription* desc = retrieveDescFromLocal(libName , version);
+
+        if(!desc->isRemovable()){
+            emit libNotRemovable();
+
+            continue;
+        }
 
         //Kutuphane siliniyor
         QDir    libDir(desc->localDir());

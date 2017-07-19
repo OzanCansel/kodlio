@@ -16,6 +16,7 @@ AvrRunner::AvrRunner(QQuickItem *parent) : Runner(parent)  {
 
 void AvrRunner::run( RunOptions *opts){
 
+    setRunnerState(Spawning);
     QString  file = opts->get("file" , true).toString();
     QString  boardName = opts->get("board" , true).toString();
     QString  portName = opts->get("port" , true).toString();
@@ -58,6 +59,7 @@ void AvrRunner::run( RunOptions *opts){
         sendStdOutput(output);
     }
 
+    setRunnerState(Started);
     //Calistirildi
     sendRunSuccess();
 }

@@ -69,5 +69,8 @@
         <file>qml/singleton/SerialOption.qml</file>
         <file>qml/animation/RunAnimation.qml</file>
         <file>qml/animation/ShowAndFadeAnimation.qml</file>
+        <file>qml/project/ArduinoContextMenu.qml</file>
+        <file>qml/dialog/CreateFileDialog.qml</file>
+        <file>qml/form/CreateFileForm.qml</file>
     </qresource>
 </RCC>

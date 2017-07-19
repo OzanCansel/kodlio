@@ -13,10 +13,16 @@ Flickable {
     property alias  verticalScroll  :   verticalScrollBar
     property bool   modified        :   false
 
-    id      :   flickable
+    id                  :   flickable
+    flickableDirection  :   Flickable.VerticalFlick
 
     TextArea.flickable  :   TextArea    {
-        id      :   textArea
+        id                  :   textArea
+        persistentSelection :   true
+        selectByKeyboard    :   true
+        selectByMouse       :   true
+        selectionColor      :   "lightsteelblue"
+
         background      :   Rectangle   {
             id          :   editorBackground
             radius      :   0
@@ -34,5 +40,6 @@ Flickable {
             }
         }
     }
+
     ScrollBar.vertical  :   ScrollBar   {   id  :   verticalScrollBar  }
 }
