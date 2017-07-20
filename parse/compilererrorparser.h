@@ -16,7 +16,7 @@ public:
 public slots:
     void    extractErrors(QString text);
 signals:
-    void    errorOccurred(QVariantMap err);
+    void    errorOccurred(QVariantHash err);
 
 private:
 

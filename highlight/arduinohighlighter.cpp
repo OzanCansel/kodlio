@@ -23,6 +23,7 @@ ArduinoHighlighter::ArduinoHighlighter(QTextDocument *parent)
                     << "\\btemplate\\b" << "\\btypedef\\b" << "\\btypename\\b"
                     << "\\bunion\\b" << "\\bunsigned\\b" << "\\bvirtual\\b"
                     << "\\bvoid\\b" << "\\bvolatile\\b";
+
     foreach (const QString &pattern, keywordPatterns) {
         rule.pattern = QRegExp(pattern);
         rule.format = keywordFormat;
@@ -72,10 +73,16 @@ ArduinoHighlighter::ArduinoHighlighter(QTextDocument *parent)
 
     delayFunctionExpression = QRegExp("delay\\([0-9]+\\);");
 
-    includeFormat.setFontItalic(true);
-    includeFormat.setForeground(Qt::blue);
-    rule.pattern = QRegExp("\\#include");
-    rule.format = includeFormat;
+    preprocessorFormat.setFontItalic(true);
+    preprocessorFormat.setForeground(Qt::blue);
+    rule.pattern = QRegExp("\\#include|\\#define|\\#endif|\\#ifndef");
+    rule.format = preprocessorFormat;
+    highlightingRules.append(rule);
+
+    memberFormat.setForeground(QColor("#28A828"));
+    memberFormat.setFontWeight(QFont::Bold);
+    rule.pattern = QRegExp("::");
+    rule.format = memberFormat;
     highlightingRules.append(rule);
 }
 //! [6]
@@ -152,5 +159,5 @@ void ArduinoHighlighter::setFunctionColor(QColor col){
 }
 
 void ArduinoHighlighter::setIncludeColor(QColor col){
-    includeFormat.setForeground(col);
+    preprocessorFormat.setForeground(col);
 }

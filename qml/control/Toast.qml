@@ -50,6 +50,10 @@ Item {
         display(message,  warning)
     }
 
+    function    displaySuccess(message){
+        display(message,  info)
+    }
+
     function    display(message , type){
         var toastObj = toastComponent.createObject(container)
 

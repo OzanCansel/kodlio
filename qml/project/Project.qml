@@ -13,7 +13,7 @@ import "../"
 Item {
 
     property string     projectName         :   fInfo.dirName()
-    property string     projectRoot         :   "/home/arnes/Documents/toolchain-example"
+    property string     projectRoot         :   ""
     property variant    openedDocuments     :   []
     property Compiler   compiler            :   ({})
     property Toolchain  toolchain           :   ({})
@@ -170,9 +170,42 @@ Item {
         }
     }
 
-    CreateFileDialog{
+
+    ContextMenu  {
+        id              :   contextMenu
+        z               :   10
+        property string removeFilePath  :   ""
+        onCreateFile    :   {
+            createFileDialog.basePath = basePath
+            createFileDialog.createDir = false
+            createFileDialog.open()
+        }
+        onRemoveFile    :   {
+            contextMenu.removeFilePath = basePath
+            removeFileDialog.message =  basePath + " isimli dosyayı silmek istediğinize emin misiniz ?"
+            removeFileDialog.open()
+        }
+        onCreateFolder  :   {
+            createFileDialog.basePath = basePath
+            createFileDialog.createDir = true
+            createFileDialog.open()
+        }
+    }
+
+    GenericMessageDialog{
+        id              :   removeFileDialog
+        title           :   "Dosya|Klasör sil"
+        onAccepted      :   {
+            var success = FileSingleton.removeFile(contextMenu.removeFilePath)
+
+            if(!success)
+                toast.displayError("Dosya silinemedi.")
+        }
+        standardButtons :   Dialog.Yes | Dialog.No
+    }
+
+    CreateFileDialog    {
         id          :   createFileDialog
-        visible     :   true
     }
 
     ErrorParser {
@@ -245,7 +278,7 @@ Item {
             DocumentHeader{
                 x           :   50
                 height      :   parent.height
-                text        :   projectName
+                text        :   projectRoot === "" ? "Project Açılmadı." : projectName
                 mainHeader  :   true
             }
         }
@@ -266,6 +299,17 @@ Item {
                 width                   :   250
                 rootPath                :   projectRoot
                 Layout.minimumWidth     :   200
+                visible                 :   projectRoot !== ""
+
+                onDirRightClicked   :   {
+                    //<path>
+                    console.log("Context menu for -> " + path)
+                    var point = browser.mapToItem(arduinoProject , mouse.x , mouse.y)
+                    contextMenu.x       =   point.x
+                    contextMenu.y       =   point.y
+                    contextMenu.filePath = path
+                    contextMenu.open()
+                }
 
                 onDoubleClicked         :   {
                     openCurrentlySelectedFile()
@@ -273,8 +317,6 @@ Item {
                 onClicked               :   {
                     console.log("clicked")
                 }
-
-                onDirRightClicked       :   console.log("Right clicck")
 
                 Keys.onEnterPressed     :   {
                     openCurrentlySelectedFile()

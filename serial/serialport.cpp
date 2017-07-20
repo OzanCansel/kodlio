@@ -6,8 +6,7 @@ void SerialPort::registerQmlType(){
     qmlRegisterType<SerialPort>("Kodlio" , 1 , 0 , "SerialPort");
 }
 
-SerialPort::SerialPort(QObject  *parent) : QObject(parent)
-{
+SerialPort::SerialPort(QObject  *parent) : QObject(parent)  {
     connect(&_port , SIGNAL(readyRead()) , this , SLOT(serialPortIncome()));
 
     _baudRateHash.insert(115200 , QSerialPort::Baud115200);

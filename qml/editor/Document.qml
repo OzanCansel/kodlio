@@ -27,7 +27,7 @@ Item {
         var     column = errObj.column
         var     message = errObj.message
 
-        lineNumerator.newError(row)
+        lineNumerator.newError(errObj)
     }
 
     function    clearErrors(){
@@ -38,6 +38,12 @@ Item {
         id              :   info
         file            :   doc.absolutePath
     }
+
+//    DocumentStyle{
+//        id              :   style
+//        editorSettings  :   EditorSettings
+//        textDocument    :   textFlickable.textArea.textDocument
+//    }
 
     DocumentContent     {
         id              :   documentContent

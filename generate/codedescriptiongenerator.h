@@ -23,7 +23,7 @@ public slots    :
 
 signals :
 
-    void    descriptionAppend(QVariantMap description);
+    void    descriptionAppend(QVariantHash description);
 
 private :
 

@@ -19,7 +19,7 @@ public:
 
 public slots:
 
-    QVariantMap    readProjects( QString root , QString filterPattern);
+    QVariantHash    readProjects( QString root , QString filterPattern);
 
 };
 

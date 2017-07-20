@@ -1,6 +1,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
 import Kodlio 1.0
+import "../control"
 
 Menu{
 
@@ -9,6 +10,8 @@ Menu{
     id          :   contextMenu
 
     signal  createFile(string basePath)
+    signal  removeFile(string basePath)
+    signal  createFolder(string basePath)
 
     enter           :   Transition {
         NumberAnimation { property: "opacity"; from: 0.0; to: 1.0 }
@@ -32,9 +35,18 @@ Menu{
         onTriggered :   createFile(filePath)
     }
 
+
     MenuItem{
-        id      :   removeFile
-        text    :   isDir(filePath) ? "Klasörü sil" : "Dosyayı Sil"
-        height  :   30
+        id          :   createDirectory
+        text        :   isDir(filePath) ? "Klasör ekle" : "Dosyayı Sil"
+        height      :   30
+        onTriggered :   createFolder(filePath)
+    }
+
+    MenuItem{
+        id          :   removeFileItem
+        text        :   isDir(filePath) ? "Klasörü sil" : "Dosyayı Sil"
+        height      :   30
+        onTriggered :   removeFile(filePath)
     }
 }

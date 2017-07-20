@@ -4,6 +4,7 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import Qt.labs.folderlistmodel 2.1
 import QtQuick.Window 2.2
+import Kodlio 1.0
 import "qml"
 import "qml/singleton"
 import "qml/dialog"
@@ -97,12 +98,22 @@ ApplicationWindow {
         }
     }
 
+    ProjectOptions{
+        id      :   projectOptions
+    }
+
+    ArduinoProjectManager{
+        id                  :   projectManager
+    }
+
     SerialMonitorDialog{
         id      :   serialMonitorDialog
     }
 
     CreateProjectDialog{
         id      :   createProjectDialog
+        manager :   projectManager
+        options :   projectOptions
     }
 
     CreateNewClassDialog{
@@ -253,7 +264,7 @@ ApplicationWindow {
                     }
 
                     onCreateProjectRequired :   {
-
+                        createProjectDialog.open()
                     }
                 }
 
@@ -367,6 +378,7 @@ ApplicationWindow {
                         anchors.leftMargin      :   Theme.controlXMargin
                         anchors.rightMargin     :   Theme.controlXMargin
                         progress                :   compileProgressBar
+                        projectRoot             :   projectManager.projectRoot
                     }
                 }
             }

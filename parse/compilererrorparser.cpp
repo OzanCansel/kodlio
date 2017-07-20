@@ -33,7 +33,7 @@ void    CompilerErrorParser::extractErrors(QString text){
 
         qDebug() << "Error Line -> " << lineNum << " Column -> " << columnNum << " Error -> " << errorText;
 
-        QVariantMap map;
+        QVariantHash map;
         map["lineNumber"]       = lineNum;
         map["columnNumber"]     = columnNum;
         map["error"]            = errorText;

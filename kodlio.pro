@@ -39,7 +39,6 @@ SOURCES += main.cpp \
     toolchain/avrcompiler.cpp \
     toolchain/unocompiler.cpp \
     directorymanager.cpp \
-    projectmanager.cpp \
     exception/workingdirectorynull.cpp \
     exception/invalidprojectdirectory.cpp \
     thread/compileworker.cpp \
@@ -86,7 +85,6 @@ SOURCES += main.cpp \
     parse/conditionparser.cpp \
     parse/selectorstrings.cpp \
     osinfo.cpp \
-    settings/editorsettings.cpp \
     traverse/projecttraverse.cpp \
     toolchain/gnugcctoolchain.cpp \
     toolchain/toolchainV2.cpp \
@@ -164,7 +162,14 @@ SOURCES += main.cpp \
     parse/errorparser.cpp \
     parse/avr/avrerrorparser.cpp \
     parse/parserplugin.cpp \
-    file/file.cpp
+    file/file.cpp \
+    editor/documentstyle.cpp \
+    editor/editorsettings.cpp \
+    project/projectmanager.cpp \
+    project/projectoptions.cpp \
+    project/arduino/arduinoprojectmanager.cpp \
+    texttemplate/arduino/arduinomainfiletemplate.cpp \
+    texttemplate/genericfiletemplate.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -262,18 +267,18 @@ DISTFILES += \
     qml/editor/EmptyDocument.qml \
     qml/project/DocumentNumerator.qml \
     qml/singleton/EventLabels.qml \
-    qml/project/ArduinoContextMenu.qml \
     qml/singleton/SerialOption.qml \
     qml/animation/RunAnimation.qml \
     qml/animation/ShowAndFadeAnimation.qml \
     qml/dialog/CreateFileDialog.qml \
-    qml/form/CreateFileForm.qml
+    qml/form/CreateFileForm.qml \
+    qml/project/ContextMenu.qml
+
 
 HEADERS += \
     toolchain/avrcompiler.h \
     toolchain/unocompiler.h \
     directorymanager.h \
-    projectmanager.h \
     exception/workingdirectorynull.h \
     exception/invalidprojectdirectory.h \
     thread/compileworker.h \
@@ -320,7 +325,6 @@ HEADERS += \
     parse/conditionparser.h \
     parse/selectorstrings.h \
     osinfo.h \
-    settings/editorsettings.h \
     traverse/projecttraverse.h \
     toolchain/gnugcctoolchain.h \
     toolchain/toolchainV2.h \
@@ -398,5 +402,12 @@ HEADERS += \
     parse/errorparser.h \
     parse/avr/avrerrorparser.h \
     parse/parserplugin.h \
-    file/file.h
+    file/file.h \
+    editor/documentstyle.h \
+    editor/editorsettings.h \
+    project/projectmanager.h \
+    project/projectoptions.h \
+    project/arduino/arduinoprojectmanager.h \
+    texttemplate/arduino/arduinomainfiletemplate.h \
+    texttemplate/genericfiletemplate.h
 

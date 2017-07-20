@@ -89,7 +89,7 @@ TabButton {
                 id                  :   txt
                 font.pointSize      :   12
                 color               :   "white"
-                text                :   control.checked ? "->" + control.text : control.text
+                text                :   control.checked && !mainHeader ? "->" + control.text : control.text
                 anchors.centerIn    :   parent
                 font.bold           :   mainHeader
                 font.family         :   FontCollection.documentHeaderFont

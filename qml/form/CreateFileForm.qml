@@ -7,8 +7,10 @@ Item {
     implicitHeight      :   100
     implicitWidth       :   250
     property string     basePath    :   ""
+    property bool       createDir   :   false
 
     signal  fileCreated()
+    signal  folderCreated()
 
     File{
         id      :   f
@@ -27,7 +29,7 @@ Item {
             id              :   txt
             width           :   parent.width
             height          :   40
-            placeholderText :   "Dosya ismini giriniz..."
+            placeholderText :  createDir ? "Klasör adını giriniz..." : "Dosya ismini giriniz..."
         }
 
         GenericButton{
@@ -36,8 +38,16 @@ Item {
             height      :   40
             text        :   "Oluştur"
             onClicked   :   {
-                if(f.createFile(basePath + "/" + txt.text))
-                    fileCreated()
+                //Eger klasor olustuurlucaksa
+                if(createDir){
+                    f.createDir(basePath , txt.text)
+                    folderCreated()
+                }
+                else//Dosya olusturulucaksa
+                {
+                    if(f.createGenericTemplatedFile(basePath + "/" + txt.text))
+                        fileCreated()
+                }
             }
         }
     }

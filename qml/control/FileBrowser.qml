@@ -54,6 +54,8 @@ TreeView {
              if (index.valid) {
                  var file = getFileInfo(index)
                  treeView.dirRightClicked(file , mouse)
+             }else{
+                 treeView.dirRightClicked(rootPath , mouse)
              }
          }
      }

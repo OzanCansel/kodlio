@@ -8,8 +8,10 @@ class TextTemplate
 
 public:
 
+    TextTemplate(QString    fileName);
     TextTemplate();
 
+    void            setFile(QString file);
     void            setValue(QString key , QString value);
     QString         getValue(QString key);
     QString         extract();
@@ -22,6 +24,9 @@ protected:
 private:
 
     QHash<QString ,  QString> _hash;
+    QString         _fileName;
+
+    void            readContent();
 
 };
 

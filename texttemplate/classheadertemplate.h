@@ -3,8 +3,7 @@
 
 #include "texttemplate.h"
 
-class ClassHeaderTemplate :  public TextTemplate
-{
+class ClassHeaderTemplate :  public TextTemplate    {
 
 public:
 

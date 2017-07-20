@@ -20,7 +20,6 @@
 #include "parse/parsehelper.h"
 #include "parse/compilererrorparser.h"
 #include "osinfo.h"
-#include "settings/editorsettings.h"
 #include "traverse/projecttraverse.h"
 #include "traverse/filetraverse.h"
 #include "toolchain/cplusplus/gnutoolchain.h"
@@ -70,7 +69,6 @@ int main(int argc, char *argv[])    {
     //    ParseHelper                     parseHelper;
     //    CompilerErrorParser             errParser;
         OsInfo                          osInfo;
-        EditorSettings                  settings;
     //    CodeDescriptionGenerator        descGen;
 
     QQmlApplicationEngine engine;
@@ -89,7 +87,6 @@ int main(int argc, char *argv[])    {
     //    context->setContextProperty("parseHelper" , &parseHelper);
     //    context->setContextProperty("compilerErrorParser" , &errParser);
         context->setContextProperty("osInfo" , &osInfo);
-        context->setContextProperty("settings" , &settings);
     //    context->setContextProperty("environment" , env);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 

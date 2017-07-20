@@ -250,7 +250,7 @@ QVariantList Cloud::retrieveProject(QString name , int version){
 
         foreach (QJsonValue val , files) {
             QJsonObject fileObj = val.toObject();
-            QVariantMap map;
+            QVariantHash map;
             foreach (QString key, fileObj.keys()) {
                 map[key] = fileObj[key].toVariant();
             }

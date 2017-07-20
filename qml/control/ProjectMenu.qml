@@ -25,7 +25,7 @@ Menu    {
     }
 
     signal  openProjectRequired(string projectPath)
-    signal  createProjectRequired(string folderPath)
+    signal  createProjectRequired()
 
     function    extractPathFromUrl(url){
         return url.replace(/^(file:\\{2})|(file:\/{2})|(qrc:\/{2})|(qrc:\\{2})|(http:\/{2})|(http:\\{2})/,"")
@@ -55,7 +55,7 @@ Menu    {
         text        :   "Yeni Proje"
         font.family :   FontCollection.menuFont
         width       :   menuItemWidth
-        onTriggered :   Global.createProject()
+        onTriggered :   createProjectRequired()
         tooltipText :   "Yeni proje oluşturmak için tıklayınız"
         anchors.horizontalCenter    :   parent.horizontalCenter
         y           :   menuItemVertShift

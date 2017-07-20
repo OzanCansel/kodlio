@@ -11,6 +11,7 @@ class Environment : public QQuickItem
 
 public:
 
+
     Environment(QQuickItem *parent = Q_NULLPTR);
 
 public slots:

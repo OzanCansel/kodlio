@@ -1,10 +1,17 @@
 #include "texttemplate.h"
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include "file/fileutil.h"
+#include "exception/filenotexists.h"
+#include "exception/filecouldnotopen.h"
 
-TextTemplate::TextTemplate()
-{
+TextTemplate::TextTemplate(){
 
+}
+
+TextTemplate::TextTemplate(QString fileName)    {
+    _fileName = fileName;
+    readContent();
 }
 
 void TextTemplate::setValue(QString key, QString value){
@@ -31,4 +38,19 @@ QString TextTemplate::extract(){
 
 void TextTemplate::setTemplate(QString t){
     _textTemplate = t;
+}
+
+void TextTemplate::readContent(){
+    try{
+    _textTemplate = FileUtil::readContent(_fileName);
+    } catch(FileCouldNotOpen&){
+
+    } catch(FileNotExists& ){
+
+    }
+}
+
+void TextTemplate::setFile(QString file){
+    _fileName = file;
+    readContent();
 }

@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import "../singleton"
 
 Item {
@@ -8,6 +8,10 @@ Item {
 
     function refresh(){
         SerialOption.scanner.refresh()
+
+        for(var i = 0; i < ports.length; i++){
+            console.log(ports[i])
+        }
     }
 
     id              :   form
@@ -57,11 +61,11 @@ Item {
             width   :   parent.width
 
             Text {
-                id      :   portNameText
-                text    :   ">" + ports[index].portName
+                id                  :   portNameText
+                text                :   ">" + ports[index].portName
                 anchors.centerIn    :   parent
-                z       :   2
-                color   :   "white"
+                z                   :   2
+                color               :   "white"
             }
 
             MouseArea{
@@ -69,7 +73,6 @@ Item {
                 anchors.fill    :   parent
                 onClicked       :   {
                     serialPortList.currentIndex = index;
-                    //                     SerialOption.option.portName = index >= 0 ? ports[index].portName : ""
                 }
                 hoverEnabled    :   true
                 z               :   2

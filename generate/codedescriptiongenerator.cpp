@@ -33,7 +33,7 @@ void CodeDescriptionGenerator::retrieveFunctionDescriptions(QString text){
             QRegularExpression  expr(generator->name());
             //Eğer ki fonksiyona karşılık gelen generator mevcutsa
             if(expr.match(fParsed.functionName()).hasMatch() && generator->argsCount() == fParsed.args().count()){
-                QVariantMap map;
+                QVariantHash map;
                 QString desc;
                 generator->generate(fParsed , desc);
                 int lineNumber = ParseHelper::calculateLineNumber(text , fParsed.matchIdx());

@@ -1,12 +1,16 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.2
+import Kodlio 1.0
 import "../control"
 import "../singleton"
 
 Item {
 
-    implicitHeight      :   100 + (projectFolderPathh.visible ? 25 : 0)
+    property ProjectManager manager :   ({})
+    property ProjectOptions options :   ({})
+
+    implicitHeight      :   100 + (projectFolderPath.visible ? 25 : 0)
     implicitWidth       :   300
 
     readonly property string projectFolder : dialog.shortcuts.documents
@@ -20,7 +24,7 @@ Item {
 
         onAccepted      :   {
             projectFolder               =   dialog.fileUrl
-            projectFolderPathh.visible  =   true
+            projectFolderPath.visible   =   true
         }
     }
 
@@ -39,7 +43,7 @@ Item {
         }
 
         Label{
-            id              :   projectFolderPathh
+            id              :   projectFolderPath
             width           :   parent.width
             text            :   dialog.fileUrl
             color           :   "white"
@@ -57,11 +61,9 @@ Item {
                 height      :   parent.height
                 text        :   "Oluştur"
                 onClicked   :   {
-                    var path = Common.extractPathFromUrl(projectFolder)
-                    var projPath = projectManager.createProject(projectNameTxt.text , path , "İçerik yok")
-                    projectManager.openProject(projPath)
-
-                    close()
+                    options.root = Common.extractPathFromUrl(projectFolder)
+                    options.projectName = projectNameTxt.text
+                    manager.createProject(options)
                 }
             }
 

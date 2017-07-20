@@ -10,36 +10,13 @@ import "../editor"
 Project {
 
 
-    id                  :   arduinoProject
+    id                  :       arduinoProject
     compiler            :       avrToolchain.compiler()
     toolchain           :       avrToolchain
     watcher             :       projectWatcher
     runner              :       avrRunner
     parser              :       errParser
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
-
-    browser.onDirRightClicked   :   {
-        //<path>
-        console.log("Context menu for -> " + path)
-        var point = browser.mapToItem(arduinoProject , mouse.x , mouse.y)
-        contextMenu.x       =   point.x
-        contextMenu.y       =   point.y
-        contextMenu.filePath = path
-        contextMenu.open()
-    }
-
-    ArduinoContextMenu  {
-        id          :   contextMenu
-        z           :   10
-        onCreateFile:   {
-            createFileDialog.basePath = basePath
-            createFileDialog.open()
-        }
-    }
-
-    CreateFileDialog{
-        id          :   createFileDialog
-    }
 
     AvrErrorParser{
         id          :   errParser
@@ -54,11 +31,6 @@ Project {
         id      :   avrToolchain
     }
 
-    ArduinoProjectWatcher{
-        id      :   projectWatcher
-        rootDir :   projectRoot
-    }
-
     AvrCompileOptions   {
         id      :   options
         board   :   "uno"
@@ -68,6 +40,11 @@ Project {
         id          :   toolchainThread
         toolchain   :   avrToolchain
         runner      :   avrRunner
+    }
+
+    ArduinoProjectWatcher{
+        id          :   projectWatcher
+        rootDir     :   projectRoot
     }
 
     AvrRunOptions   {

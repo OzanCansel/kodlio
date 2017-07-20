@@ -220,12 +220,10 @@ void LibraryManager::removeLibs(QVariantList libs){
 }
 
 ArduinoLibDescription* LibraryManager::retrieveDescFromOnline(QString name, QString version){
-
     foreach (ArduinoLibDescription* desc, _onlineLibs) {
         if(desc->name() == name && desc->version() == version)
             return desc;
     }
-
     return Q_NULLPTR;
 }
 

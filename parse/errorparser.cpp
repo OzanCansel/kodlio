@@ -33,6 +33,6 @@ void ErrorParser::compilerError(){
     parse(_err);
 }
 
-void ErrorParser::sendStdError(QVariantMap &map){
+void ErrorParser::sendStdError(QVariantHash &map){
     emit errorOccurred(map);
 }

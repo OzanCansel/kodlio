@@ -17,19 +17,26 @@ void AvrErrorParser::parse(QString &err){
     QRegularExpression   rowAndColumnMatch("(.*):(\\d+):(\\d+):");
 
     foreach (QString singleError, errors) {
-        QRegularExpressionMatch  positionMatch = rowAndColumnMatch.match(singleError);
-        QVariantMap  map;
+        //        QRegularExpressionMatch  positionMatch = rowAndColumnMatch.match(singleError);
+        QRegularExpressionMatchIterator  positionMatchIterator = rowAndColumnMatch.globalMatch(singleError);
 
-        QString fPath = positionMatch.captured(1);
-        int  rowNumber = positionMatch.captured(2).toInt();
-        int  columnNumber = positionMatch.captured(3).toInt();
+        QVariantHash  map;
+        //        positionMatchIterator.pe
+        while(positionMatchIterator.hasNext()){
 
-        QString message = QString(singleError.right(singleError.length() - positionMatch.capturedEnd(3) -1)).trimmed().append("^");
+            QRegularExpressionMatch positionMatch = positionMatchIterator.next();
+            QString fPath = positionMatch.captured(1);
+            int  rowNumber = positionMatch.captured(2).toInt();
+            int  columnNumber = positionMatch.captured(3).toInt();
 
-        map[FILE_PATH]  =   QVariant(fPath);
-        map[ROW_LABEL]   =   QVariant(rowNumber);
-        map[COLUMN_LABEL]=   QVariant(columnNumber);
-        map[MESSAGE_LABEL] = QVariant(message);
+            QString message = QString(singleError.right(singleError.length() - positionMatch.capturedEnd(3) -1)).trimmed().append("^");
+
+            map[FILE_PATH]  =   QVariant(fPath);
+            map[ROW_LABEL]   =   QVariant(rowNumber);
+            map[COLUMN_LABEL]=   QVariant(columnNumber);
+            map[MESSAGE_LABEL] = QVariant(message);
+
+        }
 
         sendStdError(map);
     }

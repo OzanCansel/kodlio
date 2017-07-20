@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import QtQuick.Controls 2.2
 import "../singleton"
 
 Item {
@@ -17,8 +18,8 @@ Item {
         return Math.floor(target.height / metrics.height)
     }
 
-    function    newError(row){
-        errors.push(row)
+    function    newError(err){
+        errors.push(err)
         lineCount = 0
         lineCount = Qt.binding(calculateLineCount)
     }
@@ -29,8 +30,28 @@ Item {
         lineCount = Qt.binding(calculateLineCount)
     }
 
+    function    getError(line){
+        //Error koleksiyonu kontrol ediliyor
+        for(var i = 0 ; i < errors.length; i++){
+            var err = errors[i]
+            //Eger satirla eslesen hata varsa
+            if(err.row === line)
+                return err
+        }
+
+        return -1
+    }
+
     function    hasError(line){
-        return errors.indexOf(line) > -1
+        //Error koleksiyonu kontrol ediliyor
+        for(var i = 0 ; i < errors.length; i++){
+            var err = errors[i]
+            //Eger satirla eslesen hata varsa
+            if(err.row === line)
+                return true
+        }
+
+        return false
     }
 
     id          :   lineNumerator
@@ -55,6 +76,7 @@ Item {
             Item    {
                 readonly property  int lineNumber       :   index + startNumber
                 property bool       hasError            :   lineNumerator.hasError(lineNumber)
+                property string     message             :   hasError ? getError(lineNumber).message : ""
 
                 id      :   lineNumberItem
                 height  :   metrics.height
@@ -73,6 +95,16 @@ Item {
                     id                  :   errorRect
                     color               :   lineNumberItem.hasError ? "red" : "transparent"
                     anchors.fill        :   parent
+                }
+
+                MouseArea{
+                    id                  :   area
+                    anchors.fill        :   parent
+                    hoverEnabled        :   true
+                    onContainsMouseChanged  :   console.log(containsMouse)
+
+                    ToolTip.visible     :   lineNumberItem.hasError && area.containsMouse
+                    ToolTip.text        :   lineNumberItem.message
                 }
             }
         }

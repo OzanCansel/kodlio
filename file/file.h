@@ -15,7 +15,9 @@ public:
 public slots:
 
     bool        createFile(QString path);
+    bool        createGenericTemplatedFile(QString path);
     bool        removeFile(QString path);
+    bool        createDir(QString root , QString newFolder);
 
 };
 

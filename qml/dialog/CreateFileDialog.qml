@@ -6,6 +6,7 @@ import "../singleton"
 Dialog {
 
     property string basePath    :   ""
+    property bool   createDir   :   false
 
     id          :   dialog
     x           :   (parent.width / 2) - (width / 2)
@@ -15,7 +16,9 @@ Dialog {
 
     contentItem :   CreateFileForm{
         basePath        :   dialog.basePath
+        createDir       :   dialog.createDir
         onFileCreated   :   dialog.close()
+        onFolderCreated :   dialog.close()
     }
     background  :   Image{
         source      :   "/res/icon/backgroundpattern.png"
