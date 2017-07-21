@@ -49,7 +49,7 @@ Dialog {
             implicitWidth   :   100
         }
         background      :   Item {
-            id: name
+            id          :   name
         }
     }
 
@@ -66,11 +66,11 @@ Dialog {
         implicitHeight  :   messageText.height + 10
 
         Text {
-            id      :   messageText
-            text    :   message
-            font.pointSize  :   12
-            color   :   "white"
-            z       :   2
+            id                  :   messageText
+            text                :   message
+            font.pointSize      :   12
+            color               :   "white"
+            z                   :   2
             anchors.centerIn    :   parent
         }
     }

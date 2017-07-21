@@ -57,18 +57,26 @@ Project {
     AvrRunner   {
         id          :   avrRunner
         onRunSuccess:   runOpts
-
         Component.onCompleted   :   {
             SerialOption.option.uploading = Qt.binding(function(){  return avrRunner.runnerState === AvrRunner.Spawning })
         }
     }
 
     function compile(){
+        if(projectRoot === ""){
+            displayWarning("Proje açılmadı.")
+            return
+        }
         var mainFile = projectWatcher.retrieveMainFile()
         toolchainThread.compile(mainFile , options)
     }
 
     function run(){
+        if(projectRoot === ""){
+            displayWarning("Proje açılmadı.")
+            return
+        }
+
         if(runOpts.hexFile === ""){
             displayMessage("Proje derlenmedi.")
             return

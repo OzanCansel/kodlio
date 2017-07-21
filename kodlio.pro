@@ -272,7 +272,9 @@ DISTFILES += \
     qml/animation/ShowAndFadeAnimation.qml \
     qml/dialog/CreateFileDialog.qml \
     qml/form/CreateFileForm.qml \
-    qml/project/ContextMenu.qml
+    qml/project/ContextMenu.qml \
+    qml/project/GenericEditorMenu.qml \
+    qml/control/ToolImageButton.qml
 
 
 HEADERS += \

@@ -14,8 +14,10 @@ MenuItem {
     property alias  backItem            :   backCont
     property string tooltipText         :   ""
     property bool   tooltipEnabled      :   true
+    height              :   back.implicitHeight
 
     background  :        Rectangle{
+        id              :   back
         implicitWidth   :   control.width
         implicitHeight  :   40
         radius          :   4
@@ -31,11 +33,11 @@ MenuItem {
 
     contentItem :   Text{
         id              :   textContent
-        text            :   "> " + control.text
+        text            :   control.text
         font.pointSize  :   12
         font.family     :   control.font.family
         color           :   textColor
-        y               :   25
+        verticalAlignment   :   Text.verticalCenter
     }
 
     ToolTip.visible     :   tooltipEnabled ? hovered : false

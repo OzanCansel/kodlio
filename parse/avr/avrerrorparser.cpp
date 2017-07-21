@@ -19,8 +19,7 @@ void AvrErrorParser::parse(QString &err){
     foreach (QString singleError, errors) {
         //        QRegularExpressionMatch  positionMatch = rowAndColumnMatch.match(singleError);
         QRegularExpressionMatchIterator  positionMatchIterator = rowAndColumnMatch.globalMatch(singleError);
-
-        QVariantHash  map;
+        QVariantMap  map;
         //        positionMatchIterator.pe
         while(positionMatchIterator.hasNext()){
 
@@ -37,7 +36,6 @@ void AvrErrorParser::parse(QString &err){
             map[MESSAGE_LABEL] = QVariant(message);
 
         }
-
         sendStdError(map);
     }
 }

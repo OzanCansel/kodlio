@@ -31,14 +31,13 @@ void DocumentStyle::applySettingsToDoc(){
 
     applyInitialSettings();
     applyTabSize();
-    applyFont();
 }
 
 void DocumentStyle::setEditorSettings(EditorSettings *val){
     _settings = val;
-    connect(_settings , SIGNAL(fontPointSizeChanged()) , this , SLOT(pointSizeChanged()));
     connect(_settings , SIGNAL(tabSizeChanged()), this , SLOT(tabSizeChanged()));
-    connect(_settings , SIGNAL(familyChanged()) , this , SLOT(familyChanged()));
+    _tabSize = _settings->tabSize();
+    _pointSize = _settings->fontPointSize();
     applySettingsToDoc();
     emit editorSettingsChanged();
 }
@@ -63,25 +62,8 @@ void DocumentStyle::applyTabSize(){
     doc->setDefaultTextOption(opt);
 }
 
-void DocumentStyle::applyFont(){
-    QTextDocument*  doc = _doc->textDocument();
-    QFont   font = doc->defaultFont();
-    font.setPointSize(_pointSize);
-    font.setFamily(_family);
-    doc->setDefaultFont(font);
-}
-
-void DocumentStyle::familyChanged(){
-    _family = _settings->family();
-    applyFont();
-}
 
 void DocumentStyle::tabSizeChanged(){
     _tabSize = _settings->tabSize();
     applyTabSize();
-}
-
-void DocumentStyle::pointSizeChanged(){
-    _pointSize = _settings->fontPointSize();
-    applyFont();
 }

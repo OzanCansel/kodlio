@@ -17,6 +17,13 @@ AvrToolchainThread::AvrToolchainThread(QQuickItem *parent) : QQuickItem(parent) 
     backgroundThread.start();
 }
 
+AvrToolchainThread::~AvrToolchainThread(){
+    qDebug() << "Terminating";
+    backgroundThread.terminate();
+    backgroundThread.wait();
+    qDebug() << "Terminated";
+}
+
 void AvrToolchainThread::compile(QString file, CompileOptions *opts){
     _worker->setToolchain(_toolchain);
     emit compileSignal(file , opts);

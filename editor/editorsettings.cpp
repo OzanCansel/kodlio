@@ -20,17 +20,14 @@ EditorSettings::EditorSettings(QQuickItem *parent) : Options(parent)    {
 
 void EditorSettings::setTabSize(int val){
     set(TAB_SIZE_LABEL , QVariant(val));
+    save();
     emit tabSizeChanged();
 }
 
 void EditorSettings::setFontPointSize(int pointSize){
     set(FONT_POINT_SIZE_LABEL , QVariant(pointSize));
+    save();
     emit fontPointSizeChanged();
-}
-
-void EditorSettings::setFamily(QString val){
-    set(FONT_FAMILY , QVariant(val));
-    emit familyChanged();
 }
 
 int EditorSettings::tabSize(){
@@ -39,8 +36,4 @@ int EditorSettings::tabSize(){
 
 int EditorSettings::fontPointSize(){
     return get(FONT_POINT_SIZE_LABEL).toInt();
-}
-
-QString EditorSettings::family(){
-    return get(FONT_FAMILY).toString();
 }

@@ -62,18 +62,6 @@ Menu    {
         backRadius  :   backRect.radius
     }
 
-    DropdownMenuItem    {
-        id          :   saveFile
-        text        :   "Kaydet"
-        width       :   menuItemWidth
-        font.family :   FontCollection.menuFont
-        onTriggered :   projectManager.saveFile()
-        tooltipText :   "Kaydetmek için tıklayınız."
-        anchors.horizontalCenter    :   parent.horizontalCenter
-        y           :   menuItemVertShift
-        backRadius  :   backRect.radius
-    }
-
     DropdownMenuItem{
         id          :   createNewClass
         text        :   "Yeni Sınıf Yarat"
@@ -113,7 +101,7 @@ Menu    {
     }
 
     Component{
-        id      :   itemBackground
+        id          :   itemBackground
         Rectangle   {
             id                          :   backCont
             y                           :   backRect.border.width

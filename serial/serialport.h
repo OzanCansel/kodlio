@@ -45,6 +45,7 @@ public slots:
 private slots:
 
     void                serialPortIncome();
+    void                errorOccurred(QSerialPort::SerialPortError error);
 
 private:
 

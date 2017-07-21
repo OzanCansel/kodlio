@@ -1,9 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import Kodlio 1.0
 import "../form"
 
 Dialog {
 
+    id          :   dialog
     x           :   parent.width / 2 - (width / 2)
     y           :   parent.height / 2 - (height / 2)
     modal       :   true

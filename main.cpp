@@ -7,7 +7,6 @@
 #include "highlight/arduinohighlightitem.h"
 #include "toolchain/unocompiler.h"
 #include "directorymanager.h"
-#include "projectmanager.h"
 #include "sdkextractor.h"
 #include "cloudapi/cloud.h"
 #include "toolchain/toolchain.h"

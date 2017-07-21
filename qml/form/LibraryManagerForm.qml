@@ -12,7 +12,7 @@ Item {
     implicitHeight      :   400
 
     readonly property bool      localSearch     :   tabBar.currentIndex === 0
-    readonly property string    filterText      :   nameFilterTxt.text
+    property string    filterText      :   nameFilterTxt.text
 
     function        filter(){
         if(localSearch)     filterLocal(filterText)
@@ -47,7 +47,6 @@ Item {
     onLocalSearchChanged    :   filter()
 
     ArduinoLibManager   {
-
         id                                  :   libManager
         onLibInstallErrorOccurred           :   {
             var message = desc.name + " yuklenemedi."

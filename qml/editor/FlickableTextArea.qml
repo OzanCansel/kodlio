@@ -27,8 +27,6 @@ Flickable {
             id          :   editorBackground
             radius      :   0
             color       :   Theme.editorBackgroundColor
-            border.width:   flickable.modified ? 3 : 0
-            border.color:   Theme.editorModifiedBorderColor
 
             Image {
                 id              :   kodlioLogo

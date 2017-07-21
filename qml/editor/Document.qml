@@ -9,6 +9,7 @@ Item {
     property string     absolutePath    :   ""
     property string     type            :   ""
     property bool       isReadOnly      :   false
+    readonly property bool modified     :   textFlickable.modified
     readonly property   string fileName :   documentContent.fileName()
 
     property alias      textFlickable   :   textFlickable
@@ -39,11 +40,11 @@ Item {
         file            :   doc.absolutePath
     }
 
-//    DocumentStyle{
-//        id              :   style
-//        editorSettings  :   EditorSettings
-//        textDocument    :   textFlickable.textArea.textDocument
-//    }
+    DocumentStyle{
+        id              :   style
+        editorSettings  :   EditorSettings
+        textDocument    :   textFlickable.textArea.textDocument
+    }
 
     DocumentContent     {
         id              :   documentContent
@@ -60,14 +61,15 @@ Item {
     }
 
     FlickableTextArea   {
-        id                  :   textFlickable
-        anchors.left        :   lineNumerator.right
-        anchors.top         :   parent.top
-        anchors.bottom      :   parent.bottom
-        anchors.right       :   parent.right
-        textArea.text       :   documentContent.content
+        id                      :   textFlickable
+        anchors.left            :   lineNumerator.right
+        anchors.top             :   parent.top
+        anchors.bottom          :   parent.bottom
+        anchors.right           :   parent.right
+        textArea.text           :   documentContent.content
         textArea.onActiveFocusChanged   :   focused(identity)
-        textArea.readOnly   :   doc.isReadOnly
-        textArea.font.family:   FontCollection.editorFont
+        textArea.readOnly       :   doc.isReadOnly
+        textArea.font.family    :   FontCollection.editorFont
+        textArea.font.pointSize :   EditorSettings.fontPointSize
     }
 }

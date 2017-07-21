@@ -19,6 +19,7 @@ public:
 
     static void     registerQmlType();
     AvrToolchainThread(QQuickItem *parent = Q_NULLPTR);
+    ~AvrToolchainThread();
     AvrToolchain*   toolchain();
     AvrRunner*      runner();
     void            setToolchain(AvrToolchain *t);

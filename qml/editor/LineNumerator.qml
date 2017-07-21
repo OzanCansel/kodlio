@@ -101,8 +101,6 @@ Item {
                     id                  :   area
                     anchors.fill        :   parent
                     hoverEnabled        :   true
-                    onContainsMouseChanged  :   console.log(containsMouse)
-
                     ToolTip.visible     :   lineNumberItem.hasError && area.containsMouse
                     ToolTip.text        :   lineNumberItem.message
                 }

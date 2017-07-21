@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import Kodlio 1.0
 import "../singleton"
 import "../control"
@@ -14,6 +14,19 @@ Item {
 
     File{
         id      :   f
+    }
+
+    function    create(){
+        //Eger klasor olustuurlucaksa
+        if(createDir){
+            f.createDir(basePath , txt.text)
+            folderCreated()
+        }
+        else//Dosya olusturulucaksa
+        {
+            if(f.createGenericTemplatedFile(basePath + "/" + txt.text))
+                fileCreated()
+        }
     }
 
     Column{
@@ -38,17 +51,15 @@ Item {
             height      :   40
             text        :   "Oluştur"
             onClicked   :   {
-                //Eger klasor olustuurlucaksa
-                if(createDir){
-                    f.createDir(basePath , txt.text)
-                    folderCreated()
-                }
-                else//Dosya olusturulucaksa
-                {
-                    if(f.createGenericTemplatedFile(basePath + "/" + txt.text))
-                        fileCreated()
-                }
+                create()
             }
         }
     }
+
+    Shortcut{
+        id          :   enter
+        sequence    :   "Return"
+        onActivated :   create()
+    }
+
 }

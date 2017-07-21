@@ -12,6 +12,7 @@ Menu{
     signal  createFile(string basePath)
     signal  removeFile(string basePath)
     signal  createFolder(string basePath)
+    signal  removeFolder(string basePath)
 
     enter           :   Transition {
         NumberAnimation { property: "opacity"; from: 0.0; to: 1.0 }
@@ -35,11 +36,11 @@ Menu{
         onTriggered :   createFile(filePath)
     }
 
-
     MenuItem{
         id          :   createDirectory
-        text        :   isDir(filePath) ? "Klasör ekle" : "Dosyayı Sil"
-        height      :   30
+        text        :   "Klasör ekle"
+        height      :    30
+        enabled     :   isDir(filePath)
         onTriggered :   createFolder(filePath)
     }
 
@@ -47,6 +48,11 @@ Menu{
         id          :   removeFileItem
         text        :   isDir(filePath) ? "Klasörü sil" : "Dosyayı Sil"
         height      :   30
-        onTriggered :   removeFile(filePath)
+        onTriggered :   {
+            if(isDir(filePath))
+                removeFolder(filePath)
+            else
+                removeFile(filePath)
+        }
     }
 }

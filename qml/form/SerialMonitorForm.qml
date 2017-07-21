@@ -49,12 +49,6 @@ Item {
         onTextIncome:   arduinoIn(text)
         portName    :   SerialOption.option.portName
         open        :   isOpen && portName && !SerialOption.option.uploading
-        onOpenChanged :   {
-            if(open)
-                outputInfo(portName + " ile baglanti kuruldu.")
-            else
-                outputInfo(portName + " ile baglanti kapatildi")
-        }
     }
 
     ListModel{
@@ -154,6 +148,19 @@ Item {
                 color           :   "#024037"
                 opacity         :   0.7
                 border.width    :   1
+                border.color    :   "black"
+
+                Text {
+                    id                      :   connectionInfo
+                    text                    :   serialPort.open ? serialPort.portName + " açık" : "Bağlantı Yok"
+                    anchors.right           :   parent.right
+                    anchors.bottom          :   parent.bottom
+                    anchors.bottomMargin    :   20
+                    anchors.rightMargin     :   20
+                    font.family             :   FontCollection.messageFont
+                    font.bold               :   true
+                    color                   :   serialPort.open ? Theme.serialMonitorInfo :  Theme.serialMonitorOut
+                }
             }
 
             onTextChanged   :   {

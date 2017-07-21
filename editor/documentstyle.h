@@ -29,8 +29,6 @@ signals:
 private slots:
 
     void            tabSizeChanged();
-    void            familyChanged();
-    void            pointSizeChanged();
 
 private:
 
@@ -43,7 +41,6 @@ private:
     void                applySettingsToDoc();
     void                applyInitialSettings();
     void                applyTabSize();
-    void                applyFont();
 
 };
 

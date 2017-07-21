@@ -8,6 +8,7 @@ void SerialPort::registerQmlType(){
 
 SerialPort::SerialPort(QObject  *parent) : QObject(parent)  {
     connect(&_port , SIGNAL(readyRead()) , this , SLOT(serialPortIncome()));
+    connect(&_port , SIGNAL(errorOccurred(QSerialPort::SerialPortError)) , this , SLOT(errorOccurred(QSerialPort::SerialPortError)));
 
     _baudRateHash.insert(115200 , QSerialPort::Baud115200);
     _baudRateHash.insert(57600 , QSerialPort::Baud57600);
@@ -61,6 +62,8 @@ bool SerialPort::connectToArduino(QString port){
 }
 
 void SerialPort::close(){
+    if(!_port.isOpen())
+        return;
     qDebug() << _port.portName() << " kapatıldı.";
     _port.close();
 }
@@ -145,4 +148,10 @@ void SerialPort::setPortName(QString val){
 
 QString SerialPort::portName(){
     return _portName;
+}
+
+void SerialPort::errorOccurred(QSerialPort::SerialPortError error){
+    Q_UNUSED(error)
+    if(_port.isOpen())
+        setOpen(false);
 }

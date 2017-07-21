@@ -39,10 +39,11 @@ TreeView {
     itemDelegate    :   Rectangle{
         color       :   styleData.selected ? "lightsteelblue" : "transparent"
         Text {
-            id          :   txt
-            elide       :   styleData.elideMode
-            text        :   styleData.value
-            font.family :   FontCollection.fileTreeFont
+            id              :   txt
+            elide           :   styleData.elideMode
+            text            :   styleData.value
+            font.pointSize  :   11
+            font.family     :   FontCollection.fileTreeFont
         }
     }
 

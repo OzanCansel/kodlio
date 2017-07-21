@@ -72,5 +72,7 @@
         <file>qml/dialog/CreateFileDialog.qml</file>
         <file>qml/form/CreateFileForm.qml</file>
         <file>qml/project/ContextMenu.qml</file>
+        <file>qml/control/ToolImageButton.qml</file>
+        <file>qml/project/GenericEditorMenu.qml</file>
     </qresource>
 </RCC>

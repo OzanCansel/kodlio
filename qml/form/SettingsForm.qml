@@ -1,9 +1,11 @@
 import QtQuick 2.0
+import Kodlio 1.0
 import "../control"
 
 Item {
+
     implicitWidth   :   400
-    implicitHeight  :   250
+    implicitHeight  :   150
 
     Column{
         width   :   parent.width
@@ -25,41 +27,41 @@ Item {
             }
         }
 
-        LabelSpinnerControl{
+        LabelSpinnerControl {
             id      :   fontSizeCtl
             width   :   parent.width
             height  :   50
             label   :   "Font Büyüklük"
-            value   :   settings.fontSize
+            value   :   EditorSettings.fontPointSize
             min     :   8
             max     :   128
         }
 
-        LabelSpinnerControl{
-            id      :   tabSizeCtl
-            width   :   parent.width
-            height  :   50
-            label   :   "Tab Boşluk"
-            value   :   settings.tabSize
-            min     :   2
-            max     :   128
-        }
+//        LabelSpinnerControl{
+//            id      :   tabSizeCtl
+//            width   :   parent.width
+//            height  :   50
+//            label   :   "Tab Boşluk"
+//            value   :   EditorSettings.tabSize
+//            min     :   2
+//            max     :   128
+//        }
 
-        GenericButton{
-            id      :   saveButton
-            width   :   120
-            height  :   40
-            text    :   "Kaydet"
-            anchors.right       :   parent.right
-            anchors.rightMargin :   10
-            onClicked   :   settings.saveSettings()
-        }
+//        GenericButton{
+//            id      :   saveButton
+//            width   :   120
+//            height  :   40
+//            text    :   "Kaydet"
+//            anchors.right       :   parent.right
+//            anchors.rightMargin :   10
+//            onClicked   :   EditorSettings.save()
+//        }
 
         Component.onCompleted: {
-            settings.tabSize    =   Qt.binding(function() {
+            EditorSettings.tabSize         =   Qt.binding(function() {
                 return tabSizeCtl.value
             })
-            settings.fontSize   =   Qt.binding(function() {
+            EditorSettings.fontPointSize   =   Qt.binding(function() {
                 return fontSizeCtl.value    })
         }
     }

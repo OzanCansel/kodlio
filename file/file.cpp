@@ -30,9 +30,16 @@ bool File::createFile(QString path){
 }
 
 bool File::removeFile(QString path){
-    QFile   f(path);
+    QFileInfo   fInfo(path);
+    if(fInfo.isDir()){
+        QDir    dir(path);
 
-    return f.remove();
+        return dir.removeRecursively();
+    }else{
+        QFile   f(path);
+
+        return f.remove();
+    }
 }
 
 bool File::createGenericTemplatedFile(QString path){

@@ -24,7 +24,7 @@ public:
 
     virtual void            parse(QString &err);
     void                    setCompiler(CompilerV2  *compiler);
-    void                    sendStdError(QVariantHash &map);
+    void                    sendStdError(QVariantMap &map);
     CompilerV2*             compiler();
 
 public slots:
@@ -35,7 +35,7 @@ public slots:
 signals:
 
     void        compilerChanged();
-    void        errorOccurred(QVariantHash   error);
+    void        errorOccurred(QVariantMap   error);
 
 private:
 

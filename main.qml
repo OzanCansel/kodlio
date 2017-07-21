@@ -1,4 +1,4 @@
-import QtQuick 2.0
+import QtQuick 2.7
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
@@ -18,7 +18,7 @@ ApplicationWindow {
     visible         :   true
     width           :   Math.max(1024 , height * 16 / 9)
     height          :   Math.max(768 , Screen.desktopAvailableHeight * 0.75)
-    visibility      :   Window.Windowed
+    visibility      :   fullscreenButton.checked ? Window.FullScreen : Window.Windowed
     title           :   qsTr("Kodlio")
 
     Component.onCompleted   :   {
@@ -50,7 +50,7 @@ ApplicationWindow {
     }
 
     SettingsDialog{
-        id      :   settingsDialog
+        id          :   settingsDialog
     }
 
     LibrariesDialog {
@@ -104,6 +104,7 @@ ApplicationWindow {
 
     ArduinoProjectManager{
         id                  :   projectManager
+//        projectRoot         :   "/home/arnes/Documents/toolchain-example"
     }
 
     SerialMonitorDialog{
@@ -131,286 +132,308 @@ ApplicationWindow {
         z           :   0
     }
 
-    Row {
+    Item {
 
         anchors.fill        :   parent
         anchors.topMargin   :   5
 
-        Item{
-
-            id          :   compileControlsContainer
-            height      :   parent.height -  26
-            anchors.verticalCenter  :   parent.verticalCenter
-            width       :   120
-            z           :   2
-
-            Item{
-                width       :   parent.width
-                height      :   50
-                x           :   10
-                y           :   -7
-
-                Image {
-                    id              :   logo
-                    source          :   "/res/icon/logo.png"
-                    anchors.fill    :   parent
-                    anchors.margins :   parent.height * 0.05
-                    fillMode        :   Image.PreserveAspectFit
-                    z               :   2
-                    visible         :   false
-                }
-
-                Rectangle{
-                    id      :   back
-                    anchors.fill    :   parent
-                    radius  :   height / 2
-                    color   :   "white"
-                    opacity :   1
-                    visible :   false
-                }
-            }
-
-            Rectangle {
-
-                anchors.fill    :   parent
-                anchors.leftMargin  :   5
-                anchors.topMargin   :   -9
-                anchors.bottomMargin:   -8
-                radius          :   10
-                border.width    :   0
-                color           :   "transparent"
-
-
-                Column  {
-                    y                       :   10
-                    anchors.horizontalCenter :   parent.horizontalCenter
-                    width                   :   parent.width * 0.8
-                    spacing                 :   5
-
-                    IdeMenuItem{
-                        id                  :   newFile
-                        img.source          :   "/res/icon/cog.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "Ekle"
-                        mouseArea.onClicked :   projectMenu.open()
-                    }
-
-                    IdeMenuItem{
-                        id                  :   serialMonitor
-                        img.source          :   "/res/icon/serial-monitor.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "İletişim"
-                        mouseArea.onClicked :   serialMonitorDialog.open()
-                    }
-
-                    IdeMenuItem {
-                        id                  :   examplesMenuItem
-                        img.source          :   "/res/icon/examples.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "Örnekler"
-                        mouseArea.onClicked :   examplesDialog.open()
-                    }
-
-                    IdeMenuItem {
-                        id                  :   serialPorts
-                        img.source          :   "/res/icon/ports.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "Portlar"
-                        mouseArea.onClicked :   serialPortPopup.open()
-                    }
-
-                    IdeMenuItem{
-                        id                  :   libraryMan
-                        img.source          :   "/res/icon/library.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "Kutuphaneler"
-                        mouseArea.onClicked :   libraryManagerDialog.open()
-                    }
-
-                    IdeMenuItem{
-                        id                  :   settingsMenuItem
-                        img.source          :   "/res/icon/settings.png"
-                        width               :   parent.width
-                        height              :   50
-                        txt.text            :   "Ayarlar"
-                        mouseArea.onClicked :   settingsDialog.open()
-                    }
-
-                    IdeMenuItem{
-                        id                  :   close
-                        img.source          :   "/res/icon/shutdown-icon.png"
-                        width               :   parent.width
-                        height              :   50
-                        mouseArea.onClicked :   quitAppDialog.open()
-                        txt.text            :   "Çıkış"
-                    }
-                }
-
-                ProjectMenu {
-                    id              :   projectMenu
-                    visible         :   false
-                    width           :   150
-                    //                    height          :   200
-                    x               :   newFile.x + newFile.width + 10
-                    y               :   newFile.y + 10
-
-                    onOpenProjectRequired   :   {
-                        currentProject.projectRoot = projectPath
-                    }
-
-                    onCreateProjectRequired :   {
-                        createProjectDialog.open()
-                    }
-                }
-
-                Popup   {
-                    id              :   serialPortPopup
-                    contentWidth    :   serialPortListF.implicitWidth
-                    contentHeight   :   serialPortListF.implicitHeight
-                    x               :   serialPorts.x + serialPorts.width + 10
-                    y               :   serialPorts.y + 10
-                    background      :   Item{  }
-                    contentItem     :   Column{ }
-                    padding         :   0
-                    clip            :   true
-                    enter           :   Transition{
-                        ParallelAnimation{
-                            NumberAnimation{
-                                property    :   "opacity"; from : 0; to : 1.0
-                            }
-
-                            NumberAnimation{
-                                property        :   "height"; from : 0; to : serialPortPopup.contentHeight
-                            }
-                        }
-                    }
-
-                    onAboutToShow       :   {
-                        if(serialPortListF.selectedPort === "Seçilmedi" || serialPortListF.selectedPort === "")
-                            serialPortListF.refresh()
-                    }
-
-                    SerialPortListForm  {
-                        id              :   serialPortListF
-                        implicitWidth   :   150
-
-                        Keys.onEscapePressed    :   {
-                        }
-
-                        Component.onCompleted   :   refresh()
-                    }
-                }
-
-                Rectangle{
-                    width           :   parent.width *  0.8
-                    anchors.horizontalCenter    :   parent.horizontalCenter
-                    height          :   1
-                    color           :   "black"
-                    anchors.bottom  :   compileControlBar.top
-                    visible         :   false
-                }
-
-                CompileControlBar   {
-                    id                          :   compileControlBar
-                    height                      :   180
-                    width                       :   parent.width * 0.8
-                    anchors.bottom              :   parent.bottom
-                    anchors.bottomMargin        :   58
-                    anchors.horizontalCenter    :   parent.horizontalCenter
-                }
-            }
+        ToolImageButton {
+            id                  :   fullscreenButton
+            checkable           :   true
+            src                 :   checked ? "/res/icon/full-screen-activated.png" : "/res/icon/full-screen-not-activated.png"
+            anchors.right       :   parent.right
+            anchors.rightMargin :   10
+            anchors.top         :   parent.top
+            anchors.topMargin   :   5
+            z                   :   2
+            highlighted         :   false
+            ToolTip.visible     :   hovered
+            ToolTip.text        :   checked ? "Tam Ekrandan Çık (F11)" : "Tam Ekran (F11)"
         }
 
-        Item    {
-            id                      :   it
-            height                  :   parent.height
-            width                   :   parent.width - compileControlsContainer.width
-            z                       :   10
+        Row {
 
-            CloudStateControl{
-                z                   :   5
-                anchors.right       :   parent.right
-                anchors.rightMargin :   10
-                height              :   50
-
-                onLoginClicked      :   {
-                    loginDialog.open()
-                    loginDialog.focus = true
-                }
-                onLogoutClicked     :   {
-                    logoutDialog.open()
-                }
-                onListProjectsRequired  :      {
-                    listProjectsDialog.open()
-                    listProjectsDialog.contentItem.retrieve()
-                }
-                onUploadClicked     :   {
-                    //
-                    uploadProjectDialog.open()
-                }
-            }
+            anchors.fill        :   parent
 
             Item{
 
-                anchors.top         :   parent.top
-                anchors.bottom      :   outputConsole.top
-                anchors.left        :   parent.left
-                anchors.right       :   parent.right
-                anchors.topMargin   :   15
-                z               :   4
+                id          :   compileControlsContainer
+                height      :   parent.height -  26
+                anchors.verticalCenter  :   parent.verticalCenter
+                width       :   120
+                z           :   2
+
+                Item{
+                    width       :   parent.width
+                    height      :   50
+                    x           :   10
+                    y           :   -7
+
+                    Image {
+                        id              :   logo
+                        source          :   "/res/icon/logo.png"
+                        anchors.fill    :   parent
+                        anchors.margins :   parent.height * 0.05
+                        fillMode        :   Image.PreserveAspectFit
+                        z               :   2
+                        visible         :   false
+                    }
+
+                    Rectangle{
+                        id      :   back
+                        anchors.fill    :   parent
+                        radius  :   height / 2
+                        color   :   "white"
+                        opacity :   1
+                        visible :   false
+                    }
+                }
 
                 Rectangle {
-                    id              :   editorOverride
+
                     anchors.fill    :   parent
-                    z               :   3
+                    anchors.leftMargin  :   5
+                    anchors.topMargin   :   -9
+                    anchors.bottomMargin:   -8
+                    radius          :   10
+                    border.width    :   0
                     color           :   "transparent"
 
-                    ArduinoProject  {
-                        id                      :   currentProject
-                        onShowToast             :   toast.displayMessage(msg)
-                        consoleOut              :   outputConsole
-                        anchors.fill            :   parent
-                        anchors.leftMargin      :   Theme.controlXMargin
-                        anchors.rightMargin     :   Theme.controlXMargin
-                        progress                :   compileProgressBar
-                        projectRoot             :   projectManager.projectRoot
+
+                    Column  {
+                        y                       :   10
+                        anchors.horizontalCenter :   parent.horizontalCenter
+                        width                   :   parent.width * 0.8
+                        spacing                 :   5
+
+                        IdeMenuItem{
+                            id                  :   newFile
+                            img.source          :   "/res/icon/cog.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Ekle"
+                            mouseArea.onClicked :   projectMenu.open()
+                        }
+
+                        IdeMenuItem{
+                            id                  :   serialMonitor
+                            img.source          :   "/res/icon/serial-monitor.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "İletişim"
+                            mouseArea.onClicked :   serialMonitorDialog.open()
+                        }
+
+                        IdeMenuItem {
+                            id                  :   examplesMenuItem
+                            img.source          :   "/res/icon/examples.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Örnekler"
+                            mouseArea.onClicked :   examplesDialog.open()
+                            visible             :   false
+                        }
+
+                        IdeMenuItem {
+                            id                  :   serialPorts
+                            img.source          :   "/res/icon/ports.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Portlar"
+                            mouseArea.onClicked :   serialPortPopup.open()
+                        }
+
+                        IdeMenuItem{
+                            id                  :   libraryMan
+                            img.source          :   "/res/icon/library.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Kutuphaneler"
+                            mouseArea.onClicked :   libraryManagerDialog.open()
+                        }
+
+                        IdeMenuItem{
+                            id                  :   settingsMenuItem
+                            img.source          :   "/res/icon/settings.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Ayarlar"
+                            mouseArea.onClicked :   settingsDialog.open()
+                        }
+
+                        IdeMenuItem{
+                            id                  :   close
+                            img.source          :   "/res/icon/shutdown-icon.png"
+                            width               :   parent.width
+                            height              :   50
+                            mouseArea.onClicked :   quitAppDialog.open()
+                            txt.text            :   "Çıkış"
+                        }
+                    }
+
+                    ProjectMenu {
+                        id              :   projectMenu
+                        visible         :   false
+                        width           :   150
+                        //                    height          :   200
+                        x               :   newFile.x + newFile.width + 10
+                        y               :   newFile.y + 10
+
+                        onOpenProjectRequired   :   {
+                            currentProject.projectRoot = projectPath
+                        }
+
+                        onCreateProjectRequired :   {
+                            createProjectDialog.open()
+                        }
+                    }
+
+                    Popup   {
+                        id              :   serialPortPopup
+                        contentWidth    :   serialPortListF.implicitWidth
+                        contentHeight   :   serialPortListF.implicitHeight
+                        x               :   serialPorts.x + serialPorts.width + 10
+                        y               :   serialPorts.y + 10
+                        background      :   Item{  }
+                        contentItem     :   Column{ }
+                        padding         :   0
+                        clip            :   true
+                        enter           :   Transition{
+                            ParallelAnimation{
+                                NumberAnimation{
+                                    property    :   "opacity"; from : 0; to : 1.0
+                                }
+
+                                NumberAnimation{
+                                    property        :   "height"; from : 0; to : serialPortPopup.contentHeight
+                                }
+                            }
+                        }
+
+                        onAboutToShow       :   {
+                            if(serialPortListF.selectedPort === "Seçilmedi" || serialPortListF.selectedPort === "")
+                                serialPortListF.refresh()
+                        }
+
+                        SerialPortListForm  {
+                            id              :   serialPortListF
+                            implicitWidth   :   150
+
+                            Keys.onEscapePressed    :   {
+                            }
+
+                            Component.onCompleted   :   refresh()
+                        }
+                    }
+
+                    Rectangle{
+                        width           :   parent.width *  0.8
+                        anchors.horizontalCenter    :   parent.horizontalCenter
+                        height          :   1
+                        color           :   "black"
+                        anchors.bottom  :   compileControlBar.top
+                        visible         :   false
+                    }
+
+                    CompileControlBar   {
+                        id                          :   compileControlBar
+                        height                      :   180
+                        width                       :   parent.width * 0.8
+                        anchors.bottom              :   parent.bottom
+                        anchors.bottomMargin        :   58
+                        anchors.horizontalCenter    :   parent.horizontalCenter
                     }
                 }
             }
 
-            OutputConsole{
-                id                  :   outputConsole
-                width               :   parent.width
-                height              :   20
-                anchors.bottom      :   parent.bottom
+            Item    {
+                id                      :   it
+                height                  :   parent.height
+                width                   :   parent.width - compileControlsContainer.width
+                z                       :   10
+
+                //            CloudStateControl{
+                //                z                   :   5
+                //                anchors.right       :   parent.right
+                //                anchors.rightMargin :   10
+                //                height              :   50
+
+                //                onLoginClicked      :   {
+                //                    loginDialog.open()
+                //                    loginDialog.focus = true
+                //                }
+                //                onLogoutClicked     :   {
+                //                    logoutDialog.open()
+                //                }
+                //                onListProjectsRequired  :      {
+                //                    listProjectsDialog.open()
+                //                    listProjectsDialog.contentItem.retrieve()
+                //                }
+                //                onUploadClicked     :   {
+                //                    //
+                //                    uploadProjectDialog.open()
+                //                }
+                //            }
+
+                Item{
+
+                    anchors.top         :   parent.top
+                    anchors.bottom      :   outputConsole.top
+                    anchors.left        :   parent.left
+                    anchors.right       :   parent.right
+                    anchors.topMargin   :   15
+                    z               :   4
+
+                    Rectangle {
+                        id              :   editorOverride
+                        anchors.fill    :   parent
+                        z               :   3
+                        color           :   "transparent"
+
+                        ArduinoProject  {
+                            id                      :   currentProject
+                            onShowToast             :   toast.displayMessage(msg)
+                            onShowError             :   toast.displayError(msg)
+                            onShowWarning           :   toast.displayWarning(msg)
+                            consoleOut              :   outputConsole
+                            anchors.fill            :   parent
+                            anchors.leftMargin      :   Theme.controlXMargin
+                            anchors.rightMargin     :   Theme.controlXMargin
+                            progress                :   compileProgressBar
+                            projectRoot             :   projectManager.projectRoot
+                        }
+                    }
+                }
+
+                OutputConsole{
+                    id                  :   outputConsole
+                    width               :   parent.width
+                    height              :   20
+                    anchors.bottom      :   parent.bottom
+                }
+
+                GenericProgressBar{
+                    id      :   compileProgressBar
+                    width   :   200
+                    height  :   50
+                    anchors.right           :   outputConsole.right
+                    anchors.rightMargin     :   Theme.internalControlsMargin * 2
+                    anchors.bottom          :   outputConsole.bottom
+                    anchors.bottomMargin    :   Theme.internalControlsMargin * 2
+                    z               :   5
+                    visible         :   false
+                    header          :   "Derleme"
+                }
             }
 
-            GenericProgressBar{
-                id      :   compileProgressBar
-                width   :   200
-                height  :   50
-                anchors.right           :   outputConsole.right
-                anchors.rightMargin     :   Theme.internalControlsMargin * 2
-                anchors.bottom          :   outputConsole.bottom
-                anchors.bottomMargin    :   Theme.internalControlsMargin * 2
-                z               :   5
-                visible         :   false
-                header          :   "Derleme"
-            }
-        }
+            Toast{
+                id              :   toast
+                container       :   parent
+                textColor       :   "white"
 
-        Toast{
-            id              :   toast
-            container       :   parent
-            textColor       :   "white"
-
-            Component.onCompleted   : {
-                Global.toast = toast
+                Component.onCompleted   : {
+                    Global.toast = toast
+                }
             }
         }
     }
@@ -452,16 +475,6 @@ ApplicationWindow {
             compileProgressBar.header   =   "Yükle"
             compileProgressBar.progress   = progress
             progressBarHideout.restart()
-        }
-    }
-
-
-    Timer{
-        id      :   progressBarHideout
-        interval:   2000
-        onTriggered :   {
-            compileProgressBar.visible  =   false
-            compileProgressBar.progress =   0
         }
     }
 

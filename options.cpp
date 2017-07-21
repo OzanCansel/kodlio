@@ -56,7 +56,7 @@ bool Options::save(){
     if(_file.isEmpty())
         return false;
 
-    QJsonDocument   doc(QJsonObject::fromVariantHash(_map));
+    QJsonDocument   doc(QJsonObject::fromVariantMap(_map));
     QFile           file(_file);
 
     if(!file.open(QIODevice::WriteOnly)){

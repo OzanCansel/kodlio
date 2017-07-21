@@ -24,7 +24,7 @@ public slots:
 
 protected:
 
-    QVariantHash    _map;
+    QVariantMap     _map;
     void            setFile(QString val);
     QString         file();
 

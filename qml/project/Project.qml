@@ -12,6 +12,8 @@ import "../"
 
 Item {
 
+    readonly property bool projectOpen       :   projectRoot != ""
+
     property string     projectName         :   fInfo.dirName()
     property string     projectRoot         :   ""
     property variant    openedDocuments     :   []
@@ -33,6 +35,8 @@ Item {
     id                      :   project
 
     signal  showToast(string msg)
+    signal  showError(string msg)
+    signal  showWarning(string msg)
 
     onProjectRootChanged    :   {
         while(openedDocuments.length > 0)
@@ -142,6 +146,14 @@ Item {
         showToast(msg)
     }
 
+    function    displayError(msg){
+        showError(msg)
+    }
+
+    function    displayWarning(msg){
+        showWarning(msg)
+    }
+
     function    openProject(){
         //Virtual
     }
@@ -183,6 +195,11 @@ Item {
         onRemoveFile    :   {
             contextMenu.removeFilePath = basePath
             removeFileDialog.message =  basePath + " isimli dosyayı silmek istediğinize emin misiniz ?"
+            removeFileDialog.open()
+        }
+        onRemoveFolder  :   {
+            contextMenu.removeFilePath = basePath
+            removeFileDialog.message =  basePath + " isimli klasörü silmek istediğinize emin misiniz ?"
             removeFileDialog.open()
         }
         onCreateFolder  :   {
@@ -275,10 +292,10 @@ Item {
 
             background      :   Item {            }
 
-            DocumentHeader{
+            DocumentHeader  {
                 x           :   50
                 height      :   parent.height
-                text        :   projectRoot === "" ? "Project Açılmadı." : projectName
+                text        :   projectOpen ? projectName : "Proje Açılmadı."
                 mainHeader  :   true
             }
         }
@@ -296,14 +313,12 @@ Item {
                 z                       :   2
                 anchors.top             :   parent.top
                 anchors.bottom          :   parent.bottom
-                width                   :   250
                 rootPath                :   projectRoot
-                Layout.minimumWidth     :   200
-                visible                 :   projectRoot !== ""
+                Layout.minimumWidth     :   projectOpen ? Math.min(300 , splitView.width / 5) : 0
+                visible                 :   projectOpen
 
                 onDirRightClicked   :   {
                     //<path>
-                    console.log("Context menu for -> " + path)
                     var point = browser.mapToItem(arduinoProject , mouse.x , mouse.y)
                     contextMenu.x       =   point.x
                     contextMenu.y       =   point.y
@@ -314,39 +329,54 @@ Item {
                 onDoubleClicked         :   {
                     openCurrentlySelectedFile()
                 }
-                onClicked               :   {
-                    console.log("clicked")
-                }
-
                 Keys.onEnterPressed     :   {
                     openCurrentlySelectedFile()
                 }
                 Keys.onReturnPressed    :   {
                     openCurrentlySelectedFile()
                 }
+
+                Behavior on width {
+                    SmoothedAnimation{
+                        velocity    :   splitView.width / 4
+                    }
+                }
             }
 
-            StackLayout {
-                id                  :   documents
-                anchors.top         :   parent.top
-                anchors.bottom      :   parent.bottom
+            Item {
+                id          :   layout
+                height      :   parent.height
                 Layout.minimumWidth :   400
 
-                currentIndex    :   {
-                    if(documentTabs.count > 1 && documentTabs.currentIndex === 0){
-                        documentTabs.currentIndex = 1
-                        return 1
-                    }
-                    else
-                        return documentTabs.currentIndex
+                GenericEditorMenu   {
+                    id                  :   editorMenu
+                    anchors.right       :   parent.right
+                    anchors.top         :   parent.top
+                    z                   :   5
+                    currentDocument     :   documents.itemAt(documents.currentIndex)
+                    visible             :   documents.anyDocumentOpened
                 }
 
-                EmptyDocument   {
-                    id              :   emptyDoc
-                    width           :   parent.width
-                    height          :   parent.height
-                    visible         :   documents.count <= 1
-                    projectOpened   :   projectRoot !== ""
+                StackLayout {
+                    id                  :   documents
+                    anchors.fill        :   parent
+                    readonly property bool anyDocumentOpened :   documents.count > 1
+                    currentIndex    :   {
+                        if(documentTabs.count > 1 && documentTabs.currentIndex === 0){
+                            documentTabs.currentIndex = 1
+                            return 1
+                        }
+                        else
+                            return documentTabs.currentIndex
+                    }
+
+                    EmptyDocument   {
+                        id              :   emptyDoc
+                        width           :   parent.width
+                        height          :   parent.height
+                        visible         :   documents.count <= 1
+                        projectOpened   :   projectRoot !== ""
+                    }
                 }
             }
         }
@@ -359,6 +389,30 @@ Item {
         context     :   Qt.ApplicationShortcut
         onActivated :   {
             closeCurrentDocument()
+        }
+    }
+
+    Shortcut{
+        id          :   closeAllShortcut
+        sequence    :   "Ctrl+Shift+W"
+        context     :   Qt.ApplicationShortcut
+        onActivated :   {
+            while(openedDocuments.length > 0)
+                closeCurrentDocument()
+        }
+    }
+
+    Shortcut{
+        id          :   transitionShortcut
+        sequence    :   "Ctrl+Tab"
+        context     :   Qt.ApplicationShortcut
+        onActivated :   {
+            if(documentTabs.count <= 1)
+                return
+            if(documentTabs.currentIndex >= (documentTabs.count - 1))
+                documentTabs.currentIndex = 0
+            else
+                documentTabs.incrementCurrentIndex()
         }
     }
 
@@ -456,9 +510,9 @@ Item {
         onErrorOccurred         :   {
             //<error>.file .row .column .message
             console.log("Err -> " + error.message)
-            var     sourcePath  = error.file
+            var     sourcePath  =   error.file
             var     docInfo     =   getDocumentInfo(sourcePath)
-            var isProjectSource = sourcePath.indexOf(projectRoot) > -1
+            var isProjectSource =   sourcePath.indexOf(projectRoot) > -1
 
             //Eger dokuman bulunduysa
             if(docInfo !== -1){
