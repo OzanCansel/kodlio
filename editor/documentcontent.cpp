@@ -28,7 +28,7 @@ void DocumentContent::setAbsolutePath(QString val){
         return;
     }
 
-    if(!doc.open(QIODevice::ReadOnly)){
+    if(!doc.open(QIODevice::ReadOnly | QIODevice::ReadOnly)){
         emit fileReadError();
         setContent(QString());
         return;
@@ -36,6 +36,7 @@ void DocumentContent::setAbsolutePath(QString val){
 
     //Dosya okunuyor
     QTextStream ss(&doc);
+    ss.setCodec("UTF-8");
     setContent(ss.readAll());
 
     //Dosya kapatiliyor
@@ -89,8 +90,8 @@ bool    DocumentContent::save(){
     }
 
     QTextStream ss(&doc);
-
-    ss << content;
+    ss.setCodec("UTF-8");
+    ss << content.toUtf8();
 
     doc.close();
 

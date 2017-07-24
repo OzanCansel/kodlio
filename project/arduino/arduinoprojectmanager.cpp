@@ -43,14 +43,15 @@ void ArduinoProjectManager::createProject(ProjectOptions *opts){
     mainFileTemplate.setFileName("sketch.cpp");
     QString content = mainFileTemplate.extract();
 
-    if(!mainFile.open(QIODevice::WriteOnly)){
+    if(!mainFile.open(QIODevice::WriteOnly | QIODevice::WriteOnly)){
         sendProjectCreateError("Dosya olusturulurken hata olustu.");
         rootDir.removeRecursively();
         return;
     }
 
     QTextStream ss(&mainFile);
-    ss << content;
+//    ss.setCodec("UTF-8");
+    ss << content.toUtf8();
 
     mainFile.close();
     setProjectRoot(rootDir.absolutePath());
