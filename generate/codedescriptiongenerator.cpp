@@ -23,7 +23,7 @@ CodeDescriptionGenerator::CodeDescriptionGenerator(QQuickItem *parent) : QQuickI
                 << new PulseInDescGeneratorO1() << new PulseInDescGeneratorO2();
 }
 
-void CodeDescriptionGenerator::retrieveFunctionDescriptions(QString text){
+void CodeDescriptionGenerator::retrieveFunctionDescriptions(QString &text){
 
     QList<FunctionUsageParsed> parsedFuncs = _parser.extractFunctions(text);
 

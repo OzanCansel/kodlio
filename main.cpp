@@ -57,36 +57,14 @@ int main(int argc, char *argv[])    {
     ThreadPlugin::attach();
     SerialPlugin::attach();
     ParserPlugin::attach();
-
-    //    RoboskopEnvironment*            env = RoboskopEnvironment::getInstance();
-    //    Compiler                        compiler;
-    //    Programmer                      programmer;
-    //    Toolchain                       toolchain(&compiler , &programmer);
-    //    DirectoryManager                dirMan;
-    //    ProjectManager                  manager(&dirMan , &toolchain);
-    //    Cloud                           cloud;
-    //    ParseHelper                     parseHelper;
-    //    CompilerErrorParser             errParser;
-        OsInfo                          osInfo;
-    //    CodeDescriptionGenerator        descGen;
+    OsInfo                          osInfo;
 
     QQmlApplicationEngine engine;
     EventContext        eventContext;
     QQmlContext *context = engine.rootContext();
 
     context->setContextProperty("eventContext" , &eventContext);
-    //    context->setContextProperty("projectManager" , &manager);
-    //    context->setContextProperty("cloudApi" , &cloud);
-    //    context->setContextProperty("fileSys" , &dirMan);
-//        context->setContextProperty("serialPort" , &sPort);
-    //    context->setContextProperty("compiler" , &compiler);
-    //    context->setContextProperty("programmer", &programmer);
-    //    context->setContextProperty("toolchain" , &toolchain);
-    //    context->setContextProperty("descriptionGenerator" , &descGen);
-    //    context->setContextProperty("parseHelper" , &parseHelper);
-    //    context->setContextProperty("compilerErrorParser" , &errParser);
-        context->setContextProperty("osInfo" , &osInfo);
-    //    context->setContextProperty("environment" , env);
+    context->setContextProperty("osInfo" , &osInfo);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
 
     return app.exec();

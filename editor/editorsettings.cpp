@@ -30,10 +30,20 @@ void EditorSettings::setFontPointSize(int pointSize){
     emit fontPointSizeChanged();
 }
 
+void EditorSettings::setAssistantEnabled(bool enabled){
+    set(ASSISTANT_ENABLED_LABEL , QVariant(enabled));
+    save();
+    emit assistantEnabledChanged();
+}
+
 int EditorSettings::tabSize(){
     return get(TAB_SIZE_LABEL).toInt();
 }
 
 int EditorSettings::fontPointSize(){
     return get(FONT_POINT_SIZE_LABEL).toInt();
+}
+
+bool EditorSettings::assistantEnabled(){
+    return get(ASSISTANT_ENABLED_LABEL).toBool();
 }

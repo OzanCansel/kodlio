@@ -41,5 +41,7 @@
         <file>res/icon/redo-available.png</file>
         <file>res/icon/full-screen-not-activated.png</file>
         <file>res/icon/full-screen-activated.png</file>
+        <file>res/icon/assistant-disabled-icon.png</file>
+        <file>res/icon/assistant-enabled-icon.png</file>
     </qresource>
 </RCC>

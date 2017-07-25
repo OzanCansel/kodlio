@@ -14,7 +14,8 @@ win32 {
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\* $${OUT_PWD_WIN}\\debug\\ /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\sdk $${OUT_PWD_WIN}\\debug\\sdk /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e &
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\template $${OUT_PWD_WIN}\\release\\template /e
 
                 message(robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e)
 
@@ -27,6 +28,7 @@ win32 {
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\sdk $${OUT_PWD_WIN}\\release\\sdk /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\release\\drivers /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e
+                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\template /e
 
         }
 }
@@ -169,7 +171,10 @@ SOURCES += main.cpp \
     project/projectoptions.cpp \
     project/arduino/arduinoprojectmanager.cpp \
     texttemplate/arduino/arduinomainfiletemplate.cpp \
-    texttemplate/genericfiletemplate.cpp
+    texttemplate/genericfiletemplate.cpp \
+    parse/kodlioasistant.cpp \
+    editor/linenumber.cpp \
+    parse/headerparser.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -411,5 +416,8 @@ HEADERS += \
     project/projectoptions.h \
     project/arduino/arduinoprojectmanager.h \
     texttemplate/arduino/arduinomainfiletemplate.h \
-    texttemplate/genericfiletemplate.h
+    texttemplate/genericfiletemplate.h \
+    parse/kodlioasistant.h \
+    editor/linenumber.h \
+    parse/headerparser.h
 

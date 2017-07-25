@@ -1,8 +1,10 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.2
+import Kodlio 1.0
 import "../singleton"
 
 Item {
+
     property FlickableTextArea  target          :   ({})
     readonly property int startNumber           :   calculateStartLineIdx()
     property int lineCount                      :   calculateLineCount()
@@ -11,7 +13,9 @@ Item {
 
     function    calculateStartLineIdx(){
         //1 den buyuk
-        return Math.max(1 , Math.round(target.contentY / metrics.height))
+        var matchIdx = target.textArea.positionAt(0 , target.contentY)
+        return lineNumberCalculator.matchIdxToLineNumber(matchIdx)
+        //        return Math.max(1 , Math.round(target.contentY / (metrics.height)))
     }
 
     function    calculateLineCount(){
@@ -20,14 +24,14 @@ Item {
 
     function    newError(err){
         errors.push(err)
-        lineCount = 0
-        lineCount = Qt.binding(calculateLineCount)
+        lineCountRepeater.model = 0
+        lineCountRepeater.model = lineCount
     }
 
     function    clearErrors(){
         while(errors.length > 0) errors.pop()
-        lineCount = 0
-        lineCount = Qt.binding(calculateLineCount)
+        lineCountRepeater.model = 0
+        lineCountRepeater.model = lineCount
     }
 
     function    getError(line){
@@ -54,6 +58,23 @@ Item {
         return false
     }
 
+    Connections{
+        target              :   lineNumerator.target.textArea
+        onTextChanged       :   {
+            lineCountRepeater.model = 0
+            lineCountRepeater.model = lineCount
+        }
+    }
+
+    function    calculatePos(lineNumber){
+        var matchIdx = lineNumberCalculator.matchIdx(lineNumber)
+        if(matchIdx === -1){
+            //            lineCount = lineNumber - startNumber
+            return {  y : 0 , matched : false }
+        }
+        return {  y : target.textArea.positionToRectangle(matchIdx).y - target.contentY , matched : true }
+    }
+
     id          :   lineNumerator
 
     FontMetrics {
@@ -61,12 +82,16 @@ Item {
         font            :   target.textArea.font
     }
 
-    Column  {
+    LineNumber{
+        id              :   lineNumberCalculator
+        lineStart       :   calculateStartLineIdx()
+        lineEnd         :   startNumber + lineCount
+        textDocument    :   target.textArea.textDocument
+    }
+
+    Item  {
         id                  :  lineNumbersColumn
         anchors.fill        :   parent
-        anchors.topMargin   :   5
-        anchors.bottomMargin:   5
-        spacing             :   metrics.leading
         z                   :   2
         clip                :   true
 
@@ -74,13 +99,16 @@ Item {
             id          :   lineCountRepeater
             model       :   lineCount
             Item    {
-                readonly property  int lineNumber       :   index + startNumber
-                property bool       hasError            :   lineNumerator.hasError(lineNumber)
-                property string     message             :   hasError ? getError(lineNumber).message : ""
+                readonly property  int      lineNumber          :   index + startNumber
+                property bool               hasError            :   lineNumerator.hasError(lineNumber)
+                property string             message             :   hasError ? getError(lineNumber).message : ""
+                readonly property variant   pos                 :   calculatePos(lineNumber)
 
                 id      :   lineNumberItem
                 height  :   metrics.height
                 width   :   parent.width
+                y       :   pos.y
+                visible :   pos.matched
 
                 Text {
                     id                  :   lineNumberText

@@ -1,4 +1,5 @@
 import QtQuick 2.7
+import QtQuick.Controls 2.2
 import Kodlio 1.0
 import "../singleton"
 
@@ -71,5 +72,42 @@ Item {
         textArea.readOnly       :   doc.isReadOnly
         textArea.font.family    :   FontCollection.editorFont
         textArea.font.pointSize :   EditorSettings.fontPointSize
+    }
+
+
+    Item {
+        id                      :   modifiedIndicatorContainer
+        z                       :   5
+        anchors.right           :   parent.right
+        anchors.rightMargin     :   10
+        anchors.bottom          :   parent.bottom
+        anchors.bottomMargin    :   10
+        width                   :   20
+        height                  :   20
+        opacity                 :   textFlickable.modified ? 1 : 0
+        ToolTip.visible         :   area.containsMouse
+        ToolTip.text            :   "Döküman kaydedilmedi"
+
+        Behavior on opacity{
+            NumberAnimation{
+
+            }
+        }
+
+        Rectangle   {
+            id          :   modifiedIndicatorVisual
+            anchors.fill:   parent
+            radius      :   height * 0.5
+            border.width:   1
+            color       :   textFlickable.modified ? "#ff1a00" : "#28A828"
+            antialiasing:   true
+            opacity     :   0.9
+        }
+
+        MouseArea   {
+            id              :   area
+            anchors.fill    :   parent
+            hoverEnabled    :   true
+        }
     }
 }

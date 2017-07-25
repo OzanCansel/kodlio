@@ -1,6 +1,6 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.2
-
+import Kodlio 1.0
 import "../control"
 import "../editor"
 
@@ -43,6 +43,15 @@ Item {
             onClicked   :   currentDocument.save()
             ToolTip.visible :   hovered
             ToolTip.text    :   "Dökümanı kaydet (Ctrl+S)"
+        }
+
+        ToolImageButton{
+            id              :   assistantEnabledButton
+            color           :   "transparent"
+            src             :   EditorSettings.assistantEnabled ? "/res/icon/assistant-enabled-icon.png" : "/res/icon/assistant-disabled-icon.png"
+            ToolTip.visible :   hovered
+            ToolTip.text    :   EditorSettings.assistantEnabled ? "Kodlio asistanı kapat" : "Kodlio asistanı aktif et"
+            onClicked       :   EditorSettings.assistantEnabled = !EditorSettings.assistantEnabled
         }
     }
 }

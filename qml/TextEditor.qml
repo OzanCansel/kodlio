@@ -428,7 +428,7 @@ Rectangle {
                 obj.remove()
             }
 
-            var functions = descriptionGenerator.retrieveFunctionDescriptions(textControl.text);
+            var functions = descriptionGenerator.retrieveFunctionDescriptions(textControl.text)
             checkCodeDescriptions()
         }
     }
@@ -488,7 +488,6 @@ Rectangle {
         }
         onCompileEnd    :   {
             //<success>
-
             if(success)
                 compileSuccesAnimation2.restart()
             else
@@ -506,7 +505,7 @@ Rectangle {
         visible :   failureAnimation.running
     }
 
-    SequentialAnimation{
+    SequentialAnimation {
         id          :   failureAnimation
 
         ParallelAnimation{

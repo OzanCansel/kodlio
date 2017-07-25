@@ -1,4 +1,5 @@
 {
-	"fontPointSize"	:	12 ,
-	"tabSize"	:	4
+	"fontPointSize"		:	12 ,
+	"tabSize"		:	4 ,
+	"assistantEnabled"	:	true
 }

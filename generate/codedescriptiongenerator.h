@@ -19,7 +19,7 @@ public:
 
 public slots    :
 
-    void    retrieveFunctionDescriptions(QString text);
+    void    retrieveFunctionDescriptions(QString &text);
 
 signals :
 

@@ -295,7 +295,7 @@ Item {
             DocumentHeader  {
                 x           :   50
                 height      :   parent.height
-                text        :   projectOpen ? projectName : "Proje Açılmadı."
+                text        :   projectOpen ? projectName : "Proje Açılmadı"
                 mainHeader  :   true
             }
         }

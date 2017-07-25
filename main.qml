@@ -35,7 +35,7 @@ ApplicationWindow {
         onListSerialPorts   :   serialPortPopup.open()
     }
 
-    Connections{
+    Connections {
         target              :   compileControlBar
         onCompileRequired   :   currentProject.compile()
         onUploadRequired    :   currentProject.run()
@@ -104,6 +104,7 @@ ApplicationWindow {
 
     ArduinoProjectManager{
         id                  :   projectManager
+        onProjectCreateError:   toast.displayError(error)
 //        projectRoot         :   "/home/arnes/Documents/toolchain-example"
     }
 
