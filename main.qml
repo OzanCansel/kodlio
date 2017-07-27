@@ -37,7 +37,10 @@ ApplicationWindow {
 
     Connections {
         target              :   compileControlBar
-        onCompileRequired   :   currentProject.compile()
+        onCompileRequired   :   {
+            currentProject.saveAll()
+            currentProject.compile()
+        }
         onUploadRequired    :   currentProject.run()
     }
 
@@ -62,9 +65,9 @@ ApplicationWindow {
     }
 
     GenericMessageDialog{
-        id      :   quitAppDialog
-        title   :   "Uygulamayı kapat"
-        message :   "Uygulamayı kapatmak istediğinize emin misiniz ?"
+        id              :   quitAppDialog
+        title           :   "Uygulamayı kapat"
+        message         :   "Uygulamayı kapatmak istediğinize emin misiniz ?"
         onAccepted      :   Qt.quit()
         standardButtons :   StandardButton.Yes | StandardButton.No
     }
@@ -105,6 +108,7 @@ ApplicationWindow {
     ArduinoProjectManager{
         id                  :   projectManager
         onProjectCreateError:   toast.displayError(error)
+        onProjectRootChanged:   console.log("Project root changed -> " + projectRoot)
 //        projectRoot         :   "/home/arnes/Documents/toolchain-example"
     }
 
@@ -112,7 +116,7 @@ ApplicationWindow {
         id      :   serialMonitorDialog
     }
 
-    CreateProjectDialog{
+    CreateProjectDialog {
         id      :   createProjectDialog
         manager :   projectManager
         options :   projectOptions

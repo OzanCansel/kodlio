@@ -67,7 +67,9 @@ Project {
             displayWarning("Proje açılmadı.")
             return
         }
+
         var mainFile = projectWatcher.retrieveMainFile()
+        console.log("Derleniyor " + mainFile)
         toolchainThread.compile(mainFile , options)
     }
 

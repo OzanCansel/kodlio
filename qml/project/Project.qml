@@ -39,6 +39,7 @@ Item {
     signal  showWarning(string msg)
 
     onProjectRootChanged    :   {
+        console.log("Root => " + projectRoot)
         while(openedDocuments.length > 0)
             closeCurrentDocument()
     }
@@ -140,6 +141,10 @@ Item {
                 doc.document.save()
             }
         }
+    }
+
+    function saveAll(){
+        saveCurrentDocument()
     }
 
     function    displayMessage(msg){

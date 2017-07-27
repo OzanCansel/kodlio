@@ -56,7 +56,6 @@ void ArduinoProjectManager::createProject(ProjectOptions *opts){
     mainFile.close();
     setProjectRoot(rootDir.absolutePath());
     sendProjectCreated();
-
 }
 
 void ArduinoProjectManager::removeProject(ProjectOptions *opts){
