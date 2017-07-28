@@ -7,9 +7,10 @@ import "../singleton"
 
 Item {
 
-    id                  :   mainContainer
-    implicitWidth       :   700
-    implicitHeight      :   400
+    id                                          :   mainContainer
+    property ArduinoLibManager  libManager      :   ({})
+    implicitWidth                               :   700
+    implicitHeight                              :   400
 
     readonly property bool      localSearch     :   tabBar.currentIndex === 0
     property string    filterText      :   nameFilterTxt.text
@@ -46,8 +47,31 @@ Item {
 
     onLocalSearchChanged    :   filter()
 
-    ArduinoLibManager   {
-        id                                  :   libManager
+//    ArduinoLibManager   {
+//        id                                  :   libManager
+//        onLibInstallErrorOccurred           :   {
+//            var message = desc.name + " yuklenemedi."
+//            Global.displayMessage(message)
+//            Global.consoleErrorOutput(message)
+//        }
+//        onLibInstalledSuccessfully          :   toast.displayMessage(desc.name + " basariyla yuklendi.")
+//        onLibRemovedSuccessfully            :   toast.displayMessage(desc.name + " basariyla silindi.")
+//        onLibRemoveErrorOcurred             :   toast.displayMessage(desc.name + " silinirken hata olustu !")
+//        onRetrieveOnlineLibsInternetError   :   toast.displayMessage("Kutuphaneler alinamadi, internet baglantisini kontrol ediniz.")
+//        onOnlineLibsChanged                 :   filterOnline()
+//        onLocalLibsChanged                  :   filterLocal()
+//        onFilterLocalResult                 :   localLibs.append(item)
+//        onFilterOnlineResult                :   onlineLibs.append(item)
+//        onLibNotRemovable                   :   toast.displayError("Bu kütüphane silinemez.")
+
+//        Component.onCompleted               :   {
+//            libManager.retrieveOnlineLibraries()
+//            libManager.retrieveLocalLibraries()
+//        }
+//    }
+
+    Connections   {
+        target                              :   libManager
         onLibInstallErrorOccurred           :   {
             var message = desc.name + " yuklenemedi."
             Global.displayMessage(message)

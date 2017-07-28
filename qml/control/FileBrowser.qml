@@ -1,20 +1,32 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
+import QtQml.Models 2.3
 import Kodlio 1.0
 import "../singleton"
 
 TreeView {
 
     property string     rootPath    :   ""
-
-    id          :   treeView
+    id                  :   treeView
 
 
     headerVisible       :   false
     backgroundVisible   :   false
     rootIndex           :   tree.rootIndex
     model               :   tree.model
+    selectionMode       :   SelectionMode.SingleSelection
+    selection           :   ItemSelectionModel {
+        model: tree.model
+    }
+
+    onRootIndexChanged  :   console.log("Root index cnhaged to -> " + tree.fileName(treeView.rootIndex))
+    onCurrentIndexChanged   :   console.log("Curr idx => " + tree.fileName(currentIndex))
+
+    onRootPathChanged   :   {
+        selection.clearSelection()
+        selection.clearCurrentIndex()
+    }
 
     signal  dirRightClicked(string path , variant mouse);
 
@@ -28,8 +40,8 @@ TreeView {
     }
 
     TableViewColumn {
-        title   :   "Name"
-        role    :   "fileName"
+        title       :   "Name"
+        role        :   "fileName"
     }
 
     FileInfo{
@@ -48,18 +60,18 @@ TreeView {
     }
 
     MouseArea {
-         anchors.fill: parent
-         acceptedButtons: Qt.RightButton
-         onClicked: {
-             var index = parent.indexAt(mouse.x, mouse.y)
-             if (index.valid) {
-                 var file = getFileInfo(index)
-                 treeView.dirRightClicked(file , mouse)
-             }else{
-                 treeView.dirRightClicked(rootPath , mouse)
-             }
-         }
-     }
+        anchors.fill: parent
+        acceptedButtons: Qt.RightButton
+        onClicked: {
+            var index = parent.indexAt(mouse.x, mouse.y)
+            if (index.valid) {
+                var file = getFileInfo(index)
+                treeView.dirRightClicked(file , mouse)
+            }else{
+                treeView.dirRightClicked(rootPath , mouse)
+            }
+        }
+    }
 
     rowDelegate     :   Rectangle{
         color       :   "transparent"

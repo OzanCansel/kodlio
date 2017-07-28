@@ -15,9 +15,9 @@ void AvrToolchain::registerQmlType(){
 }
 
 AvrToolchain::AvrToolchain(QQuickItem *parent) : ToolchainV2(parent)    {
-    map();
-    //    _compiler.moveToThread(&_compilerThread);
+    //    map();
     _compatibleSourceExtensions << ".c" << ".S" << ".cpp";
+    _libManager = Q_NULLPTR;
 }
 
 
@@ -108,12 +108,15 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     double  archiveProgressstep = PROGRESS_ARCHIVE_TOTAL_PORTION / (double) projectSources.length();
 
     sendInfo("Kütüphaneler derleniyor...");
+
+    QStringList generatedObjectFiles;
+
     //Kutuphaneler derleniyor
     foreach (ArduinoLibDescription* desc, projectLibDependencies) {
         try{
-        compileLib(desc , boardBuildDirPath , boardName);
-        progress += libProgressStep;
-        sendProgress(progress);
+            compileLib(desc , boardBuildDirPath , boardName , generatedObjectFiles);
+            progress += libProgressStep;
+            sendProgress(progress);
         }catch(CompileError &err){
             sendStdError("");
             sendCompileError();
@@ -135,9 +138,9 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         QString     output = QString("%0/%1.o").arg(boardBuildDirPath).arg(sourceInfo.fileName());
 
         try{
-        _compiler.generateObjFile(sourceFile , output , includes , boardName);
-        progress += compileProgressStep;
-        sendProgress(progress);
+            _compiler.generateObjFile(sourceFile , output , includes , boardName);
+            progress += compileProgressStep;
+            sendProgress(progress);
         }catch (CompileError &err){
             sendStdError(err.err());
             sendCompileError();
@@ -178,7 +181,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
     sendInfo("Hex dosyası üretiliyor...");
     try{
-        setCompiledHexFile(_compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath));
+        setCompiledHexFile(_compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath , generatedObjectFiles));
     }catch(CompileError&){
         sendStdError("Hex dosyasi üretilirken hata oluştu.");
         sendCompileError();
@@ -254,9 +257,14 @@ void AvrToolchain::extractDependencies(QString file , QList<ArduinoLibDescriptio
 }
 
 void AvrToolchain::map(){
-    _libManager.retrieveLocalLibraries();
+    if(_libManager == Q_NULLPTR)
+        return
 
-    QList<ArduinoLibDescription*>   libs = _libManager.getLocalLibs();
+                _headerMaps.clear();
+    _headers.clear();
+    _libManager->retrieveLocalLibraries();
+
+    QList<ArduinoLibDescription*>   libs = _libManager->getLocalLibs();
 
     foreach (ArduinoLibDescription *libDesc, libs) {
         foreach (QString headerFPath, libDesc->headerPaths()) {
@@ -289,7 +297,7 @@ AvrToolchain::HeaderMapInfo   AvrToolchain::getHeaderMap(QString headerName){
     }
 }
 
-void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder , QString &boardName){
+void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder , QString &boardName , QStringList &generatedObjectFiles){
 
     sendInfo(QString("%0 kütüphanesi derleniyor...").arg(desc->name()));
     FileTraverse    traverser;
@@ -325,6 +333,8 @@ void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder
             //<outputFolder>/<fileName>
             QString outputPath = QString("%0/%1.o").arg(outputFolder).arg(fInfo.fileName());
             _compiler.generateObjFile(discovered , outputPath , includes , boardName);
+            if(!generatedObjectFiles.contains(outputPath))
+                generatedObjectFiles.append(outputPath);
         }
     }
 }
@@ -373,4 +383,22 @@ void AvrToolchain::setCompiledHexFile(QString path){
 
 Runner* AvrToolchain::runner(){
     return &_runner;
+}
+
+void AvrToolchain::setLibManager(LibraryManager *libManager){
+    _libManager = libManager;
+    if(_libManager != Q_NULLPTR){
+        connect(_libManager , SIGNAL(libRemovedSuccessfully(ArduinoLibDescription*)) , this , SLOT(librariesChanged(ArduinoLibDescription*)));
+        connect(_libManager , SIGNAL(libInstalledSuccessfully(ArduinoLibDescription*)) , this , SLOT(librariesChanged(ArduinoLibDescription*)));
+        map();
+    }
+    emit libManagerChanged();
+}
+
+LibraryManager* AvrToolchain::libManager(){
+    return _libManager;
+}
+
+void AvrToolchain::librariesChanged(ArduinoLibDescription *desc){
+    map();
 }

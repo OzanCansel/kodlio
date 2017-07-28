@@ -175,8 +175,8 @@ Item {
         }
     }
 
-    function openCurrentlySelectedFile(){
-        var path = fileBrowser.getFileInfo(fileBrowser.currentIndex)
+    function openCurrentlySelectedFile(idx){
+        var path = fileBrowser.getFileInfo(idx)
         openDocument(path)
     }
 
@@ -324,7 +324,7 @@ Item {
 
                 onDirRightClicked   :   {
                     //<path>
-                    var point = browser.mapToItem(arduinoProject , mouse.x , mouse.y)
+                    var point = browser.mapToItem(project , mouse.x , mouse.y)
                     contextMenu.x       =   point.x
                     contextMenu.y       =   point.y
                     contextMenu.filePath = path
@@ -332,7 +332,7 @@ Item {
                 }
 
                 onDoubleClicked         :   {
-                    openCurrentlySelectedFile()
+                    openCurrentlySelectedFile(index)
                 }
                 Keys.onEnterPressed     :   {
                     openCurrentlySelectedFile()

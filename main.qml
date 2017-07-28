@@ -57,7 +57,8 @@ ApplicationWindow {
     }
 
     LibrariesDialog {
-        id      :   libraryManagerDialog
+        id          :   libraryManagerDialog
+        libManager  :   libManager
     }
 
     ExamplesDialog{
@@ -108,8 +109,6 @@ ApplicationWindow {
     ArduinoProjectManager{
         id                  :   projectManager
         onProjectCreateError:   toast.displayError(error)
-        onProjectRootChanged:   console.log("Project root changed -> " + projectRoot)
-//        projectRoot         :   "/home/arnes/Documents/toolchain-example"
     }
 
     SerialMonitorDialog{
@@ -127,14 +126,17 @@ ApplicationWindow {
     }
 
 
-    background  :
-        Image {
+    background  :   Image   {
         id          :   img
         source      :   "/res/icon/backgroundpattern.png"
         fillMode    :   Image.Tile
         width       :   app.width
         height      :   app.height
         z           :   0
+    }
+
+    ArduinoLibManager{
+        id                  :   libManager
     }
 
     Item {
@@ -160,7 +162,7 @@ ApplicationWindow {
 
             anchors.fill        :   parent
 
-            Item{
+            Item    {
 
                 id          :   compileControlsContainer
                 height      :   parent.height -  26
@@ -280,12 +282,11 @@ ApplicationWindow {
                         id              :   projectMenu
                         visible         :   false
                         width           :   150
-                        //                    height          :   200
                         x               :   newFile.x + newFile.width + 10
                         y               :   newFile.y + 10
 
                         onOpenProjectRequired   :   {
-                            currentProject.projectRoot = projectPath
+                            projectManager.projectRoot = projectPath
                         }
 
                         onCreateProjectRequired :   {
@@ -397,6 +398,7 @@ ApplicationWindow {
 
                         ArduinoProject  {
                             id                      :   currentProject
+                            libManager              :   libManager
                             onShowToast             :   toast.displayMessage(msg)
                             onShowError             :   toast.displayError(msg)
                             onShowWarning           :   toast.displayWarning(msg)

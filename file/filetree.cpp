@@ -7,7 +7,7 @@ void FileTree::registerQmlType(){
 }
 
 FileTree::FileTree(QQuickItem *parent) : QQuickItem(parent){
-
+    _model.setRootPath("/");
 }
 
 QModelIndex FileTree::rootIndex(){
@@ -15,7 +15,8 @@ QModelIndex FileTree::rootIndex(){
     if(_rootPath.isEmpty())
         return QModelIndex();
 
-    return _model.index(_rootPath);
+    QModelIndex index = _model.index(_rootPath);
+    return index;
 }
 
 QFileSystemModel* FileTree::model(){
@@ -29,13 +30,12 @@ QString FileTree::rootPath(){
 void FileTree::setRootPath(QString path){
     if(path.isEmpty())
         return;
+
     _rootPath = path;
-    _model.setRootPath(path);
+
     emit rootPathChanged();
     emit rootIndexChanged();
-    emit modelChanged();
 }
-
 
 QString FileTree::fileName(QModelIndex idx) {
     QFileInfo   info    =   _model.fileInfo(idx);

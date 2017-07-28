@@ -18,6 +18,8 @@ Project {
     parser              :       errParser
     allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
 
+    property ArduinoLibManager  libManager  :   ({})
+
     AvrErrorParser{
         id          :   errParser
         compiler    :   parent.compiler
@@ -28,7 +30,8 @@ Project {
     }
 
     AvrToolchain{
-        id      :   avrToolchain
+        id          :   avrToolchain
+        libManager  :   arduinoProject.libManager
     }
 
     AvrCompileOptions   {

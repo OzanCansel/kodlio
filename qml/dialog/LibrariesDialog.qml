@@ -1,14 +1,19 @@
 import QtQuick 2.0
+import Kodlio 1.0
 import "../control"
 import "../form"
 
 GenericDialog {
 
+    property ArduinoLibManager      libManager  :   ({})
+
+    id          :   dialog
     width       :   form.implicitWidth
     height      :   form.implicitHeight
 
     contentItem :  LibraryManagerForm  {
-        id      :   form
+        id          :   form
+        libManager  :   dialog.libManager
     }
 
     background      :    Rectangle{

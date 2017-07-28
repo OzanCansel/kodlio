@@ -6,7 +6,7 @@ void CompilerV2::registerQmlType(){
 }
 
 CompilerV2::CompilerV2(QQuickItem *parent) : QQuickItem(parent){
-
+    setDebugEnabled(true);
 }
 
 void CompilerV2::sendStdOutput(QString output){

@@ -87,7 +87,7 @@ void AvrCompilerV2::archiveFiles(QStringList &objFiles, QString &output){
         //<compilerName> rcs <output> <input>
         QString command = QString("%0 rcs %1 %2").arg(env.gccAr())
                 .arg(output)
-                .arg(objFile);;
+                .arg(objFile);
 
         sendCommandOutput(command);
         //Baslatiliyor
@@ -105,7 +105,7 @@ void AvrCompilerV2::archiveFiles(QStringList &objFiles, QString &output){
     }
 }
 
-QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString &buildFolder){
+QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString &buildFolder , QStringList& generatedObjFiles){
     QString elfFilePath = QString(buildFolder).append("/output.elf");
     QString eepFilePath = QString(buildFolder).append("/output.eep");
     QString hexFilePath = QString(buildFolder).append("/output.hex");
@@ -115,11 +115,18 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
 
     bool interrupted  = false;  //Islem  yarida kesilirse true
 
+    QString     objFilesText(objFile);
+
+    foreach (QString objFile, generatedObjFiles) {
+        objFilesText.append(QString(" %0").arg(objFile));
+    }
+
     //<avr-gcc> <params> -o <outputFile> <inputFile> <archiveFile> -L<buildFolder> -lm
-    QString generateElfCommand = QString("%0 %1 -o %2 %3 %4 -L%5 -lm").arg(env.gcc())
-            .arg(board->elfParams())
-            .arg(elfFilePath)
-            .arg(objFile)
+    QString generateElfCommand = QString("%0 %1 -o %2 %3 %4 -L%5 -lm")
+            .arg(env.gcc()) //0
+            .arg(board->elfParams()) //1
+            .arg(elfFilePath) //2
+            .arg(objFilesText) //objFiles
             .arg(archiveFile)
             .arg(buildFolder);
 
