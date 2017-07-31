@@ -46,6 +46,7 @@ public:
     virtual CompilerV2*     compiler();
     virtual Runner*         runner();
 
+
 public slots:
 
     void                    librariesChanged(ArduinoLibDescription* desc);
@@ -69,6 +70,7 @@ private:
     bool            isHeaderFile(QString &fileName);
     bool            isSourceFile(QString &fileName);
     bool            possibleSourceFiles(QString &headerName , QStringList &sourceFile);
+    QDir            mkpath(QString path);
 };
 
 #endif // AVRTOOLCHAIN_H

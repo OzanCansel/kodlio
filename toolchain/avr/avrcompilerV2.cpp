@@ -105,7 +105,7 @@ void AvrCompilerV2::archiveFiles(QStringList &objFiles, QString &output){
     }
 }
 
-QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QString &buildFolder , QStringList& generatedObjFiles){
+QString AvrCompilerV2::generateHex(QString &archiveFile, QString &buildFolder , QStringList& generatedObjFiles){
     QString elfFilePath = QString(buildFolder).append("/output.elf");
     QString eepFilePath = QString(buildFolder).append("/output.eep");
     QString hexFilePath = QString(buildFolder).append("/output.hex");
@@ -115,10 +115,10 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
 
     bool interrupted  = false;  //Islem  yarida kesilirse true
 
-    QString     objFilesText(objFile);
+    QString     objFilesText;
 
     foreach (QString objFile, generatedObjFiles) {
-        objFilesText.append(QString(" %0").arg(objFile));
+        objFilesText.append(QString("%0 ").arg(objFile));
     }
 
     //<avr-gcc> <params> -o <outputFile> <inputFile> <archiveFile> -L<buildFolder> -lm
@@ -145,7 +145,7 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
         sendStdError(err);
         sendStdError(actualError);
         sendCompileError();
-        CompileError(actualError).raise();
+        CompileError(err).raise();
     }
 
     //<objcopy> <params> <inputElf> <outputEep>
@@ -160,10 +160,12 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
     interrupted = !process.waitForFinished();
 
     if(interrupted || process.exitCode() != 0){
-        QString     err(".eep dosyasi uretilirken hata !");
-        sendStdError(err);
+        QString     stdErr = process.readAllStandardError();
+        QString     appErr(".eep dosyasi uretilirken hata !");
+        sendStdError(stdErr);
+        sendStdError(appErr);
         sendCompileError();
-        CompileError(err).raise();
+        CompileError(appErr).raise();
     }
 
     //<objcopy> <params> <inputElf> <outputHex>
@@ -179,6 +181,8 @@ QString AvrCompilerV2::generateHex(QString &objFile, QString &archiveFile, QStri
     //Hata
     if(interrupted || process.exitCode() != 0){
         QString     err(".hex dosyasi uretilirken hata !");
+        QString     stdErr = process.readAllStandardError();
+        sendStdError(stdErr);
         sendStdError(err);
         sendCompileError();
         CompileError(err).raise();

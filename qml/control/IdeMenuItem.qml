@@ -41,7 +41,7 @@ Item {
 
         anchors.fill    :   parent
 
-        Item{
+        Item    {
             width       :   parent.width
             height      :   parent.height
 

@@ -66,6 +66,7 @@ int main(int argc, char *argv[])    {
     context->setContextProperty("eventContext" , &eventContext);
     context->setContextProperty("osInfo" , &osInfo);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
+    QObject::connect(&engine , SIGNAL(quit()) , &app , SLOT(quit()));
 
     return app.exec();
 }

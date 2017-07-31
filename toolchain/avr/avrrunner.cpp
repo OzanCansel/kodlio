@@ -16,6 +16,7 @@ AvrRunner::AvrRunner(QQuickItem *parent) : Runner(parent)  {
 
 void AvrRunner::run( RunOptions *opts){
 
+    setBusy(true);
     setRunnerState(Spawning);
     QString  file = opts->get("file" , true).toString();
     QString  boardName = opts->get("board" , true).toString();
@@ -25,8 +26,10 @@ void AvrRunner::run( RunOptions *opts){
     ArduinoBoard::AvrDudeConfParams params = board->avrDudeConfParams();
 
     //Port belirtilmemisse hata firlatiliyor
-    if(portName.isEmpty())
+    if(portName.isEmpty()){
         PortNameNotSpecified().raise();
+        setBusy(false);
+    }
 
     //<avrdudePath> -C<avrdudeConfPath> -v -patmega328p -carduino -P<portName> -b<baudRate> -D -Uflash:w:<hexFilePath>:i
     QString command = QString("%0 -C%1 %2 -P%3 -b%4 -D -Uflash:w:%5:i").arg(env.avrdude())
@@ -52,14 +55,15 @@ void AvrRunner::run( RunOptions *opts){
 
         //Hata firlatiliyor
         RunError(err).raise();
+        setBusy(false);
     }   else    {
-        //AvrDude error olarak yaziyor outputunu
+        //AvrDude standart outputunu error olarak yazdigi icin readAllStandardError metodu ile okunuyor
         QString output = process.readAllStandardError();
-
         sendStdOutput(output);
     }
 
     setRunnerState(Started);
     //Calistirildi
     sendRunSuccess();
+    setBusy(false);
 }

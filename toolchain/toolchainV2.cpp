@@ -65,6 +65,16 @@ void ToolchainV2::sendBuildStarted(){
     emit buildStarted();
 }
 
+void ToolchainV2::setBusy(bool enabled){
+    _busy = enabled;
+
+    emit busyChanged();
+}
+
+bool ToolchainV2::busy(){
+    return  _busy;
+}
+
 CompilerV2* ToolchainV2::compiler(){
     return Q_NULLPTR;
 }

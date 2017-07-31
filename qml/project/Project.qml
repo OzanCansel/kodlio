@@ -487,7 +487,6 @@ Item {
     }
 
     Connections {
-
         target          :   toolchain
 
         onInfoOutput    :   consoleOut.infoOutput(output)
@@ -498,6 +497,10 @@ Item {
         onCompileSuccess:   compileSuccessAnimation.restart()
         onCompileError  :   compileErrorAnimation.restart()
         onBuildStarted  :   clearErrors()
+    }
+
+    Connections{
+        target          :   compiler
     }
 
     Connections{

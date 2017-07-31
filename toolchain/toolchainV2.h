@@ -12,11 +12,14 @@ class ToolchainV2 : public QQuickItem
 {
 
     Q_OBJECT
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
+
 
 public:
 
     static void     registerQmlType();
     ToolchainV2(QQuickItem *parent = Q_NULLPTR);
+    bool            busy();
 
 public slots:
 
@@ -37,6 +40,7 @@ protected:
     void    sendCompileError();
     void    sendProgress(double val);
     void    sendBuildStarted();
+    void    setBusy(bool enabled);
 
 signals:
 
@@ -49,10 +53,13 @@ signals:
     void    buildStarted();
     void    buildEnd();
     void    progress(double value);
+    void    busyChanged();
 
 private:
 
     bool    _debugEnabled;
+    bool                    _busy;
+
 
 };
 

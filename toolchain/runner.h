@@ -9,6 +9,7 @@ class Runner : public QQuickItem
 
     Q_OBJECT
     Q_PROPERTY(RunnerState runnerState READ runnerState NOTIFY runnerStateChanged)
+    Q_PROPERTY(bool busy READ busy NOTIFY busyChanged)
 
 public:
 
@@ -23,6 +24,7 @@ public:
     Runner(QQuickItem *parent = Q_NULLPTR);
     void            setDebugEnabled(bool enabled);
     bool            debugEnabled();
+    bool            busy();
     RunnerState     runnerState();
 
 public slots:
@@ -38,6 +40,7 @@ protected:
     void    sendRunSuccess();
     void    sendRunError();
     void    setRunnerState(RunnerState state);
+    void    setBusy(bool val);
 
 signals:
 
@@ -48,10 +51,12 @@ signals:
     void    runSuccess();
     void    runError();
     void    runnerStateChanged();
+    void    busyChanged();
 
 private:
 
     RunnerState _state;
+    bool        _busy;
     bool        _debugEnabled;
 
 };

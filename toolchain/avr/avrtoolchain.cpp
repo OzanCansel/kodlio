@@ -31,6 +31,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     QFileInfo   mainFileInfo(file);
     QVariant    buildDirVariant = opts->get("buildDir");
     QString     buildDirPath;
+    QString     libBuildDirPath;
     QString     boardBuildDirPath;
     QVariant    board = opts->get("board");
     QString     boardName;
@@ -44,10 +45,13 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     //Progress baslatiliyor
     sendBuildStarted();
     sendProgress(0);
+    setBusy(true); //Toolchain mesgul
 
     //Eger board secilmemisse
     if(board.isNull()){
         //Hata firlatiliyor
+
+        setBusy(false);
         BoardNotSpecified("AvrToolchain::compile board secilmemis").raise();
     }   else    {
         boardName = board.toString();
@@ -75,6 +79,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     }
 
     boardBuildDirPath = QDir(buildDirPath).filePath(boardName);
+    libBuildDirPath = QDir(boardBuildDirPath).filePath("libs");
 
     //Kullanilmasi gereken kutuphaneler belirleniyor
     extractDependencies(file , projectLibDependencies , discovered);
@@ -92,8 +97,11 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     //Proje calisma klasoru ekleniyor
     includes.append(srcDir);
 
-    foreach (QString discoveredFile, discovered) {
 
+    QStringList generatedObjectFiles;
+    QStringList arduinoObjectFiles;
+
+    foreach (QString discoveredFile, discovered) {
         //Headersa eselesen source dosyalari araniyor
         if(isSourceFile(discoveredFile) && discoveredFile.contains(srcDir))   {
             projectSources.append(discoveredFile);
@@ -109,18 +117,26 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
     sendInfo("Kütüphaneler derleniyor...");
 
-    QStringList generatedObjectFiles;
-
     //Kutuphaneler derleniyor
     foreach (ArduinoLibDescription* desc, projectLibDependencies) {
-        try{
-            compileLib(desc , boardBuildDirPath , boardName , generatedObjectFiles);
+        try {
+            QDir    libBuildDir(libBuildDirPath);
+            QString libBuildPath = libBuildDir.filePath(desc->name());
+            mkpath(libBuildPath);
+
+            //Arduino kutuphaneleri farkli bir koleksiyona ekleniyor
+            if(desc->name() == "Arduino")
+                compileLib(desc , libBuildPath , boardName ,arduinoObjectFiles);
+            else
+                compileLib(desc , libBuildPath , boardName , generatedObjectFiles);
+
             progress += libProgressStep;
             sendProgress(progress);
         }catch(CompileError &err){
             sendStdError("");
             sendCompileError();
             sendProgress(-1);
+            setBusy(false);
             return;
         }
     }
@@ -139,12 +155,14 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
         try{
             _compiler.generateObjFile(sourceFile , output , includes , boardName);
+            generatedObjectFiles.append(output);
             progress += compileProgressStep;
             sendProgress(progress);
-        }catch (CompileError &err){
+        } catch (CompileError &err){
             sendStdError(err.err());
             sendCompileError();
             sendProgress(-1);
+            setBusy(false);
             return;
         }
     }
@@ -152,27 +170,21 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     progress = PROGRESS_EXTRACT_DEPENDENCIES + PROGRESS_COMPILE_LIB_TOTAL_PORTION + PROGRESS_COMPILE_SOURCE_TOTAL_PORTION;
     sendProgress(progress);
 
+    //Arsivleme asamasina geciliyor
     QDir    boardBuildDir(boardBuildDirPath);
-    QStringList objFiles;
     QString archivedLibPath = boardBuildDir.filePath("archive.a");
-    QString mainObjFile = boardBuildDir.filePath(QString("%0.o").arg(mainFileInfo.fileName()));
     QStringList l;
 
-    foreach (QFileInfo fInfo, boardBuildDir.entryInfoList(l, QDir::Files)) {
-        //Ana dosya haric arsivleniyor
-        if(fInfo.fileName().endsWith(".o") && fInfo.fileName() != mainObjFile)
-            objFiles.append(fInfo.filePath());
-    }
-
     sendInfo("Arşivleniyor...");
-    try{
-        _compiler.archiveFiles(objFiles , archivedLibPath);
+
+    try {
+        _compiler.archiveFiles(arduinoObjectFiles , archivedLibPath);
         progress += archiveProgressstep;
         sendProgress(progress);
-    }catch(CompileError&){
+    }   catch(CompileError&)    {
         sendStdError("Kütüphaneler arşivlenirken hata oluştu.");
         sendCompileError();
-
+        setBusy(false);
         return;
     }
 
@@ -181,16 +193,18 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
     sendInfo("Hex dosyası üretiliyor...");
     try{
-        setCompiledHexFile(_compiler.generateHex(mainObjFile , archivedLibPath , boardBuildDirPath , generatedObjectFiles));
-    }catch(CompileError&){
+        setCompiledHexFile(_compiler.generateHex(archivedLibPath , boardBuildDirPath , generatedObjectFiles));
+    }catch(CompileError& err){
         sendStdError("Hex dosyasi üretilirken hata oluştu.");
+        sendStdError(err.err());
         sendCompileError();
-
+        setBusy(false);
         return;
     }
 
     sendProgress(1);
     sendCompileSuccess();
+    setBusy(false);
 }
 
 CompilerV2*    AvrToolchain::compiler(){
@@ -326,12 +340,15 @@ void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder
     //Kutuphanenin ana dizini ekleniyor
     includes.append(srcDir);
 
+    QDir    baseDir(desc->srcDir());
     foreach (QString discovered, discoveredFiles) {
         if(isSourceFile(discovered) && discovered.contains(srcDir)){
-            QFileInfo   fInfo(discovered);
-
+            QString relativePath = baseDir.relativeFilePath(discovered);
+            QString outputFilePath = QDir::cleanPath(QDir(outputFolder).filePath(relativePath));
+            QString folder = QFileInfo(outputFilePath).absolutePath();
+            mkpath(folder);
             //<outputFolder>/<fileName>
-            QString outputPath = QString("%0/%1.o").arg(outputFolder).arg(fInfo.fileName());
+            QString outputPath = QString("%0.o").arg(outputFilePath);
             _compiler.generateObjFile(discovered , outputPath , includes , boardName);
             if(!generatedObjectFiles.contains(outputPath))
                 generatedObjectFiles.append(outputPath);
@@ -401,4 +418,13 @@ LibraryManager* AvrToolchain::libManager(){
 
 void AvrToolchain::librariesChanged(ArduinoLibDescription *desc){
     map();
+}
+
+QDir AvrToolchain::mkpath(QString path){
+    QDir dir(path);
+    if(dir.exists())
+        return dir;
+    else
+        dir.mkpath(path);
+    return dir;
 }

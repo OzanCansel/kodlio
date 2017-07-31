@@ -62,3 +62,13 @@ void Runner::setRunnerState(RunnerState state){
 
     emit runnerStateChanged();
 }
+
+bool Runner::busy(){
+    return _busy;
+}
+
+void  Runner::setBusy(bool val){
+    _busy = val;
+
+    emit busyChanged();
+}
