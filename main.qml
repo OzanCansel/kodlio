@@ -125,6 +125,10 @@ ApplicationWindow {
         id      :   createNewClassDialog
     }
 
+    Cloud   {
+        id      :   cloud
+    }
+
 
     background  :   Image   {
         id          :   img
@@ -517,7 +521,7 @@ ApplicationWindow {
         }
     }
 
-    Connections{
+    Connections {
         target      :       cloudApi
         onStdOutput :   {
             //<out>

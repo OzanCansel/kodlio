@@ -38,6 +38,7 @@
 #include "eventcontext.h"
 #include "serial/serialplugin.h"
 #include "parse/parserplugin.h"
+#include "cloudapi/cloudplugin.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[])    {
@@ -57,6 +58,7 @@ int main(int argc, char *argv[])    {
     ThreadPlugin::attach();
     SerialPlugin::attach();
     ParserPlugin::attach();
+    CloudPlugin::attach();
     OsInfo                          osInfo;
 
     QQmlApplicationEngine engine;

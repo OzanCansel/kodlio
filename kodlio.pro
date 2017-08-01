@@ -43,8 +43,6 @@ SOURCES += main.cpp \
     directorymanager.cpp \
     exception/workingdirectorynull.cpp \
     exception/invalidprojectdirectory.cpp \
-    thread/compileworker.cpp \
-    thread/uploadworker.cpp \
     exception/tempdirectorycreationfailed.cpp \
     exception/workingdirectorynotset.cpp \
     shprocess.cpp \
@@ -63,7 +61,6 @@ SOURCES += main.cpp \
     texttemplate/texttemplate.cpp \
     texttemplate/classheadertemplate.cpp \
     texttemplate/classcpptemplate.cpp \
-    thread/compileanduploadworkerv2.cpp \
     exception/compileerror.cpp \
     parse/functionparser.cpp \
     parse/functionusageparsed.cpp \
@@ -174,7 +171,8 @@ SOURCES += main.cpp \
     texttemplate/genericfiletemplate.cpp \
     parse/kodlioasistant.cpp \
     editor/linenumber.cpp \
-    parse/headerparser.cpp
+    parse/headerparser.cpp \
+    cloudapi/cloudplugin.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -288,8 +286,6 @@ HEADERS += \
     directorymanager.h \
     exception/workingdirectorynull.h \
     exception/invalidprojectdirectory.h \
-    thread/compileworker.h \
-    thread/uploadworker.h \
     exception/tempdirectorycreationfailed.h \
     exception/workingdirectorynotset.h \
     shprocess.h \
@@ -308,7 +304,6 @@ HEADERS += \
     texttemplate/texttemplate.h \
     texttemplate/classheadertemplate.h \
     texttemplate/classcpptemplate.h \
-    thread/compileanduploadworkerv2.h \
     exception/compileerror.h \
     parse/functionparser.h \
     parse/functionusageparsed.h \
@@ -419,5 +414,6 @@ HEADERS += \
     texttemplate/genericfiletemplate.h \
     parse/kodlioasistant.h \
     editor/linenumber.h \
-    parse/headerparser.h
+    parse/headerparser.h \
+    cloudapi/cloudplugin.h
 

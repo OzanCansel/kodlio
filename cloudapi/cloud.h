@@ -11,10 +11,11 @@
 #include <QJsonObject>
 #include <QNetworkConfigurationManager>
 #include <QDir>
+#include <QQuickItem>
 #include "cloudresponse.h"
 #include "jsonstorage.h"
 
-class Cloud : public QObject
+class Cloud : public QQuickItem
 {
 
     Q_OBJECT
@@ -30,7 +31,8 @@ public:
         bool    isFile;
     } FInfo;
 
-    Cloud();
+    static void     registerQmlType();
+    Cloud(QQuickItem* parent = nullptr);
     bool        authenticated();
     bool        hasInternetAccess();
     QString     userName();

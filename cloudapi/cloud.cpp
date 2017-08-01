@@ -7,19 +7,22 @@
 #include <QVariantList>
 #include <QRegularExpression>
 #include <QRegularExpressionMatch>
+#include <QtQml>
 
-Cloud::Cloud()
+void Cloud::registerQmlType(){
+    qmlRegisterType<Cloud>("Kodlio" , 1 , 0 , "Cloud" );
+}
+
+Cloud::Cloud(QQuickItem* parent) : QQuickItem(parent)
 {
 
     _manager = new QNetworkAccessManager(this);
-//    _url = QString("http://160.153.230.248/api");
     _url    =   QString("http://localhost:3000/api");
     _storage = new JsonStorage("cloud-mem.json" , this);
     loadUserInfo();
 
     connect(&_confMan , SIGNAL(onlineStateChanged(bool)) , this , SLOT(internetAccessStateChanged(bool)));
 }
-
 
 bool Cloud::authenticate(QString name , QString password){
 
