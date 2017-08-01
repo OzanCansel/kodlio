@@ -126,9 +126,14 @@ ApplicationWindow {
     }
 
     Cloud   {
-        id      :   cloud
+        id      :   cloudApi
     }
 
+    CloudThread{
+        id      :   cloudThread
+        cloud   :   cloudApi
+        Component.onCompleted   : cloudApi.authenticate("admin","123456")
+    }
 
     background  :   Image   {
         id          :   img
@@ -261,6 +266,15 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Kutuphaneler"
                             mouseArea.onClicked :   libraryManagerDialog.open()
+                        }
+
+                        IdeMenuItem{
+                            id                  :   cloudMenu
+                            img.source          :   "/res/icon/cloud-icon-2.png"
+                            width               :   parent.width
+                            height              :   50
+                            txt.text            :   "Bulut"
+                            mouseArea.onClicked :   cloudThread.uploadProject(projectManager.projectRoot)
                         }
 
                         IdeMenuItem{

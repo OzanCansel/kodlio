@@ -40,8 +40,8 @@ public:
 public slots:
 
     bool        authenticate(QString name , QString password);
-    bool        uploadProject(QString name ,  QString src);
-    bool        uploadProjectV2(QString name , QString root);
+    bool        uploadProject(QString name);
+    bool        uploadProjectV2(QString root);
     int         getVersionNum(QString projectName);
     bool        deleteProject(QString name);
     QVariantList retrieveProject(QString name , int version = -1);

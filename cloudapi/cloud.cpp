@@ -61,11 +61,10 @@ bool Cloud::authenticate(QString name , QString password){
     return resp.success();
 }
 
-bool Cloud::uploadProject(QString projName , QString src){
+bool Cloud::uploadProject(QString projName){
     QJsonObject obj;
 
     obj["name"]  = projName;
-    obj["src"]  =   src;
 
     QByteArray  jsonStr = QJsonDocument(obj).toJson(QJsonDocument::Compact);
     QNetworkRequest postReq(QUrl(QString(_url).append("/project/upsertProject")));
@@ -330,12 +329,12 @@ bool Cloud::endCommit(QString proj , int version){
 
 }
 
-bool Cloud::uploadProjectV2(QString name, QString root){
+bool Cloud::uploadProjectV2(QString root){
 
-    QString     mainFContent  = readContent(QDir(root).absoluteFilePath("sketch.cpp"));
-
-    uploadProject(name , mainFContent);
-    int     versionNum  =   getVersionNum(name);
+    QFileInfo   fileInfo(root);
+    QString projectName = fileInfo.fileName();
+    uploadProject(projectName);
+    int     versionNum  =   getVersionNum(projectName);
 
     QList<FInfo> files =  fInfo(root , "\\.cpp|\\.c|\\.S|\\.h");
 
@@ -349,7 +348,7 @@ bool Cloud::uploadProjectV2(QString name, QString root){
     foreach (FInfo inf, files) {
         QJsonObject obj;
 
-        obj["project"]      =   name;
+        obj["project"]      =   projectName;
         obj["isFile"]       =   inf.isFile;
         obj["rPath"]        =   inf.relativePath;
         obj["content"]      =   inf.content;
@@ -383,7 +382,7 @@ bool Cloud::uploadProjectV2(QString name, QString root){
     }
 
     emit commandOutput("Yükleme tamamlanıyor...");
-    endCommit(name , versionNum);
+    endCommit(projectName , versionNum);
     emit stdOutput("Proje başarıyla yüklendi...");
     return true;
 }

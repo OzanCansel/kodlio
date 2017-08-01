@@ -18,10 +18,8 @@ AvrToolchainThread::AvrToolchainThread(QQuickItem *parent) : QQuickItem(parent) 
 }
 
 AvrToolchainThread::~AvrToolchainThread(){
-    qDebug() << "Terminating";
     backgroundThread.terminate();
     backgroundThread.wait();
-    qDebug() << "Terminated";
 }
 
 void AvrToolchainThread::compile(QString file, CompileOptions *opts){

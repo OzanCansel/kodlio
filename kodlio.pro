@@ -172,7 +172,9 @@ SOURCES += main.cpp \
     parse/kodlioasistant.cpp \
     editor/linenumber.cpp \
     parse/headerparser.cpp \
-    cloudapi/cloudplugin.cpp
+    cloudapi/cloudplugin.cpp \
+    thread/cloud/cloudthread.cpp \
+    thread/cloud/cloudworker.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -277,7 +279,8 @@ DISTFILES += \
     qml/form/CreateFileForm.qml \
     qml/project/ContextMenu.qml \
     qml/project/GenericEditorMenu.qml \
-    qml/control/ToolImageButton.qml
+    qml/control/ToolImageButton.qml \
+    qml/control/CloudMenu.qml
 
 
 HEADERS += \
@@ -415,5 +418,7 @@ HEADERS += \
     parse/kodlioasistant.h \
     editor/linenumber.h \
     parse/headerparser.h \
-    cloudapi/cloudplugin.h
+    cloudapi/cloudplugin.h \
+    thread/cloud/cloudthread.h \
+    thread/cloud/cloudworker.h
 

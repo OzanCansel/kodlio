@@ -43,5 +43,6 @@
         <file>res/icon/full-screen-activated.png</file>
         <file>res/icon/assistant-disabled-icon.png</file>
         <file>res/icon/assistant-enabled-icon.png</file>
+        <file>res/icon/cloud-icon-2.png</file>
     </qresource>
 </RCC>
