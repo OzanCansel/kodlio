@@ -1,11 +1,11 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
-
+import Kodlio 1.0
 import "../form"
 
 Dialog {
 
-    signal      loginRequired(string uName , string passwd)
+    property Cloud  cloud       :   ({})
 
     id          :   loginDialog
     width       :   300
@@ -18,14 +18,11 @@ Dialog {
     background  :   Rectangle{
         color   :   "transparent"
     }
+    visible     :   !cloud.authenticated
 
     contentItem :   LoginForm   {
         id      :   form
         focus   :   true
-        onAuthenticated :   {
-            if(success){
-                loginDialog.close()
-            }
-        }
+        cloud   :   loginDialog.cloud
     }
 }

@@ -74,5 +74,8 @@
         <file>qml/project/ContextMenu.qml</file>
         <file>qml/control/ToolImageButton.qml</file>
         <file>qml/project/GenericEditorMenu.qml</file>
+        <file>qml/control/CloudMenu.qml</file>
+        <file>qml/control/GenericMenuItem.qml</file>
+        <file>qml/control/GenericMenu.qml</file>
     </qresource>
 </RCC>

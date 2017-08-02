@@ -59,7 +59,7 @@ int main(int argc, char *argv[])    {
     SerialPlugin::attach();
     ParserPlugin::attach();
     CloudPlugin::attach();
-    OsInfo                          osInfo;
+    OsInfo      osInfo;
 
     QQmlApplicationEngine engine;
     EventContext        eventContext;

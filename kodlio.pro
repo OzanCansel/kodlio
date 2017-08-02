@@ -280,7 +280,9 @@ DISTFILES += \
     qml/project/ContextMenu.qml \
     qml/project/GenericEditorMenu.qml \
     qml/control/ToolImageButton.qml \
-    qml/control/CloudMenu.qml
+    qml/control/CloudMenu.qml \
+    qml/control/GenericMenuItem.qml \
+    qml/control/GenericMenu.qml
 
 
 HEADERS += \

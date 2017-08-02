@@ -1,9 +1,12 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
+import Kodlio 1.0
 import "../singleton"
 import "../control"
 
 FocusScope {
+
+    property Cloud      cloud   :   ({})
 
     function    clear(){
         userNameField.clear()
@@ -24,18 +27,14 @@ FocusScope {
     readonly property string    userName    :   userNameField.text
     readonly property string    password    :   passwordField.text
 
-    signal  authenticated(bool success)
-
     function    login(){
-        var res = cloudApi.authenticate(userName , password)
+        var res = cloud.authenticate(userName , password)
 
         if(res){
             Global.displayMessage(userName + " hoşgeldin.")
         }else{
             Global.displayMessage("Kullanıcı adı veya şifre hatalı ")
         }
-
-        authenticated(res)
     }
 
     Keys.onEnterPressed :   login()
@@ -67,10 +66,6 @@ FocusScope {
                 placeholderText :   "Kullanıcı adı."
                 backgroundRect.border.width :   0
                 backgroundRect.radius       :   0
-
-//                Keys.onEnterPressed :   login()
-//                Keys.onReturnPressed:   login()
-
             }
         }
 
@@ -88,29 +83,27 @@ FocusScope {
             }
 
             GenericTextBox{
-                id      :   passwordField
-                width   :   parent.width - passwordIcon.width - passwordRow.spacing
-                height  :   50
-                placeholderText :   "Şifre giriniz..."
+                id                          :   passwordField
+                width                       :   parent.width - passwordIcon.width - passwordRow.spacing
+                height                      :   50
+                placeholderText             :   "Şifre giriniz..."
                 backgroundRect.border.width :   0
                 backgroundRect.radius       :   0
-                echoMode    :   TextInput.Password
-//                Keys.onEnterPressed :   login()
-//                Keys.onReturnPressed:   login()
+                echoMode                    :   TextInput.Password
             }
         }
 
         GenericButton{
-            id              :   loginButton
-            width           :   160
-            height          :   40
-            text            :   "Giriş"
-            anchors.right   :   parent.right
-            anchors.rightMargin :   5
-            backgroundRect.radius   :   0
-            backgroundRect.color    :   "#fe7902"
+            id                          :   loginButton
+            width                       :   160
+            height                      :   40
+            text                        :   "Giriş"
+            anchors.right               :   parent.right
+            anchors.rightMargin         :   5
+            backgroundRect.radius       :   0
+            backgroundRect.color        :   "#fe7902"
             backgroundRect.border.width :   0
-            onClicked       :   login()
+            onClicked                   :   login()
         }
     }
 }

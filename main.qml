@@ -46,6 +46,7 @@ ApplicationWindow {
 
     LoginDialog{
         id      :   loginDialog
+        cloud   :   cloudApi
     }
 
     ListProjectsDialog{
@@ -146,6 +147,16 @@ ApplicationWindow {
 
     ArduinoLibManager{
         id                  :   libManager
+    }
+
+
+
+    CloudMenu {
+        id              :   cloudMenu
+        cloud           :   cloudApi
+        x               :   110
+        y               :   235
+        z               :   2
     }
 
     Item {
@@ -269,12 +280,12 @@ ApplicationWindow {
                         }
 
                         IdeMenuItem{
-                            id                  :   cloudMenu
+                            id                  :   cloudMenuItem
                             img.source          :   "/res/icon/cloud-icon-2.png"
                             width               :   parent.width
                             height              :   50
                             txt.text            :   "Bulut"
-                            mouseArea.onClicked :   cloudThread.uploadProject(projectManager.projectRoot)
+                            mouseArea.onClicked :   cloudApi.authenticated ? cloudMenu.open() : loginDialog.open()
                         }
 
                         IdeMenuItem{
@@ -406,7 +417,7 @@ ApplicationWindow {
                     anchors.left        :   parent.left
                     anchors.right       :   parent.right
                     anchors.topMargin   :   15
-                    z               :   4
+                    z                   :   4
 
                     Rectangle {
                         id              :   editorOverride
@@ -464,35 +475,6 @@ ApplicationWindow {
     }
 
     Connections{
-        target                      :   projectManager
-        onProjectOpened             :   {
-        }
-        onCompilerStandardOutput    :   {
-            //<output>
-            //outputConsole.standartOutput(output)
-        }
-        onCompilerErrorOutput       :   {
-            //<output>
-            outputConsole.errorOutput(output)
-        }
-    }
-
-    Connections{
-        target      :   toolchain
-        onCompileProgress   :   {
-            //<progress>
-            if(!compileProgressBar.visible) compileProgressBar.visible = true
-            compileProgressBar.header = "Derle"
-            compileProgressBar.progress = progress
-            progressBarHideout.restart()
-        }
-        onStdOutput :   {
-            //<output>
-            outputConsole.commandOutput(output)
-        }
-    }
-
-    Connections{
         target      :   cloudApi
         onProjectUploadProgress :   {
             //  <progress>
@@ -500,38 +482,6 @@ ApplicationWindow {
             compileProgressBar.header   =   "Yükle"
             compileProgressBar.progress   = progress
             progressBarHideout.restart()
-        }
-    }
-
-    Connections{
-        target                      :   compiler
-        onCommandOutput             :   {
-            //  <text>
-            //outputConsole.commandOutput(text)
-        }
-        onStdOutput             :   {
-            // <text>
-            //outputConsole.standartOutput(text)
-        }
-        onStdError              :   {
-            //  <text>
-            outputConsole.errorOutput(text)
-        }
-    }
-
-    Connections{
-        target                      :   programmer
-        onCommandOutput             :   {
-            //<text>
-            outputConsole.commandOutput(text)
-        }
-        onStdOutput                 :   {
-            //<text>
-            outputConsole.standartOutput(text)
-        }
-        onStdError                  :   {
-            //<text>
-            outputConsole.errorOutput(text)
         }
     }
 
