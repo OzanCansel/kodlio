@@ -51,6 +51,8 @@ ApplicationWindow {
 
     ListProjectsDialog{
         id      :   listProjectsDialog
+        manager :   projectManager
+        cloudApi:   cloudApi
     }
 
     SettingsDialog{
@@ -89,17 +91,14 @@ ApplicationWindow {
         id              :   uploadProjectDialog
         title           :   "Proje Yükle"
         standardButtons :   StandardButton.Yes | StandardButton.No
-        message         :   "'" + projectManager.projectName + "' isimli projeyi yüklemek istediğinize emin misiniz ?"
+        message         :   "Projeyi yüklemek istediğinize emin misiniz ?"
         onAccepted      :   {
-            var projname = fileSys.projectName(fileSys.workingDirectory());
-            var src = fileSys.mainFileContent();
-
-            var res = cloudApi.uploadProjectV2(projname , fileSys.workingDirectory());
-
-            if(res)
-                Global.displayMessage("Proje başarıyla yüklendi.")
-            else
-                Global.displayMessage("Proje yüklenirken hata oluştu !")
+            if(cloudApi.projectUploadBusy){
+                toast.displayError("Su anda baska bir yukleme mevcut")
+            }
+            else{
+                cloudApi.uploadProjectV2(projectManager.projectRoot)
+            }
         }
     }
 
@@ -131,9 +130,9 @@ ApplicationWindow {
     }
 
     CloudThread{
-        id      :   cloudThread
-        cloud   :   cloudApi
-        Component.onCompleted   : cloudApi.authenticate("admin","123456")
+        id                      :   cloudThread
+        cloud                   :   cloudApi
+        Component.onCompleted   :   cloudApi.authenticate("admin","123456")
     }
 
     background  :   Image   {
@@ -149,14 +148,36 @@ ApplicationWindow {
         id                  :   libManager
     }
 
-
-
     CloudMenu {
         id              :   cloudMenu
         cloud           :   cloudApi
+        dialogContainer :   parent
         x               :   110
         y               :   235
         z               :   2
+        onLogout        :   cloudApi.logout()
+        onUploadProject :   {
+            //Internet baglantisi yoksa
+            if(!cloudApi.hasInternetAccess){
+                toast.displayWarning("Internet baglantisi yok.")
+                return
+            }
+
+            if(projectManager.projectOpened)
+                uploadProjectDialog.open()
+            else
+                toast.displayWarning("Yuklemek icin once projeyi aciniz")
+        }
+        onListProjects  :   listProjectsDialog.open()
+    }
+
+    FileMenu{
+        id              :   fileMenu
+        x               :   110
+        y               :   15
+        z               :   2
+        onCreateProject :   createProjectDialog.open()
+        onOpenProject   :   projectManager.projectRoot = projectRoot
     }
 
     Item {
@@ -239,7 +260,7 @@ ApplicationWindow {
                             width               :   parent.width
                             height              :   50
                             txt.text            :   "Ekle"
-                            mouseArea.onClicked :   projectMenu.open()
+                            mouseArea.onClicked :   fileMenu.menu.open()
                         }
 
                         IdeMenuItem{
@@ -307,6 +328,8 @@ ApplicationWindow {
                         }
                     }
 
+
+
                     ProjectMenu {
                         id              :   projectMenu
                         visible         :   false
@@ -325,8 +348,8 @@ ApplicationWindow {
 
                     Popup   {
                         id              :   serialPortPopup
-                        contentWidth    :   serialPortListF.implicitWidth
-                        contentHeight   :   serialPortListF.implicitHeight
+                        contentWidth    :   serialPortListF.width
+                        contentHeight   :   serialPortListF.height
                         x               :   serialPorts.x + serialPorts.width + 10
                         y               :   serialPorts.y + 10
                         background      :   Item{  }
@@ -352,7 +375,7 @@ ApplicationWindow {
 
                         SerialPortListForm  {
                             id              :   serialPortListF
-                            implicitWidth   :   150
+                            //                            implicitWidth   :   150
 
                             Keys.onEscapePressed    :   {
                             }
@@ -449,16 +472,16 @@ ApplicationWindow {
                 }
 
                 GenericProgressBar{
-                    id      :   compileProgressBar
-                    width   :   200
-                    height  :   50
+                    id                      :   compileProgressBar
+                    width                   :   200
+                    height                  :   50
                     anchors.right           :   outputConsole.right
                     anchors.rightMargin     :   Theme.internalControlsMargin * 2
                     anchors.bottom          :   outputConsole.bottom
                     anchors.bottomMargin    :   Theme.internalControlsMargin * 2
-                    z               :   5
-                    visible         :   false
-                    header          :   "Derleme"
+                    z                       :   5
+                    visible                 :   false
+                    header                  :   "Derleme"
                 }
             }
 
@@ -481,7 +504,6 @@ ApplicationWindow {
             if(!compileProgressBar.visible)    compileProgressBar.visible = true
             compileProgressBar.header   =   "Yükle"
             compileProgressBar.progress   = progress
-            progressBarHideout.restart()
         }
     }
 

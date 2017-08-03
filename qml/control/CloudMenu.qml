@@ -6,10 +6,15 @@ import "../singleton"
 Item {
 
     property Cloud cloud            :   ({})
+    property Item dialogContainer   :   ({})
 
     id                              :   container
     width                           :   menu.width
     height                          :   childrenRect.height
+
+    signal  uploadProject()
+    signal  listProjects()
+    signal  logout()
 
     function open(){
         menu.open()
@@ -50,6 +55,7 @@ Item {
             text            :   "Projeyi Yükle"
             tooltipEnabled  :   true
             tooltipText     :   "Mevcut projeniniz yüklemek için tıklayınız"
+            onTriggered     :   uploadProject()
         }
 
         GenericMenuItem     {
@@ -57,6 +63,7 @@ Item {
             text            :   "Projelerim"
             tooltipEnabled  :   true
             tooltipText     :   "Buluttaki projelerinizi listelemek için tıklayınız"
+            onTriggered     :   listProjects()
         }
 
         GenericMenuItem     {
@@ -64,6 +71,7 @@ Item {
             text            :   "Çıkış Yap"
             tooltipEnabled  :   true
             tooltipText     :   "Çıkış yapmak için tıklayınız"
+            onTriggered     :   logout()
         }
     }
 }

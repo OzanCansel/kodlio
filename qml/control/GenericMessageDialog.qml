@@ -4,8 +4,8 @@ import QtQuick.Controls 2.1
 Dialog {
     property string     message     :   ""
 
-    id      :   messageDialogCtl
-    modal   :   true
+    id          :   messageDialogCtl
+    modal       :   true
     x           :   (parent.width / 2) - (width / 2)
     y           :   (parent.height / 2) - (height / 2)
 

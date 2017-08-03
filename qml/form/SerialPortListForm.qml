@@ -15,49 +15,47 @@ Item {
     }
 
     id              :   form
-    implicitHeight  :  Math.max(50 , ports.length * 50)
+    width           :   120
+    height          :   200
 
     Item    {
-        visible :   !ports.length
-        height  :   50
-        width   :   parent.width
+        id                          :   headerContainer
+        width                       :   parent.width
+        height                      :   40
 
         Text {
-            id      :   portNameText
-            text    :   "Port Yok"
-            anchors.centerIn    :   parent
-            z       :   2
-            color   :   "white"
+            id                      :   userNameText
+            text                    :   "Portlar"
+            anchors.centerIn        :   parent
+            z                       :   2
+            color                   :   "white"
+            font.family             :   FontCollection.menuFont
+            font.bold               :   true
         }
 
-        MouseArea{
-            id              :   area
-            anchors.fill    :   parent
-            hoverEnabled    :   true
-            z               :   2
-        }
-
-        Image {
-            id          :   backImg
-            source      :   area.containsMouse || area.pressed ? "/res/icon/backgroundpattern-highlight.png" : "/res/icon/backgroundpattern.png"
-            fillMode    :   Image.Tile
-            anchors.fill:   parent
-            z           :   0
+        Rectangle{
+            id                      :   back
+            anchors.fill            :   parent
+            color                   :   "#ffa500"
+            radius                  :   10
+            anchors.bottomMargin    :   -radius
         }
     }
 
     ListView    {
 
-        id      :   serialPortList
-        width   :   parent.implicitWidth
-        height  :   parent.implicitHeight
-        model   :   ports
+        id          :   serialPortList
+        width       :   parent.width
+        height      :   parent.height
+        anchors.top :   headerContainer.bottom
+        model       :   ports
+
         onCurrentItemChanged    :   {
             SerialOption.option.portName = currentIndex >= 0 ? ports[currentIndex].portName : ""
         }
 
         delegate:       Item    {
-            height  :   50
+            height  :   30
             width   :   parent.width
 
             Text {
@@ -65,7 +63,7 @@ Item {
                 text                :   ">" + ports[index].portName
                 anchors.centerIn    :   parent
                 z                   :   2
-                color               :   "white"
+                color               :   "black"
             }
 
             MouseArea{
@@ -78,19 +76,19 @@ Item {
                 z               :   2
             }
 
-            Image {
-                id          :   img
-                source      :   area.containsMouse || area.pressed ? "/res/icon/backgroundpattern-highlight.png" : "/res/icon/backgroundpattern.png"
-                fillMode    :   Image.Tile
+            Rectangle{
+                id          :   backRect
                 anchors.fill:   parent
-                z           :   0
+                color       :   area.containsMouse ? "lightsteelblue" : "white"
             }
-        }
 
-        highlight   :   Rectangle   {
-            color   :   "steelblue"
-            radius  :   4
-            border.width    :   1
+            //            Image {
+            //                id          :   img
+            //                source      :   area.containsMouse || area.pressed ? "/res/icon/backgroundpattern-highlight.png" : "/res/icon/backgroundpattern.png"
+            //                fillMode    :   Image.Tile
+            //                anchors.fill:   parent
+            //                z           :   0
+            //            }
         }
     }
 }

@@ -17,7 +17,7 @@ MenuItem {
         Rectangle {
             id              :   backgroundRect
             anchors.fill    :   parent
-            color           :   menuItem.hovered ? "red" : "white"
+            color           :   menuItem.hovered ? "lightsteelblue" : "white"
         }
     }
 

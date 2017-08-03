@@ -1,6 +1,7 @@
 import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.2
+import Kodlio 1.0
 import "../singleton"
 import "../control"
 
@@ -9,6 +10,8 @@ Item {
     property string     projName    :   ""
     property string     content     :   ""
     property variant    sourceFilesInf :   []
+    property ProjectManager manager :   ({})
+    property Cloud          cloudApi:   ({})
 
     function    retrieve(){
         projectModel.clear()
@@ -26,21 +29,21 @@ Item {
         id      :   projectModel
     }
 
+    ProjectOptions{
+        id              :   opts
+    }
+
     FileDialog{
-        id              :   yeniDialog
+        id              :   createProjectDialog
         title           :   "Klasör seçiniz..."
         folder          :   shortcuts.documents
         selectFolder    :   true
         selectMultiple  :   false
-
         onAccepted      :   {
-
-            var folder = Common.extractPathFromUrl(yeniDialog.folder.toString()).concat("/").concat(projName)
-            projectManager.createProject(folder)
-            projectManager.openProject(folder)
-
-            projectManager.writeProj(sourceFilesInf)
-            projectManager.readOnly =   false
+            var projectRoot = Common.extractPathFromUrl(createProjectDialog.folder.toString()) + "/" + projName
+            cloudApi.downloadSources(projName , projectRoot)
+            opts.root = projectRoot
+            manager.openProject(opts)
         }
     }
 
@@ -161,15 +164,12 @@ Item {
                     return
 
                 var name = projectModel.get(projectsList.currentIndex).name;
-                var sourceFiles = cloudApi.retrieveProject(name)
 
-                if(fileSys.projectName(fileSys.workingDirectory()) === name){
-                    projectManager.writeProj(sourceFiles)
-                    projectManager.refresh()
-                }   else   {
+                if(manager.projectName === name){
+                    cloudApi.downloadSources(name , manager.projectRoot)
+                } else {
                     projName = name
-                    sourceFilesInf =   sourceFiles;
-                    yeniDialog.open()
+                    createProjectDialog.open()
                 }
 
                 closeForm()
@@ -200,7 +200,7 @@ Item {
 
 
     Connections{
-        target      :   yeniDialog
+        target      :   createProjectDialog
         onAccepted  :   {
             deleteProjectDialog.open()
         }

@@ -1,4 +1,5 @@
 #include "projectmanager.h"
+#include <QDir>
 
 void ProjectManager::registerQmlType(){
     qmlRegisterType<ProjectManager>("Kodlio" , 1 , 0 , "ProjectManager");
@@ -48,9 +49,29 @@ void ProjectManager::setDebugEnabled(bool enabled){
 void ProjectManager::setProjectRoot(QString root){
     _projectRoot = root;
 
+    setProjectName(QDir(root).dirName());
+    projectOpenedChanged();
     emit projectRootChanged();
 }
 
+//Getter
 QString ProjectManager::projectRoot(){
     return _projectRoot;
+}
+
+QString ProjectManager::projectName(){
+    return _projectName;
+}
+
+bool ProjectManager::projectOpened(){
+    return !_projectRoot.isEmpty();
+}
+
+void ProjectManager::setProjectName(QString val){
+    _projectName = val;
+    emit projectNameChanged();
+}
+
+void ProjectManager::openProject(ProjectOptions *opts){
+    setProjectRoot(opts->root());
 }

@@ -227,7 +227,12 @@ void Cloud::loadUserInfo(){
     setUserName(_storage->get("userName").toString());
 }
 
-QVariantList Cloud::retrieveProject(QString name , int version){
+void Cloud::retrieveProject(QString name , int version){
+
+    if(retrieveProjectBusy())
+        return;
+
+    setRetrieveProjectDownloadBusy(true);
     QUrl    url(QString(_url).append("/project/getProject"));
     QUrlQuery   query;
 
@@ -238,36 +243,10 @@ QVariantList Cloud::retrieveProject(QString name , int version){
     QNetworkRequest req(url);
     setHeaderToken(&req);
     QNetworkReply *reply = _manager->get(req);
-    QEventLoop  loop;
-    connect(reply , SIGNAL(finished()) , &loop , SLOT(quit()));
-    loop.exec();
 
-    QVariantList    projectList;
-
-    CloudResponse   resp;
-    extractResponse(reply , &resp);
-
-    if(resp.success()){
-        QJsonArray files = resp.body()["files"].toArray();
-
-        foreach (QJsonValue val , files) {
-            QJsonObject fileObj = val.toObject();
-            QVariantHash map;
-            foreach (QString key, fileObj.keys()) {
-                map[key] = fileObj[key].toVariant();
-            }
-
-            qDebug()    <<  projectList;
-            projectList << map;
-        }
-
-        return projectList;
-    }   else    {
-        qDebug() << "retrieveProject Hata : " << resp.message();
-    }
-
-    //Boş string döndürülüyor
-    return projectList;
+    connect(reply , SIGNAL(downloadProgress(qint64,qint64)), this , SLOT(retrieveProjectDownloadProgress(qint64,qint64)));
+    connect(reply , SIGNAL(finished()), this , SLOT(retrieveProjectDownloadFinished()));
+    connect(reply , SIGNAL(error(QNetworkReply::NetworkError)), this, SLOT(retrieveProjectErrorOccurred()));
 }
 
 
@@ -331,6 +310,10 @@ bool Cloud::endCommit(QString proj , int version){
 
 bool Cloud::uploadProjectV2(QString root){
 
+    if(projectUploadBusy())
+        return false;
+
+    setProjectUploadBusy(true);
     QFileInfo   fileInfo(root);
     QString projectName = fileInfo.fileName();
     uploadProject(projectName);
@@ -372,11 +355,11 @@ bool Cloud::uploadProjectV2(QString root){
             output2.append(inf.relativePath).append(" yüklenirken hata oluştu !.");
             qDebug() << output2;
             emit stdError(output2);
+            setProjectUploadBusy(false);
             return false;
         }
 
         double progress = (idx / (double)files.length());
-        qDebug() << progress;
         emit projectUploadProgress(progress);
         idx++;
     }
@@ -384,6 +367,7 @@ bool Cloud::uploadProjectV2(QString root){
     emit commandOutput("Yükleme tamamlanıyor...");
     endCommit(projectName , versionNum);
     emit stdOutput("Proje başarıyla yüklendi...");
+    setProjectUploadBusy(false);
     return true;
 }
 
@@ -442,4 +426,143 @@ QString Cloud::readContent(QString file){
     content = fStream.readAll();
 
     return content;
+}
+
+void Cloud::setProjectUploadBusy(bool val){
+    _projectUploadBusy = val;
+
+    emit projectUploadBusyChanged();
+}
+
+bool Cloud::projectUploadBusy(){
+    return _projectUploadBusy;
+}
+
+void Cloud::downloadSources(QString projectName , QString root){
+
+    if(retrieveProjectBusy())
+        return;
+
+    QDir    rootDir(root);
+
+    if(!rootDir.exists() && !rootDir.mkpath(root)){
+        return;
+    }
+
+    _root = root;
+    _writeSourceFlag = true;
+    retrieveProject(projectName);
+}
+
+void Cloud::downloadSourcesStepTwo(){
+
+    foreach (QVariant variant, _projectSources) {
+        QVariantHash map = variant.toHash();
+        if(!map["isFile"].toBool()){
+            QString dir(QString(_root).append(map["rPath"].toString()));
+            QDir    folderDir(dir);
+            if(!folderDir.exists()){
+                folderDir.mkpath(dir);
+            }
+        }
+    }
+
+    foreach (QVariant variant, _projectSources) {
+        QVariantHash map = variant.toHash();
+        if(map["isFile"].toBool()){
+            QString content = map["content"].toString();
+            QString file(QString(_root).append(map["rPath"].toString()));
+            QFile   f(file);
+            if(!f.open(QIODevice::WriteOnly)){
+                emit downloadProjectError();
+
+                return;
+            }
+            QTextStream ss(&f);
+
+            ss << content;
+
+            f.close();
+        }
+    }
+}
+
+bool Cloud::retrieveProjectBusy(){
+    return _retrieveProjectBusy;
+}
+
+void Cloud::setRetrieveProjectDownloadBusy(bool val){
+    _retrieveProjectBusy = val;
+
+    emit retrieveProjectBusyChanged();
+}
+
+void Cloud::retrieveProjectDownloadProgress(qint64 read, qint64 total){
+    double progress = read / (double)total;
+    qDebug() << "RetrieveProject progress : " << progress;
+    emit retrieveProjectProgress(progress);
+}
+
+void Cloud::retrieveProjectDownloadFinished(){
+    _projectSources.clear();
+    QNetworkReply* reply = (QNetworkReply*)QObject::sender();
+
+    CloudResponse   resp;
+    extractResponse(reply , &resp);
+
+    if(resp.success()){
+        QJsonArray files = resp.body()["files"].toArray();
+
+        foreach (QJsonValue val , files) {
+            QJsonObject fileObj = val.toObject();
+            QVariantHash map;
+            foreach (QString key, fileObj.keys()) {
+                map[key] = fileObj[key].toVariant();
+            }
+
+            _projectSources << map;
+        }
+
+    }   else    {
+        qDebug() << "retrieveProject Hata : " << resp.message();
+    }
+
+    if(_writeSourceFlag){
+        foreach (QVariant variant, _projectSources) {
+            QVariantHash map = variant.toHash();
+            if(!map["isFile"].toBool()){
+                QString dir(QString(_root).append(map["rPath"].toString()));
+                QDir    folderDir(dir);
+                if(!folderDir.exists()){
+                    folderDir.mkpath(dir);
+                }
+            }
+        }
+
+        foreach (QVariant variant, _projectSources) {
+            QVariantHash map = variant.toHash();
+            if(map["isFile"].toBool()){
+                QString content = map["content"].toString();
+                QString file(QString(_root).append(map["rPath"].toString()));
+                QFile   f(file);
+                if(!f.open(QIODevice::WriteOnly)){
+                    emit downloadProjectError();
+
+                    return;
+                }
+                QTextStream ss(&f);
+
+                ss << content;
+
+                f.close();
+            }
+        }
+    }
+
+    _writeSourceFlag = false;
+    setRetrieveProjectDownloadBusy(false);
+}
+
+void Cloud::retrieveProjectErrorOccurred(){
+    setRetrieveProjectDownloadBusy(false);
 }
