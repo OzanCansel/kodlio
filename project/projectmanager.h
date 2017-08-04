@@ -2,6 +2,7 @@
 #define PROJECTMANAGER_H
 
 #include <QQuickItem>
+#include "file/file.h"
 #include "projectoptions.h"
 
 class ProjectManager : public QQuickItem
@@ -32,6 +33,7 @@ public slots:
     virtual void    createProject(ProjectOptions *opts);
     virtual void    openProject(ProjectOptions* opts);
     virtual void    removeProject(ProjectOptions *opts);
+    virtual void    copyProject(QString from , QString to);
 
 signals:
 

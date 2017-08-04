@@ -18,6 +18,7 @@ public slots:
     bool        createGenericTemplatedFile(QString path);
     bool        removeFile(QString path);
     bool        createDir(QString root , QString newFolder);
+    bool        copyDirectoryRecursively(QString root , QString target , QStringList fileFilter , bool overwrite);
 
 };
 

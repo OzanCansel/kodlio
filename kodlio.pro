@@ -174,7 +174,8 @@ SOURCES += main.cpp \
     parse/headerparser.cpp \
     cloudapi/cloudplugin.cpp \
     thread/cloud/cloudthread.cpp \
-    thread/cloud/cloudworker.cpp
+    thread/cloud/cloudworker.cpp \
+    globalplugin.cpp
 
 RESOURCES += qml.qrc \
     res.qrc
@@ -423,5 +424,6 @@ HEADERS += \
     parse/headerparser.h \
     cloudapi/cloudplugin.h \
     thread/cloud/cloudthread.h \
-    thread/cloud/cloudworker.h
+    thread/cloud/cloudworker.h \
+    globalplugin.h
 

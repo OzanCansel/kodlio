@@ -178,6 +178,7 @@ ApplicationWindow {
         z               :   2
         onCreateProject :   createProjectDialog.open()
         onOpenProject   :   projectManager.projectRoot = projectRoot
+        onOpenExamples  :   examplesDialog.open()
     }
 
     Item {
@@ -279,7 +280,6 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Örnekler"
                             mouseArea.onClicked :   examplesDialog.open()
-                            visible             :   false
                         }
 
                         IdeMenuItem {

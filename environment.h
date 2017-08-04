@@ -12,6 +12,7 @@ class Environment : public QQuickItem
 public:
 
 
+    static void     registerQmlType();
     Environment(QQuickItem *parent = Q_NULLPTR);
 
 public slots:

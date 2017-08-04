@@ -1,13 +1,15 @@
 import QtQuick 2.0
+import QtQuick.Dialogs 1.2
 import Kodlio 1.0
 import "../control"
 
 Item {
 
+    property    variant     sections    :   []
+    property ProjectManager manager     :   ({})
+
     implicitWidth   :   500
     implicitHeight  :   600
-
-    property    variant     sections    :   []
     signal  closeMe()
 
     ListModel{
@@ -16,6 +18,10 @@ Item {
 
     ListModel{
         id      :   filteredModel
+    }
+
+    Environment{
+        id      :   environment
     }
 
     function    refresh(){
@@ -33,13 +39,14 @@ Item {
                 filteredModel.append(item);
             }
         }
-
         filter(filterTxtBox.text)
     }
 
-    function    openExample(){
-        projectManager.openProject(examplesList.currentItem.examplePath)
-        projectManager.readOnly = true
+    function    openExample(targetPath){
+        var examplePath = examplesList.currentItem.examplePath
+        manager.copyProject(examplePath , targetPath)
+        projectOpts.root = targetPath;
+        manager.openProject(targetPath)
         closeMe()
     }
 
@@ -54,13 +61,6 @@ Item {
     }
 
     function    filter(name){
-//        for(var i = 0; i < examplesList.count; i++){
-//            var del = examplesList.contentItem.children[i];
-//            if(del.exampleName && del.exampleName === name){
-//                examplesList.positionViewAtIndex(i, ListView.Center)
-//                examplesList.currentIndex = i;
-//            }
-//        }
         filteredModel.clear()
         for(var i = 0; i < examplesModel.count; i++){
             var item = examplesModel.get(i);
@@ -70,8 +70,16 @@ Item {
         }
     }
 
+    ProjectOptions{
+        id      :   projectOpts
+    }
+
     ProjectTraverse{
         id      :   traverse
+    }
+
+    FileDialog  {
+        id      :   exampleMoveDialog
     }
 
     Component{

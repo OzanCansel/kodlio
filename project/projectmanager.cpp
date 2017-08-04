@@ -75,3 +75,9 @@ void ProjectManager::setProjectName(QString val){
 void ProjectManager::openProject(ProjectOptions *opts){
     setProjectRoot(opts->root());
 }
+
+void ProjectManager::copyProject(QString from, QString to){
+    File    f;
+
+    f.copyDirectoryRecursively(from , to , QStringList() << "*.cpp" << "*.cxx" << "*.cc" << "*.h" , true);
+}

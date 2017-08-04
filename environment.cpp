@@ -2,6 +2,10 @@
 #include <QCoreApplication>
 #include "exception/environmentvariablenotset.h"
 
+void Environment::registerQmlType(){
+    qmlRegisterType<Environment>("Kodlio" , 1 , 0 , "Environment");
+}
+
 Environment::Environment(QQuickItem *parent) : QQuickItem(parent)   {
     set("appStartDir" , QCoreApplication::applicationDirPath());
     set("toolsDir" , appStartDir().append("/tools"));

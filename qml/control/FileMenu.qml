@@ -10,6 +10,7 @@ Item {
 
     signal  createProject()
     signal  openProject(string projectRoot)
+    signal  openExamples()
 
     width                           :   menu.width
     height                          :   childrenRect.height
@@ -44,7 +45,7 @@ Item {
         id          :   menu
         y           :   headerContainer.height
 
-        GenericMenuItem{
+        GenericMenuItem     {
             id              :   openProjectItem
             text            :   "Projeyi Ac"
             tooltipEnabled  :   true
@@ -52,12 +53,20 @@ Item {
             onTriggered     :   openProjectDialog.open()
         }
 
-        GenericMenuItem{
+        GenericMenuItem     {
             id              :   createProjectItem
             text            :   "Proje Olustur"
             tooltipEnabled  :   true
             tooltipText     :   "Yeni proje olusturmak icin tiklayiniz"
+            onTriggered     :   createProject()
+        }
 
+        GenericMenuItem{
+            id              :   openExamplesItem
+            text            :   "Örnekleri Aç"
+            tooltipEnabled  :   true
+            tooltipText     :   "Örnekleri açmak için tıklayınız"
+            onTriggered     :   openExamples()
         }
     }
 

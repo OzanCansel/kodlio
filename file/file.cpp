@@ -3,6 +3,7 @@
 #include <QTextStream>
 #include <QFileInfo>
 #include <QDir>
+#include <QFileInfo>
 #include "texttemplate/genericfiletemplate.h"
 
 static QObject* singletonProvider(QQmlEngine *engine, QJSEngine *scriptEngine){
@@ -67,4 +68,25 @@ bool File::createDir(QString root , QString newFolder){
     }
 
     return dir.mkdir(newFolder);
+}
+
+bool File::copyDirectoryRecursively(QString root, QString target , QStringList filter , bool overwrite){
+    QDir    rootDir(root);
+    QDir    targetDir(target);
+
+    if(!targetDir.exists())
+        targetDir.mkpath(target);
+
+    foreach (auto info, rootDir.entryInfoList(filter , QDir::NoDotAndDotDot | QDir::AllDirs | QDir::Files)) {
+        QString     relativeToRoot = rootDir.relativeFilePath(info.filePath());
+        QString     targetPath = QDir::cleanPath(targetDir.filePath(relativeToRoot));
+        if(info.isDir()){
+            copyDirectoryRecursively(info.filePath() , targetPath , filter , overwrite);
+        } else {
+            if(overwrite && QFile(targetPath).exists()){
+                QFile(targetPath).remove();
+            }
+            QFile::copy(info.filePath() , targetPath);
+        }
+    }
 }
