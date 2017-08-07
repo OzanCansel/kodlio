@@ -17,7 +17,8 @@ Cloud::Cloud(QQuickItem* parent) : QQuickItem(parent)
 {
 
     _manager = new QNetworkAccessManager(this);
-    _url    =   QString("http://localhost:3000/api");
+    _url    =   QString("http://160.153.238.188/api");
+    //    _url    =   QString("http://localhost:3000/api");
     _storage = new JsonStorage("cloud-mem.json" , this);
     loadUserInfo();
 

@@ -7,6 +7,9 @@ import "../control"
 FocusScope {
 
     property Cloud      cloud   :   ({})
+    property Toast      toast   :   ({})
+
+    signal authenticated()
 
     function    clear(){
         userNameField.clear()
@@ -31,10 +34,11 @@ FocusScope {
         var res = cloud.authenticate(userName , password)
 
         if(res){
-            Global.displayMessage(userName + " hoşgeldin.")
-        }else{
-            Global.displayMessage("Kullanıcı adı veya şifre hatalı ")
+            toast.displaySuccess("Basarıyla Giriş Yapıldı.")
+            authenticated()
         }
+        else
+            toast.displayError("Bilgiler Hatalı. Giriş Yapılamadı")
     }
 
     Keys.onEnterPressed :   login()

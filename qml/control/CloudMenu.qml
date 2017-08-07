@@ -7,6 +7,7 @@ Item {
 
     property Cloud cloud            :   ({})
     property Item dialogContainer   :   ({})
+    property Toast toast            :   ({})
 
     id                              :   container
     width                           :   menu.width
@@ -71,7 +72,10 @@ Item {
             text            :   "Çıkış Yap"
             tooltipEnabled  :   true
             tooltipText     :   "Çıkış yapmak için tıklayınız"
-            onTriggered     :   logout()
+            onTriggered     :   {
+                logout()
+                toast.displaySuccess("Çıkış Yapıldı")
+            }
         }
     }
 }

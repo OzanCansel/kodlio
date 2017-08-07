@@ -221,7 +221,7 @@ Item {
             var success = FileSingleton.removeFile(contextMenu.removeFilePath)
 
             if(!success)
-                toast.displayError("Dosya silinemedi.")
+                mainToast.displayError("Dosya silinemedi.")
         }
         standardButtons :   Dialog.Yes | Dialog.No
     }

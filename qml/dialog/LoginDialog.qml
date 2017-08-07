@@ -1,11 +1,13 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.1
 import Kodlio 1.0
+import "../control"
 import "../form"
 
 Dialog {
 
     property Cloud  cloud       :   ({})
+    property Toast  toast       :   ({})
 
     id          :   loginDialog
     width       :   300
@@ -18,11 +20,12 @@ Dialog {
     background  :   Rectangle{
         color   :   "transparent"
     }
-    visible     :   !cloud.authenticated
 
     contentItem :   LoginForm   {
-        id      :   form
-        focus   :   true
-        cloud   :   loginDialog.cloud
+        id              :   form
+        focus           :   true
+        cloud           :   loginDialog.cloud
+        toast           :   loginDialog.toast
+        onAuthenticated :   close()
     }
 }

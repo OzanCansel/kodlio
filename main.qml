@@ -47,6 +47,7 @@ ApplicationWindow {
     LoginDialog{
         id      :   loginDialog
         cloud   :   cloudApi
+        toast   :   mainToast
     }
 
     ListProjectsDialog{
@@ -94,7 +95,7 @@ ApplicationWindow {
         message         :   "Projeyi yüklemek istediğinize emin misiniz ?"
         onAccepted      :   {
             if(cloudApi.projectUploadBusy){
-                toast.displayError("Su anda baska bir yukleme mevcut")
+                mainToast.displayError("Su anda baska bir yukleme mevcut")
             }
             else{
                 cloudApi.uploadProjectV2(projectManager.projectRoot)
@@ -108,7 +109,7 @@ ApplicationWindow {
 
     ArduinoProjectManager{
         id                  :   projectManager
-        onProjectCreateError:   toast.displayError(error)
+        onProjectCreateError:   mainToast.displayError(error)
     }
 
     SerialMonitorDialog{
@@ -155,18 +156,19 @@ ApplicationWindow {
         x               :   110
         y               :   235
         z               :   2
+        toast           :   mainToast
         onLogout        :   cloudApi.logout()
         onUploadProject :   {
             //Internet baglantisi yoksa
             if(!cloudApi.hasInternetAccess){
-                toast.displayWarning("Internet baglantisi yok.")
+                mainToast.displayWarning("Internet baglantisi yok.")
                 return
             }
 
             if(projectManager.projectOpened)
                 uploadProjectDialog.open()
             else
-                toast.displayWarning("Yuklemek icin once projeyi aciniz")
+                mainToast.displayWarning("Yuklemek icin once projeyi aciniz")
         }
         onListProjects  :   listProjectsDialog.open()
     }
@@ -451,9 +453,9 @@ ApplicationWindow {
                         ArduinoProject  {
                             id                      :   currentProject
                             libManager              :   libManager
-                            onShowToast             :   toast.displayMessage(msg)
-                            onShowError             :   toast.displayError(msg)
-                            onShowWarning           :   toast.displayWarning(msg)
+                            onShowToast             :   mainToast.displayMessage(msg)
+                            onShowError             :   mainToast.displayError(msg)
+                            onShowWarning           :   mainToast.displayWarning(msg)
                             consoleOut              :   outputConsole
                             anchors.fill            :   parent
                             anchors.leftMargin      :   Theme.controlXMargin
@@ -486,12 +488,12 @@ ApplicationWindow {
             }
 
             Toast{
-                id              :   toast
+                id              :   mainToast
                 container       :   parent
                 textColor       :   "white"
 
                 Component.onCompleted   : {
-                    Global.toast = toast
+                    Global.toast = mainToast
                 }
             }
         }
