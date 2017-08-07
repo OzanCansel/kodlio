@@ -133,7 +133,6 @@ ApplicationWindow {
     CloudThread{
         id                      :   cloudThread
         cloud                   :   cloudApi
-        Component.onCompleted   :   cloudApi.authenticate("admin","123456")
     }
 
     background  :   Image   {
