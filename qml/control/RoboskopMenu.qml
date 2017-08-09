@@ -46,7 +46,7 @@ Item {
 
         Text {
             id                      :   userNameText
-            text                    :   cloud.userName
+            text                    :   "Roboskop"
             anchors.centerIn        :   parent
             z                       :   2
             color                   :   "white"

@@ -1,10 +1,13 @@
 import QtQuick 2.7
+import QtQuick.Controls 2.2
 import "../singleton"
 
 Item {
 
     id              :   it
     property color color    :   Theme.ideMenuItemBackColor
+    property bool   tooltipEnabled  :   false
+    property string tooltipText     :   ({})
     property alias  mouseArea   :   area
     property alias  img         :   icon
     property alias  txt         :   txt
@@ -71,4 +74,7 @@ Item {
         anchors.fill        :   parent
         hoverEnabled        :   true
     }
+
+    ToolTip.visible         :   tooltipEnabled && area.containsMouse
+    ToolTip.text            :   tooltipText
 }

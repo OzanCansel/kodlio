@@ -30,6 +30,8 @@ Rectangle {
             img.source          :   "/res/icon/compile.png"
             txt.text            :   "Derle"
             enabled             :   !currentProject.toolchain.busy
+            tooltipEnabled      :   true
+            tooltipText         :   "Projenizi derlemek için tıklayınız"
         }
 
         IdeMenuItem {
@@ -42,6 +44,8 @@ Rectangle {
             img.source          :   "/res/icon/upload.png"
             txt.text            :   "Yükle"
             enabled             :   !currentProject.runner.busy
+            tooltipEnabled      :   true
+            tooltipText         :   "Projenizi mikroişlemcinize yüklemek için tıklayınız"
         }
     }
 }

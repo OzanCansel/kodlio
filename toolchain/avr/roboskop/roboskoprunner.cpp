@@ -27,14 +27,24 @@ void RoboskopRunner::run(RunOptions *opts){
     if(!QFile::copy(":/res/firmware/validator-uno.hex" , validatorPath)){
         sendRunError();
         sendStdErr("Yükleme esnasında hata !");
+        setBusy(false);
+        sendProgress(-1);
         return;
     }
+
     opts->set("file" , validatorPath);
 
     //%10 tamamlandi
     sendProgress(0.1);
     //Roboskop yazilimini kontrol eden firmware yukleniyor
-    runner.run(opts);
+    try{
+        runner.run(opts);
+    }catch(RunError &err){
+        sendRunError();
+        sendProgress(-1);
+        setBusy(false);
+        return;
+    }
 
     QSerialPort  port;
     port.setPortName(portName);
@@ -50,6 +60,7 @@ void RoboskopRunner::run(RunOptions *opts){
             sendRunError();
             sendStdErr("Yüklenecek port açılamıyor.");
             sendProgress(-1);
+            setBusy(false);
             return;
         }
     }
@@ -62,6 +73,7 @@ void RoboskopRunner::run(RunOptions *opts){
         sendRunError();
         sendStdErr("Yükleme esnasında hata oluştu.");
         sendProgress(-1);
+        setBusy(false);
         return;
     }
 
@@ -72,6 +84,7 @@ void RoboskopRunner::run(RunOptions *opts){
         sendRunError();
         sendStdErr("Yükleme esnasında hata oluştu");
         sendProgress(-1);
+        setBusy(false);
         return;
     }
 
@@ -86,6 +99,7 @@ void RoboskopRunner::run(RunOptions *opts){
         sendRunError();
         sendStdErr("Yükleme esnasında hata oluştu.");
         sendProgress(-1);
+        setBusy(false);
         return;
     }
 
@@ -99,6 +113,7 @@ void RoboskopRunner::run(RunOptions *opts){
         sendRunError();
         sendStdErr("Sadece Roboskop işlemcilerine yükleme yapılabilir.");
         sendProgress(-1);
+        setBusy(false);
         return;
     }
 
@@ -112,6 +127,7 @@ void RoboskopRunner::run(RunOptions *opts){
         sendRunError();
         sendStdErr("Roboskop yazılımı yüklenirken hata oluştu.");
         sendProgress(-1);
+        setBusy(false);
         return;
     }
 
@@ -123,6 +139,7 @@ void RoboskopRunner::run(RunOptions *opts){
         runner.run(opts);
     }   catch(RunError &err){
         sendRunError();
+        setBusy(false);
         return;
     }
 

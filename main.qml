@@ -278,6 +278,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Ekle"
                             mouseArea.onClicked :   fileMenu.menu.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Proje ilgili işlemler için tıklayınız"
                         }
 
                         IdeMenuItem{
@@ -287,6 +289,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "İletişim"
                             mouseArea.onClicked :   serialMonitorDialog.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Seri portu açmak için tıklayınız"
                         }
 
                         IdeMenuItem {
@@ -296,6 +300,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Örnekler"
                             mouseArea.onClicked :   examplesDialog.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Hazır örneklere göz atmak için tıklayınız"
                         }
 
                         IdeMenuItem {
@@ -305,6 +311,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Portlar"
                             mouseArea.onClicked :   serialPortPopup.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Bilgisayara bağlı arduino işlemcileri için tıklayınız"
                         }
 
                         IdeMenuItem{
@@ -314,6 +322,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Kutuphaneler"
                             mouseArea.onClicked :   libraryManagerDialog.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Kütüphanelere göz atmak için tıklayınız"
                         }
 
                         IdeMenuItem{
@@ -323,6 +333,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Bulut"
                             mouseArea.onClicked :   cloudApi.authenticated ? cloudMenu.open() : loginDialog.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Bulut işlemleri için tıklayınız"
                         }
 
                         IdeMenuItem{
@@ -331,6 +343,8 @@ ApplicationWindow {
                             width               :   parent.width
                             height              :   50
                             mouseArea.onClicked :   roboskopMenu.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Roboskop yazılımı ile ilgili işlemler için tıklayınız."
                         }
 
                         IdeMenuItem{
@@ -340,6 +354,8 @@ ApplicationWindow {
                             height              :   50
                             txt.text            :   "Ayarlar"
                             mouseArea.onClicked :   settingsDialog.open()
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Ayarlar için tıklayınız."
                         }
 
                         IdeMenuItem{
@@ -349,6 +365,8 @@ ApplicationWindow {
                             height              :   50
                             mouseArea.onClicked :   quitAppDialog.open()
                             txt.text            :   "Çıkış"
+                            tooltipEnabled      :   true
+                            tooltipText         :   "Programdan çıkmak için tıklayınız"
                         }
                     }
 
