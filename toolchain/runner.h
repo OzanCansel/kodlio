@@ -41,6 +41,7 @@ protected:
     void    sendRunError();
     void    setRunnerState(RunnerState state);
     void    setBusy(bool val);
+    void    sendProgress(double val);
 
 signals:
 
@@ -52,6 +53,7 @@ signals:
     void    runError();
     void    runnerStateChanged();
     void    busyChanged();
+    void    progress(double progress);
 
 private:
 

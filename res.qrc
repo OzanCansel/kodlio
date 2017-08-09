@@ -44,5 +44,6 @@
         <file>res/icon/assistant-disabled-icon.png</file>
         <file>res/icon/assistant-enabled-icon.png</file>
         <file>res/icon/cloud-icon-2.png</file>
+        <file>res/icon/roboskop-icon.png</file>
     </qresource>
 </RCC>

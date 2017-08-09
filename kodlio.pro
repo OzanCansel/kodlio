@@ -175,10 +175,14 @@ SOURCES += main.cpp \
     cloudapi/cloudplugin.cpp \
     thread/cloud/cloudthread.cpp \
     thread/cloud/cloudworker.cpp \
-    globalplugin.cpp
+    globalplugin.cpp \
+    toolchain/avr/roboskop/roboskoprunner.cpp \
+    thread/avr/roboskop/roboskoptoolchainthread.cpp \
+    thread/avr/roboskop/roboskoptoolchainworker.cpp
 
 RESOURCES += qml.qrc \
-    res.qrc
+    res.qrc \
+    firmware.qrc
 
 # Additional import path used to resolve QML modules in Qt Creator's code model
 QML_IMPORT_PATH =
@@ -284,7 +288,8 @@ DISTFILES += \
     qml/control/CloudMenu.qml \
     qml/control/GenericMenuItem.qml \
     qml/control/GenericMenu.qml \
-    qml/control/FileMenu.qml
+    qml/control/FileMenu.qml \
+    qml/control/RoboskopMenu.qml
 
 
 HEADERS += \
@@ -425,5 +430,8 @@ HEADERS += \
     cloudapi/cloudplugin.h \
     thread/cloud/cloudthread.h \
     thread/cloud/cloudworker.h \
-    globalplugin.h
+    globalplugin.h \
+    toolchain/avr/roboskop/roboskoprunner.h \
+    thread/avr/roboskop/roboskoptoolchainthread.h \
+    thread/avr/roboskop/roboskoptoolchainworker.h
 

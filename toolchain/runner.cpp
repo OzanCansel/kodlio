@@ -45,6 +45,12 @@ void Runner::sendStdErr(QString output){
     emit stdErr(output);
 }
 
+void Runner::sendProgress(double val){
+    if(debugEnabled())  qDebug() << "Runner progress() -> " << val;
+
+    emit progress(val);
+}
+
 void Runner::setDebugEnabled(bool enabled){
     _debugEnabled = enabled;
 }

@@ -43,8 +43,7 @@
 #include "file/file.h"
 #include <QStandardPaths>
 
-int main(int argc, char *argv[])    {
-
+int main(int argc, char *argv[]){
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication app(argc, argv);
 
@@ -63,13 +62,6 @@ int main(int argc, char *argv[])    {
     CloudPlugin::attach();
     GlobalPlugin::attach();
     OsInfo      osInfo;
-
-    File f;
-
-    f.copyDirectoryRecursively("/home/arnes/workspace/kodlio/extFiles/linux/examples/kodlio",
-                               "/home/arnes/examples-sketch" ,
-                               QStringList() << "*.cpp" << "*.cxx" << "*.cc" << "*.h",
-                               true);
 
     QQmlApplicationEngine engine;
     EventContext        eventContext;

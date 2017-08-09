@@ -44,6 +44,8 @@ ApplicationWindow {
         onUploadRequired    :   currentProject.run()
     }
 
+
+    //Dialogs
     LoginDialog{
         id      :   loginDialog
         cloud   :   cloudApi
@@ -67,6 +69,22 @@ ApplicationWindow {
 
     ExamplesDialog{
         id      :   examplesDialog
+    }
+
+
+    SerialMonitorDialog{
+        id      :   serialMonitorDialog
+    }
+
+    CreateNewClassDialog{
+        id      :   createNewClassDialog
+    }
+
+
+    CreateProjectDialog {
+        id      :   createProjectDialog
+        manager :   projectManager
+        options :   projectOptions
     }
 
     GenericMessageDialog{
@@ -103,6 +121,7 @@ ApplicationWindow {
         }
     }
 
+    //Backend objects
     ProjectOptions{
         id      :   projectOptions
     }
@@ -112,28 +131,14 @@ ApplicationWindow {
         onProjectCreateError:   mainToast.displayError(error)
     }
 
-    SerialMonitorDialog{
-        id      :   serialMonitorDialog
-    }
-
-    CreateProjectDialog {
-        id      :   createProjectDialog
-        manager :   projectManager
-        options :   projectOptions
-    }
-
-    CreateNewClassDialog{
-        id      :   createNewClassDialog
-    }
-
     Cloud   {
         id      :   cloudApi
     }
 
-    CloudThread{
-        id                      :   cloudThread
-        cloud                   :   cloudApi
-    }
+//    CloudThread{
+//        id                      :   cloudThread
+//        cloud                   :   cloudApi
+//    }
 
     background  :   Image   {
         id          :   img
@@ -170,6 +175,16 @@ ApplicationWindow {
                 mainToast.displayWarning("Yuklemek icin once projeyi aciniz")
         }
         onListProjects  :   listProjectsDialog.open()
+    }
+
+    RoboskopMenu{
+        id              :   roboskopMenu
+        x               :   110
+        y               :   350
+        z               :   2
+        toast           :   mainToast
+        consoleOutput   :   outputConsole
+        progressBar     :   compileProgressBar
     }
 
     FileMenu{
@@ -311,6 +326,14 @@ ApplicationWindow {
                         }
 
                         IdeMenuItem{
+                            id                  :   roboskopMenuItem
+                            img.source          :   "/res/icon/roboskop-icon.png"
+                            width               :   parent.width
+                            height              :   50
+                            mouseArea.onClicked :   roboskopMenu.open()
+                        }
+
+                        IdeMenuItem{
                             id                  :   settingsMenuItem
                             img.source          :   "/res/icon/settings.png"
                             width               :   parent.width
@@ -328,8 +351,6 @@ ApplicationWindow {
                             txt.text            :   "Çıkış"
                         }
                     }
-
-
 
                     ProjectMenu {
                         id              :   projectMenu

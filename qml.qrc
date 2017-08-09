@@ -78,5 +78,6 @@
         <file>qml/control/GenericMenuItem.qml</file>
         <file>qml/control/GenericMenu.qml</file>
         <file>qml/control/FileMenu.qml</file>
+        <file>qml/control/RoboskopMenu.qml</file>
     </qresource>
 </RCC>

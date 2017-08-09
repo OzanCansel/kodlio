@@ -26,12 +26,6 @@ MenuItem {
         text                :   menuItem.text
         verticalAlignment   :   Text.verticalCenter
         font.family         :   FontCollection.menuFont
-
-        Behavior on scale {
-            NumberAnimation{
-
-            }
-        }
     }
 
     ToolTip.visible     :   tooltipEnabled ? hovered : false
