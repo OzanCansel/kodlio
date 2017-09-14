@@ -22,7 +22,7 @@ Project {
 
     AvrErrorParser{
         id          :   errParser
-        compiler    :   parent.compiler
+        compiler    :   arduinoProject.compiler
     }
 
     FileInfo    {

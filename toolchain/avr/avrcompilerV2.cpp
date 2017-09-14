@@ -11,6 +11,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <QFileInfo>
+#include <QDir>
 
 void AvrCompilerV2::registerQmlType(){
     qmlRegisterType<AvrCompilerV2>("Kodlio" , 1 , 0 , "AvrCompiler");
@@ -22,6 +23,7 @@ AvrCompilerV2::AvrCompilerV2(QQuickItem *parent) : CompilerV2(parent)   {
 }
 
 void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList &includes, QString &boardName) {
+
     QString     fileExtension = file.right(file.length() - file.lastIndexOf("."));
 
     //Uzantinin dogrulugu kontrol ediliyor
@@ -51,7 +53,7 @@ void AvrCompilerV2::generateObjFile(QString &file, QString &output , QStringList
             .arg(board->objectCodeParams(fileExtension))
             .arg(includesText)
             .arg(file)
-            .arg(output);
+            .arg(QDir::toNativeSeparators(output));
 
 
     sendCommandOutput(command);

@@ -98,6 +98,7 @@ Item {
         Repeater{
             id          :   lineCountRepeater
             model       :   lineCount
+//            model       :   0
             Item    {
                 readonly property  int      lineNumber          :   index + startNumber
                 property bool               hasError            :   lineNumerator.hasError(lineNumber)

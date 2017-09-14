@@ -74,7 +74,6 @@ Item {
         textArea.font.pointSize :   EditorSettings.fontPointSize
     }
 
-
     Item {
         id                      :   modifiedIndicatorContainer
         z                       :   5

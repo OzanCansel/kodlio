@@ -1,4 +1,5 @@
 #include "avrenvironment.h"
+#include <QDir>
 
 AvrEnvironment::AvrEnvironment(QQuickItem *parent) : Environment(parent)    {
     set("g++" , sdkDir().append("/tools/avr/bin/avr-g++"));
@@ -14,29 +15,29 @@ AvrEnvironment::AvrEnvironment(QQuickItem *parent) : Environment(parent)    {
 }
 
 QString AvrEnvironment::gPlusPlus(){
-    return  get("g++");
+    return  QDir::toNativeSeparators(get("g++"));
 }
 
 QString AvrEnvironment::gcc(){
-    return get("gcc");
+    return QDir::toNativeSeparators(get("gcc"));
 }
 
 QString AvrEnvironment::gccAr(){
-    return get("gcc-ar");
+    return QDir::toNativeSeparators(get("gcc-ar"));
 }
 
 QString AvrEnvironment::objcopy(){
-    return get("objcopy");
+    return QDir::toNativeSeparators(get("objcopy"));
 }
 
 QString AvrEnvironment::variants(QString &boardName){
-    return get(QString("variants-%0").arg(boardName) , true);
+    return QDir::toNativeSeparators(get(QString("variants-%0").arg(boardName) , true));
 }
 
 QString AvrEnvironment::avrdude(){
-    return get("avrdude");
+    return QDir::toNativeSeparators(get("avrdude"));
 }
 
 QString AvrEnvironment::avrdudeConf(){
-    return get("avrdude-conf");
+    return QDir::toNativeSeparators(get("avrdude-conf"));
 }

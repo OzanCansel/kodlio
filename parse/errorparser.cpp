@@ -24,7 +24,12 @@ CompilerV2* ErrorParser::compiler(){
     return _compiler;
 }
 
+
 //Slots
+void ErrorParser::clear(){
+    _err.clear();
+}
+
 void ErrorParser::stdError(QString errStr){
     _err.append(errStr);
 }

@@ -31,6 +31,7 @@ public slots:
 
     void        stdError(QString err);
     void        compilerError();
+    void        clear();
 
 signals:
 

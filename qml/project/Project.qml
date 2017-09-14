@@ -363,16 +363,19 @@ Item {
                 }
 
                 StackLayout {
+
                     id                  :   documents
                     anchors.fill        :   parent
                     readonly property bool anyDocumentOpened :   documents.count > 1
+
                     currentIndex    :   {
                         if(documentTabs.count > 1 && documentTabs.currentIndex === 0){
                             documentTabs.currentIndex = 1
                             return 1
                         }
-                        else
+                        else{
                             return documentTabs.currentIndex
+                        }
                     }
 
                     EmptyDocument   {
@@ -496,11 +499,15 @@ Item {
         onProgress      :   progress.progress = value
         onCompileSuccess:   compileSuccessAnimation.restart()
         onCompileError  :   compileErrorAnimation.restart()
-        onBuildStarted  :   clearErrors()
+        onBuildStarted  :   {
+            clearErrors()
+            parser.clear()
+        }
     }
 
     Connections{
         target          :   compiler
+        onStdError      :   consoleOut.errorOutput(output)
     }
 
     Connections{

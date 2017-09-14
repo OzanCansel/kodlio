@@ -50,7 +50,6 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
     //Eger board secilmemisse
     if(board.isNull()){
         //Hata firlatiliyor
-
         setBusy(false);
         BoardNotSpecified("AvrToolchain::compile board secilmemis").raise();
     }   else    {
@@ -78,6 +77,7 @@ void AvrToolchain::compile(QString file, CompileOptions *opts)    {
         buildDirPath = buildDirVariant.toString();
     }
 
+    QDir(buildDirPath).removeRecursively();
     boardBuildDirPath = QDir(buildDirPath).filePath(boardName);
     libBuildDirPath = QDir(boardBuildDirPath).filePath("libs");
 

@@ -343,8 +343,9 @@ ApplicationWindow {
                             width               :   parent.width
                             height              :   50
                             mouseArea.onClicked :   roboskopMenu.open()
-                            tooltipEnabled      :   true
+                            tooltipEnabled      :    true
                             tooltipText         :   "Roboskop yazılımı ile ilgili işlemler için tıklayınız."
+                            visible             :   false
                         }
 
                         IdeMenuItem{

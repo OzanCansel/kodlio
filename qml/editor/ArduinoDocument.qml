@@ -13,7 +13,7 @@ Document {
         document    :   textFlickable.textArea.textDocument
     }
 
-    KodlioAsistant{
+    KodlioAsistant  {
         id              :   assistant
         textDocument    :   textFlickable.textArea.textDocument
         cooldown        :   2000
@@ -49,7 +49,6 @@ Document {
         x               :   parent.width / 2
         z               :   2
         opacity         :   assistant.enabled ? 1 : 0
-//        visible         :   assistant.enabled
 
         Behavior on opacity{
             NumberAnimation{

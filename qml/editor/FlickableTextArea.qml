@@ -17,6 +17,7 @@ Flickable {
     flickableDirection  :   Flickable.VerticalFlick
 
     TextArea.flickable  :   TextArea    {
+
         id                  :   textArea
         persistentSelection :   true
         selectByKeyboard    :   true
