@@ -1,6 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>res/firmware/validator-uno.hex</file>
-        <file>res/firmware/firmware-uno.hex</file>
-    </qresource>
-</RCC>

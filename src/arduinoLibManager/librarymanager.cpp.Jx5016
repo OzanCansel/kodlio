@@ -1,0 +1,132 @@
+#include "librarymanager.h"
+#include <QNetworkRequest>
+#include <QEventLoop>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QtQml>
+#include "http/roboskopnetworkmanager.h"
+#include "arduinolibdescription.h"
+#include "traverse/filetraverse.h"
+#include "arduinolibenvironment.h"
+#include "arduinolibdownloader.h"
+#include "zip/winzipextractor.h"
+#include "osinfo.h"
+#include "exception/environmentvariablenotset.h"
+
+void LibraryManager::registerQml(){
+    qmlRegisterType<LibraryManager>("Kodlio" , 1 , 0 , "ArduinoLibManager");
+}
+
+LibraryManager::LibraryManager(QQuickItem *parent) : QQuickItem(parent)
+{   }
+
+void LibraryManager::refreshArduinoLibraries(){
+    RoboskopNetworkAccessManager    accesManager;
+    QNetworkRequest                 request(QUrl(QString("http://downloads.arduino.cc/libraries/library_index.json")));
+
+    QNetworkReply* reply = accesManager.getSync(request);
+
+    QJsonArray libJsonArray     =   QJsonDocument::fromJson(reply->readAll()).object()["libraries"].toArray();
+
+    //Onceki liste temizleniyor
+    _descriptions.clear();
+
+    foreach (QJsonValue val, libJsonArray) {
+        ArduinoLibDescription   desc;
+        QJsonObject obj = val.toObject();
+        //Json parse ediliyor
+        desc.deserialize(obj);
+
+        _descriptions.append(desc);
+    }
+}
+
+QVariantList    LibraryManager::filter(QString name){
+    QVariantList    l;
+
+    foreach (ArduinoLibDescription desc, _descriptions) {
+        l.append(desc.asVariant());
+    }
+
+    return l;
+}
+
+void    LibraryManager::installLibs(QVariantList libs){
+
+    ArduinoLibEnvironment   env;
+    OsInfo                  osInfo;
+    ArduinoLibDownloader    downloader;
+    ZipExtractor            *extractor;
+    QString                 libsDir;
+
+    if(osInfo.os() == "windows")
+        extractor = new WinZipExtractor();
+    else{
+        throw "Zip/Unzip programi mevcut degil.";
+    }
+
+    //Ortam degiskeni kontrol ediliyor
+    if(!env.isAssigned("installedLibsDir"))
+        EnvironmentVariableNotSet("installedLibsDir").raise();
+
+    //Kutuphaneler yukleniyor
+    foreach (QVariant m, libs) {
+        QVariantMap lib = m.toMap();
+
+        QString     libName =   lib["name"].toString();
+        QString     version =   lib["version"].toString();
+
+        ArduinoLibDescription   desc    =   retrieveDesc(libName , version);
+
+        //Kutuphane var mi diye kontrol ediliyor
+        bool exists = libExists(desc.name() , desc.version());
+
+        //Kutuphane mevcutsa pas geciliyor
+        if(exists){
+            qDebug() << libName << " mevcut. Pas geciliyor.";
+            continue;
+        }
+
+        QTemporaryDir   dir;
+        QString     downloadFPath = dir.filePath(desc.name().append(".zip"));
+
+        downloader.download(desc.url());
+        bool written = downloader.writeTo(downloadFPath);
+
+        if(!written){
+            return;
+        }
+
+        QString     installLibPath = env.get("instalaledLibsDir");
+
+        extractor->unzip(downloadFPath , installLibPath , true);
+    }
+
+    extractor->deleteLater();
+}
+
+ArduinoLibDescription LibraryManager::retrieveDesc(QString name, QString version){
+    foreach (ArduinoLibDescription desc, _descriptions) {
+        if(desc.name() == name && desc.version() == version)
+            return desc;
+    }
+
+    return ArduinoLibDescription();
+}
+
+bool LibraryManager::libExists(QString name, QString version){
+    FileTraverse    traverser;
+    QList<TraversedFileInfo> files = traverser.traverseRecursively(ArduinoLibEnvironment().get("arduinoInstalledLibs"));
+
+    foreach(TraversedFileInfo file , files){
+        ArduinoLibDescription   desc;
+        QString     fPath   =   file.info().filePath();
+       desc.deserialize(fPath);
+
+       if(desc.name() == name && desc.version() == version)
+           return true;
+    }
+
+    return false;
+}
