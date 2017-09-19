@@ -2,7 +2,7 @@
 
 if [ "$#" -ne 3 ]; then
     echo "./deploy.sh <Kit Dizin> <version> seklinde calistirilmalidir."
-    echo "ornek => './deploy.sh /homearnes/Qt /home/arnes/Qt/5.9.1/gcc_64 v2'"
+    echo "ornek => './deploy.sh /home/arnes/Qt /home/arnes/Qt/5.9.1/gcc_64 v2'"
     exit
 fi
 
