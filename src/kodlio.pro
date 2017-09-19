@@ -17,18 +17,7 @@ win32 {
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e &
                 QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\template $${OUT_PWD_WIN}\\release\\template /e
 
-                message(robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\debug\\drivers /e)
-
         } else {
-                PWD_WIN = $${PWD}
-                PWD_WIN ~= s,/,\\,g
-                OUT_PWD_WIN = $${OUT_PWD}
-                OUT_PWD_WIN ~= s,/,\\,g
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\* $${OUT_PWD_WIN}\\release\\ /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\sdk $${OUT_PWD_WIN}\\release\\sdk /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\drivers $${OUT_PWD_WIN}\\release\\drivers /e &
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\tools /e
-                QMAKE_POST_LINK  += robocopy $${PWD_WIN}\\extFiles\\windows\\tools $${OUT_PWD_WIN}\\release\\template /e
 
         }
 }

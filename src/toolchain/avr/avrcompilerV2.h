@@ -26,6 +26,8 @@ private:
     LibraryManager  manager;
     QStringList     _allowedExtensions;
 
+    QString        normalizePath(QString str);
+
 };
 
 #endif // AVRCOMPILER_V2_H

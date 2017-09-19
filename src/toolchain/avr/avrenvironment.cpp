@@ -19,7 +19,7 @@ QString AvrEnvironment::gPlusPlus(){
 }
 
 QString AvrEnvironment::gcc(){
-    return QDir::toNativeSeparators(get("gcc"));
+    return get("gcc");
 }
 
 QString AvrEnvironment::gccAr(){
