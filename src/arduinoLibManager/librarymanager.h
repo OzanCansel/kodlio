@@ -25,7 +25,7 @@ public:
     QString         downloadingLibVersion();
     QList<ArduinoLibDescription*>*      localLibs();
     QList<ArduinoLibDescription*>*      onlineLibs();
-    QList<ArduinoLibDescription*>       getLocalLibs();
+    QList<ArduinoLibDescription*>&       getLocalLibs();
 
 
 public slots:

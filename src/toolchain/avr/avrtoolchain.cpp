@@ -28,6 +28,14 @@ void AvrToolchain::run(RunOptions *options) {
 
 void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
+    //Eger .ino ile bitiyorsa
+    if(file.endsWith(".ino")){
+        QFile   f(file);
+
+        QString str = f.readAll();
+
+    }
+
     QFileInfo   mainFileInfo(file);
     QVariant    buildDirVariant = opts->get("buildDir");
     QString     buildDirPath;
@@ -427,4 +435,52 @@ QDir AvrToolchain::mkpath(QString path){
     else
         dir.mkpath(path);
     return dir;
+}
+
+bool AvrToolchain::preprocessInoFile(QString filePath , QString processedFile){
+    QRegularExpression  checkLoopFuncExpr("void\\sloop\\(\\s*\\)\\s*;");
+    QRegularExpression  checkSetupFuncExpr("void\\ssetup\\(\\s*\\)\\s*;");
+    QRegularExpression  checkArduinoHeaderExpr("#include\\s+<Arduino.h>");
+    QRegularExpression  whereToAddExpr("#include\s+(<|\\\").+(>|\\\")\s+");
+
+
+    QFile   f(filePath);
+
+    if(!f.open(QIODevice::ReadOnly)){
+        return false;
+    }
+
+    QString content(f.readAll());
+
+    QRegularExpressionMatch loopFuncMatch = checkLoopFuncExpr.match(content);
+    QRegularExpressionMatch setupFuncMatch = checkSetupFuncExpr.match(content);
+    QRegularExpressionMatch arduinoHeaderMatch = checkArduinoHeaderExpr.match(content);
+    QRegularExpressionMatch whereToAddMatch = whereToAddExpr.match(content);
+
+    QString processedTexts;
+
+
+    //Arduino headeri cagirilmamissa
+    if(!arduinoHeaderMatch.hasMatch()){
+        processedTexts.append("\n#include <Arduino.h> //Kodlio editoru tarafindan otomatik eklenmistir.\n");
+    }
+
+    //Eger setup fonksiyonu yoksa
+    if(!setupFuncMatch.hasMatch()){
+        processedTexts << "void setup(); //Kodlio tarafindan otomatik eklenmistir.\n";
+    }
+
+    //Eger loop fonksiyonu yoksa
+    if(!loopFuncMatch.hasMatch()){
+        processedTexts << "void loop(); //Kodlio tarafindan otomatik eklenmistir\n";
+    }
+
+    if(whereToAddMatch.hasMatch()){
+        int idx = whereToAddMatch.capturedEnd(whereToAddMatch.lastCapturedIndex());
+
+        content.insert(idx , processedTexts);
+    } else {
+        content.insert(0 , processedTexts);
+    }
+
 }

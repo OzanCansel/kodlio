@@ -41,6 +41,7 @@
 #include "cloudapi/cloudplugin.h"
 #include "globalplugin.h"
 #include "file/file.h"
+#include "project/arduino/examplesmanager.h"
 #include <QStandardPaths>
 
 int main(int argc, char *argv[]){

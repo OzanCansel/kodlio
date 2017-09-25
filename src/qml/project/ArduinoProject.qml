@@ -16,7 +16,7 @@ Project {
     watcher             :       projectWatcher
     runner              :       avrRunner
     parser              :       errParser
-    allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S"]
+    allowedExtensions   :       ["cpp" , "c" , "s" , "h" , "S" , "ino"]
 
     property ArduinoLibManager  libManager  :   ({})
 

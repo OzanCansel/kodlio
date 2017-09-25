@@ -46,6 +46,7 @@ public:
     QString     archivedFileName() const;
     QString     localDir() const;
     QString     srcDir() const;
+    QString     examplesDir() const;
     QStringList headerPaths() const;
     QStringList headerFolders();
 

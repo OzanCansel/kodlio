@@ -3,6 +3,7 @@
 #include "parse/functionparser.h"
 #include "traverse/filetraverse.h"
 #include <QtQml>
+#include <QDir>
 
 void ArduinoProjectWatcher::registerQmlType(){
     qmlRegisterType<ArduinoProjectWatcher>("Kodlio" , 1 , 0 , "ArduinoProjectWatcher");
@@ -20,21 +21,10 @@ QString ArduinoProjectWatcher::retrieveMainFile(){
         return QDir(rootDir()).filePath("sketch.cpp");
     }
 
-//    QStringList projFiles = _watcher.files();
-//    FunctionParser  fParser;
-
-//    foreach (QString fileName, projFiles) {
-//        QString content =   FileUtil::readContent(fileName);
-//        QString signature = "void";
-//        QString setupF = "setup";
-//        QString loopF = "loop";
-//        bool setupFExists = fParser.functionExists(content , signature , setupF);
-//        bool loopFExists = fParser.functionExists(content , signature , loopF);
-
-//        if(setupFExists && loopFExists){
-//            return fileName;
-//        }
-//    }
+    foreach(QString file , QDir(rootDir()).entryList(QDir::Files)){
+        if(file.endsWith(".ino"))
+            return QDir(rootDir()).filePath(file);
+    }
 
     return "sketch.cpp";
 }

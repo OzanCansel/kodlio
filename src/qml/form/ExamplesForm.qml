@@ -1,16 +1,34 @@
 import QtQuick 2.0
 import QtQuick.Dialogs 1.2
 import Kodlio 1.0
+import "../singleton"
 import "../control"
 
 Item {
 
     property    variant     sections    :   []
     property ProjectManager manager     :   ({})
+    property ProjectOptions options     :   ({})
+    property ArduinoLibManager  libraryManager  :   ({})
 
+
+    id              :   examplesForm
     implicitWidth   :   500
     implicitHeight  :   600
+
     signal  closeMe()
+
+    FileDialog{
+        id                  :   copyProjectDialog
+        title               :   "Kaydetmek istediginiz yeri seciniz"
+        folder              :   shortcuts.documents
+        selectFolder        :   true
+        selectMultiple      :   false
+        onAccepted          :   {
+            var path = Common.extractPathFromUrl(copyProjectDialog.fileUrl.toString())
+            openExample(path)
+        }
+    }
 
     ListModel{
         id      :   examplesModel
@@ -25,7 +43,8 @@ Item {
     }
 
     function    refresh(){
-        var examples =  traverse.readProjects(environment.appDirPath() + "/examples" , "")
+        var examples = examplesManager.load()
+
         examplesModel.clear()
         filteredModel.clear()
 
@@ -45,8 +64,8 @@ Item {
     function    openExample(targetPath){
         var examplePath = examplesList.currentItem.examplePath
         manager.copyProject(examplePath , targetPath)
-        projectOpts.root = targetPath;
-        manager.openProject(targetPath)
+        options.root = targetPath;
+        manager.openProject(options)
         closeMe()
     }
 
@@ -70,12 +89,13 @@ Item {
         }
     }
 
-    ProjectOptions{
-        id      :   projectOpts
-    }
-
     ProjectTraverse{
         id      :   traverse
+    }
+
+    ExamplesManager{
+        id          :   examplesManager
+        libManager  :   examplesForm.libraryManager
     }
 
     FileDialog  {
@@ -172,7 +192,7 @@ Item {
                 text        :   "Aç"
                 width       :   120
                 height      :   parent.height
-                onClicked   :   openExample()
+                onClicked   :   copyProjectDialog.open()
             }
         }
     }

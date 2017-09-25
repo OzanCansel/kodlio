@@ -21,7 +21,7 @@ void Programmer::upload(QString hexFilePath, ProgrammerConfiguration *conf){
 
     emit commandOutput(command);
 
-    bool res = RoboskopProcess::startProcess(command , stdOut , stdErr);
+    RoboskopProcess::startProcess(command , stdOut , stdErr);
 
     if(!stdOut.isEmpty()){
 

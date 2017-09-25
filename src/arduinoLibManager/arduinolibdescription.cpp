@@ -160,11 +160,24 @@ QString ArduinoLibDescription::srcDir() const{
     return srcDir;
 }
 
+QString ArduinoLibDescription::examplesDir() const {
+
+    QDir    examplesDir(QString("%0/%1").arg(_libDir).arg("examples"));
+
+
+    //Eger ornekler klasoru mevcutsa
+    if(examplesDir.exists()){
+        return examplesDir.absolutePath();
+    }
+
+    return QString();
+}
+
 void ArduinoLibDescription::setName(QString val){
     _name = val;
 
     emit nameChanged();
-}\
+}
 
 void ArduinoLibDescription::setVersion(QString val){
     _version = val;

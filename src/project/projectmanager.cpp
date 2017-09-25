@@ -79,5 +79,5 @@ void ProjectManager::openProject(ProjectOptions *opts){
 void ProjectManager::copyProject(QString from, QString to){
     File    f;
 
-    f.copyDirectoryRecursively(from , to , QStringList() << "*.cpp" << "*.cxx" << "*.cc" << "*.h" , true);
+    f.copyDirectoryRecursively(from , to , QStringList() << "*.cpp" << "*.cxx" << "*.cc" << "*.h" << "*.ino" , true);
 }

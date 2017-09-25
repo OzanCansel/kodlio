@@ -4,6 +4,7 @@
 #include "projectmanager.h"
 #include "arduino/arduinoprojectmanager.h"
 #include "arduino/arduinoprojectwatcher.h"
+#include "arduino/examplesmanager.h"
 
 ProjectPlugin::ProjectPlugin()
 {
@@ -16,4 +17,5 @@ void ProjectPlugin::attach(){
     ArduinoProjectManager::registerQmlType();
     ProjectWatcher::registerQmlType();
     ArduinoProjectWatcher::registerQmlType();
+    ExamplesManager::registerQmlType();
 }

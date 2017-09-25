@@ -15,7 +15,7 @@ public:
 
     static void         copy(QString sourceDir , QString destionationDir);
 
-public slots    :
+public slots:
 
     QString             workingDirectory();
     QString             projectName(QString folder);
@@ -29,7 +29,7 @@ public slots    :
     bool                createFile(QString path , QString content);
     void                save(QString content);
 
-private         :
+private:
 
     QString     _workingDirectory;
 

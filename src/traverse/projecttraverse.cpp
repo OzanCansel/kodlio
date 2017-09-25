@@ -10,11 +10,12 @@ ProjectTraverse::ProjectTraverse(QQuickItem *parent) : QQuickItem(parent){
 
 }
 
-QVariantHash    ProjectTraverse::readProjects(QString dirPath , QString filterPattern){
+QVariantMap    ProjectTraverse::readProjects(QString dirPath , QString filterPattern){
     QDir    currDir(dirPath);
 
-    if(currDir.entryList(QDir::Files).contains("sketch.cpp")){
-        QVariantHash variant;
+    QStringList l = currDir.entryList(QDir::Files);
+    if(l.contains("sketch.cpp") || l.indexOf("^.+\.ino$") != -1){
+        QVariantMap variant;
 
         variant["name"]         =   QVariant(currDir.dirName());
         variant["path"]         =   QVariant(currDir.absolutePath());
@@ -23,7 +24,7 @@ QVariantHash    ProjectTraverse::readProjects(QString dirPath , QString filterPa
         return variant;
     }
 
-    QVariantHash    variant;
+    QVariantMap    variant;
     variant["isCategory"]   =   QVariant(true);
 
     foreach (QString nestedFolder, currDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot)) {

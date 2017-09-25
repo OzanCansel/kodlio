@@ -310,7 +310,7 @@ QList<ArduinoLibDescription*>* LibraryManager::onlineLibs(){
     return &_onlineLibs;
 }
 
-QList<ArduinoLibDescription*>   LibraryManager::getLocalLibs(){
+QList<ArduinoLibDescription*>&   LibraryManager::getLocalLibs(){
     return _localLibs;
 }
 

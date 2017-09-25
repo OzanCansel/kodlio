@@ -70,7 +70,7 @@ private:
     bool            isHeaderFile(QString &fileName);
     bool            isSourceFile(QString &fileName);
     bool            possibleSourceFiles(QString &headerName , QStringList &sourceFile);
-    void            preprocessInoFile(QString filePath);
+    bool            preprocessInoFile(QString filePath);
     QDir            mkpath(QString path);
 };
 

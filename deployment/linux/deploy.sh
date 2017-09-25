@@ -7,7 +7,7 @@ if [ "$#" -ne 3 ]; then
 fi
 
 SCRIPT=$(readlink -f '$0')
-SCRIPRTDIR=$(dirname '$SCRIPT')
+SCRIPTDIR=$(dirname '$SCRIPT')
 echo $SCRIPT
 echo $SCRIPTDIR
 QTPATH=$1
@@ -49,6 +49,8 @@ binarycreator -c config/config.xml -p packages KodlioKurulum
 
 mkdir -p ../../../../dist/linux/$VERSION
 mv KodlioKurulum ../../../../dist/linux/$VERSION/KodlioKurulum
+
+echo "Installer uretildi. Dizin => $(pwd)" 
 
 cd ..
 cd ..

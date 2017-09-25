@@ -167,7 +167,8 @@ SOURCES += main.cpp \
     globalplugin.cpp \
     toolchain/avr/roboskop/roboskoprunner.cpp \
     thread/avr/roboskop/roboskoptoolchainthread.cpp \
-    thread/avr/roboskop/roboskoptoolchainworker.cpp
+    thread/avr/roboskop/roboskoptoolchainworker.cpp \
+    project/arduino/examplesmanager.cpp
 
 RESOURCES += qml.qrc \
     res.qrc \
@@ -422,5 +423,6 @@ HEADERS += \
     globalplugin.h \
     toolchain/avr/roboskop/roboskoprunner.h \
     thread/avr/roboskop/roboskoptoolchainthread.h \
-    thread/avr/roboskop/roboskoptoolchainworker.h
+    thread/avr/roboskop/roboskoptoolchainworker.h \
+    project/arduino/examplesmanager.h
 

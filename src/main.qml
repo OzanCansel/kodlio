@@ -68,9 +68,11 @@ ApplicationWindow {
     }
 
     ExamplesDialog{
-        id      :   examplesDialog
+        id              :   examplesDialog
+        manager         :   projectManager
+        options         :   projectOptions
+        libraryManager  :   libManager
     }
-
 
     SerialMonitorDialog{
         id      :   serialMonitorDialog
