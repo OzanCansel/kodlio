@@ -28,12 +28,13 @@ void AvrToolchain::run(RunOptions *options) {
 
 void AvrToolchain::compile(QString file, CompileOptions *opts)    {
 
-    //Eger .ino ile bitiyorsa
-    if(file.endsWith(".ino")){
-        QFile   f(file);
-
-        QString str = f.readAll();
-
+    //Ino file ise
+    if(isInoFile(file)){
+        QString outFile = QString(file).replace(".ino" , ".cpp");
+        preprocessInoFile(file , outFile);
+        compile(outFile , opts);
+        QFile(outFile).remove();
+        return;
     }
 
     QFileInfo   mainFileInfo(file);
@@ -317,6 +318,8 @@ AvrToolchain::HeaderMapInfo   AvrToolchain::getHeaderMap(QString headerName){
         if(info.headerName == headerName)
             return info;
     }
+
+    return HeaderMapInfo();
 }
 
 void AvrToolchain::compileLib(ArduinoLibDescription *desc, QString &outputFolder , QString &boardName , QStringList &generatedObjectFiles){
@@ -378,6 +381,10 @@ bool AvrToolchain::isSourceFile(QString &fileName){
     return false;
 }
 
+bool AvrToolchain::isInoFile(QString &fileName){
+    return fileName.endsWith(".ino");
+}
+
 bool AvrToolchain::possibleSourceFiles(QString &headerName , QStringList &sourceFile){
 
     bool    exists = false;
@@ -425,6 +432,7 @@ LibraryManager* AvrToolchain::libManager(){
 }
 
 void AvrToolchain::librariesChanged(ArduinoLibDescription *desc){
+    Q_UNUSED(desc)
     map();
 }
 
@@ -437,20 +445,24 @@ QDir AvrToolchain::mkpath(QString path){
     return dir;
 }
 
-bool AvrToolchain::preprocessInoFile(QString filePath , QString processedFile){
+bool AvrToolchain::preprocessInoFile(QString filePath , QString outputFile){
+
     QRegularExpression  checkLoopFuncExpr("void\\sloop\\(\\s*\\)\\s*;");
     QRegularExpression  checkSetupFuncExpr("void\\ssetup\\(\\s*\\)\\s*;");
     QRegularExpression  checkArduinoHeaderExpr("#include\\s+<Arduino.h>");
-    QRegularExpression  whereToAddExpr("#include\s+(<|\\\").+(>|\\\")\s+");
-
+    QRegularExpression  whereToAddExpr("#include\\s+(<|\\\").+(>|\\\")\\s+");
 
     QFile   f(filePath);
 
+    //Dosya aciliyor
     if(!f.open(QIODevice::ReadOnly)){
         return false;
     }
 
     QString content(f.readAll());
+
+    //Dosya kapatiliyor
+    f.close();
 
     QRegularExpressionMatch loopFuncMatch = checkLoopFuncExpr.match(content);
     QRegularExpressionMatch setupFuncMatch = checkSetupFuncExpr.match(content);
@@ -467,12 +479,12 @@ bool AvrToolchain::preprocessInoFile(QString filePath , QString processedFile){
 
     //Eger setup fonksiyonu yoksa
     if(!setupFuncMatch.hasMatch()){
-        processedTexts << "void setup(); //Kodlio tarafindan otomatik eklenmistir.\n";
+        processedTexts.append("\n\nvoid setup(); //Kodlio tarafindan otomatik eklenmistir.\n");
     }
 
     //Eger loop fonksiyonu yoksa
     if(!loopFuncMatch.hasMatch()){
-        processedTexts << "void loop(); //Kodlio tarafindan otomatik eklenmistir\n";
+        processedTexts.append("void loop(); //Kodlio tarafindan otomatik eklenmistir\n");
     }
 
     if(whereToAddMatch.hasMatch()){
@@ -483,4 +495,17 @@ bool AvrToolchain::preprocessInoFile(QString filePath , QString processedFile){
         content.insert(0 , processedTexts);
     }
 
+    QFile outF(outputFile);
+
+    //Dosya aciliyor
+    if(!outF.open(QIODevice::WriteOnly)){
+        return false;
+    }
+
+    //Icerik dosyaya yaziliyor
+    if(!outF.write(content.toUtf8())){
+        return false;
+    }
+
+    return true;
 }

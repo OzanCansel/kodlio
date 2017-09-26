@@ -45,6 +45,7 @@ public:
     LibraryManager*         libManager();
     virtual CompilerV2*     compiler();
     virtual Runner*         runner();
+    bool                    preprocessInoFile(QString filePath , QString outputFile);
 
 
 public slots:
@@ -69,8 +70,8 @@ private:
 
     bool            isHeaderFile(QString &fileName);
     bool            isSourceFile(QString &fileName);
+    bool            isInoFile(QString &fileName);
     bool            possibleSourceFiles(QString &headerName , QStringList &sourceFile);
-    void            preprocessInoFile(QString filePath);
     QDir            mkpath(QString path);
 };
 

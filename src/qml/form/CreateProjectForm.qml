@@ -13,7 +13,7 @@ Item {
     implicitHeight      :   100 + (projectFolderPath.visible ? 25 : 0)
     implicitWidth       :   300
 
-    readonly property string projectFolder : dialog.shortcuts.documents
+    readonly property string projectFolder : dialog.shortcuts.documents + "/kodlio"
 
     FileDialog{
         id              :   dialog

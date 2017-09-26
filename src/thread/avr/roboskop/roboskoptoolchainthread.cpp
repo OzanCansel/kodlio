@@ -15,6 +15,11 @@ RoboskopToolchainThread::RoboskopToolchainThread(QQuickItem *parent) : QQuickIte
     backgroundThread.start();
 }
 
+RoboskopToolchainThread::~RoboskopToolchainThread(){
+    backgroundThread.quit();
+    backgroundThread.wait();
+}
+
 void RoboskopToolchainThread::run(RunOptions *opts) {
     emit runSignal(opts);
 }

@@ -44,6 +44,11 @@ ApplicationWindow {
         onUploadRequired    :   currentProject.run()
     }
 
+    onClosing   :   {
+        console.log("Closing")
+        Qt.quit()
+    }
+
 
     //Dialogs
     LoginDialog{
@@ -136,11 +141,6 @@ ApplicationWindow {
     Cloud   {
         id      :   cloudApi
     }
-
-//    CloudThread{
-//        id                      :   cloudThread
-//        cloud                   :   cloudApi
-//    }
 
     background  :   Image   {
         id          :   img

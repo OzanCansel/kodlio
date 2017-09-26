@@ -4,6 +4,7 @@
 #include <QQmlContext>
 #include <QTime>
 #include <QNetworkConfigurationManager>
+#include <QStandardPaths>
 #include "highlight/arduinohighlightitem.h"
 #include "toolchain/unocompiler.h"
 #include "directorymanager.h"
@@ -43,6 +44,7 @@
 #include "file/file.h"
 #include "project/arduino/examplesmanager.h"
 #include <QStandardPaths>
+#include "toolchain/avr/avrtoolchain.h"
 
 int main(int argc, char *argv[]){
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -67,11 +69,15 @@ int main(int argc, char *argv[]){
     QQmlApplicationEngine engine;
     EventContext        eventContext;
     QQmlContext *context = engine.rootContext();
+    QString path = QStandardPaths::locate(QStandardPaths::DocumentsLocation , "" , QStandardPaths::LocateDirectory);
 
+    QDir(path).mkpath("kodlio");
+
+    QObject::connect(&engine , SIGNAL(quit()) , &app , SLOT(quit()));
+    QObject::connect(&engine , &QQmlApplicationEngine::exit , QApplication::exit);
     context->setContextProperty("eventContext" , &eventContext);
     context->setContextProperty("osInfo" , &osInfo);
     engine.load(QUrl(QLatin1String("qrc:/main.qml")));
-    QObject::connect(&engine , SIGNAL(quit()) , &app , SLOT(quit()));
 
     return app.exec();
 }

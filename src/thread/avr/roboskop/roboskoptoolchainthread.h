@@ -17,6 +17,7 @@ public:
 
     static void     registerQmlType();
     RoboskopToolchainThread(QQuickItem* parent = nullptr);
+    ~RoboskopToolchainThread();
     Runner*         runner();
     void            setRunner(Runner* runner);
 

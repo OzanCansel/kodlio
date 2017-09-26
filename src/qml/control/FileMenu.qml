@@ -73,7 +73,7 @@ Item {
     FileDialog{
         id                  :   openProjectDialog
         title               :   "Acmak istediginiz projeyi seciniz"
-        folder              :   shortcuts.documents
+        folder              :   shortcuts.documents + "/kodlio"
         selectFolder        :   true
         selectMultiple      :   false
         onAccepted          :   {
