@@ -16,6 +16,7 @@ public:
 public slots:
 
     void        run( RunOptions*  opts);
+    QString     normalizePath(QString str);
 
 };
 

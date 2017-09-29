@@ -32,7 +32,7 @@ void AvrRunner::run( RunOptions *opts){
     }
 
     //<avrdudePath> -C<avrdudeConfPath> -v -patmega328p -carduino -P<portName> -b<baudRate> -D -Uflash:w:<hexFilePath>:i
-    QString command = QString("%0 -C%1 %2 -P%3 -b%4 -D -Uflash:w:%5:i").arg(env.avrdude())
+    QString command = QString("%0 \"-C%1\" %2 -P%3 -b%4 -D \"-Uflash:w:%5:i\"").arg(normalizePath(env.avrdude()))
             .arg(env.avrdudeConf())
                  .arg(params.params)
                  .arg(portName)
@@ -66,4 +66,8 @@ void AvrRunner::run( RunOptions *opts){
     //Calistirildi
     sendRunSuccess();
     setBusy(false);
+}
+
+QString AvrRunner::normalizePath(QString str){
+    return QString("\"%0\"").arg(str);
 }
