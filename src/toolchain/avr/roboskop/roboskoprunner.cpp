@@ -15,11 +15,9 @@ RoboskopRunner::RoboskopRunner(QQuickItem* parent) : Runner(parent)
 }
 
 void RoboskopRunner::run(RunOptions *opts){
-    Q_UNUSED(opts)
     setBusy(true);
     sendInfo("Yükleme başlatılıyor");
     sendProgress(0);
-    QString board = opts->get("board").toString();
     QString portName = opts->get("port").toString();
     AvrRunner           runner;
     QTemporaryDir       firmwareDir;
@@ -40,6 +38,7 @@ void RoboskopRunner::run(RunOptions *opts){
     try{
         runner.run(opts);
     }catch(RunError &err){
+        Q_UNUSED(err)
         sendRunError();
         sendProgress(-1);
         setBusy(false);
@@ -145,6 +144,6 @@ void RoboskopRunner::run(RunOptions *opts){
 
     sendProgress(1);
     setBusy(false);
-    sendInfo("Yükleme başarıyla tamamlandı.");
+    sendInfo("Roboskop yazılımı başarıyla yüklendi.");
     sendRunSuccess();
 }

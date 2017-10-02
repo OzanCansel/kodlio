@@ -10,6 +10,7 @@
 #include "runner.h"
 #include "avr/avrrunner.h"
 #include "avr/roboskop/roboskoprunner.h"
+#include "avr/scratch/s4arunner.h"
 
 void ToolchainPlugin::attach(){
     CompilerV2::registerQmlType();
@@ -24,6 +25,7 @@ void ToolchainPlugin::attach(){
     AvrRunOptions::registerQmlType();
     AvrRunner::registerQmlType();
     RoboskopRunner::registerQmlType();
+    S4ARunner::registerQmlType();
 
 }
 

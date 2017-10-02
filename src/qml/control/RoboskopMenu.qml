@@ -33,9 +33,24 @@ Item {
         onProgress  :   progressBar.progress = progress
     }
 
+    S4ARunner{
+        id          :   scratchRunner
+        onStdErr    :   consoleOutput.errorOutput(output)
+        onStdOutput :   consoleOutput.infoOutput(output)
+        onInfoOutput:   consoleOutput.infoOutput(output)
+        onRunSuccess:   toast.displaySuccess("Scratch yazılımı başarıyla yüklendi.")
+        onRunError  :   toast.displayError("Yükleme sırasında hata oluştu !")
+        onProgress  :   progressBar.progress = progress
+    }
+
     RoboskopToolchainThread{
-        id          :   thread
+        id          :   roboskopRunnerThread
         runner      :   roboskopRunner
+    }
+
+    RoboskopToolchainThread{
+        id          :   scratchRunnerThread
+        runner      :   scratchRunner
     }
 
     Item    {
@@ -46,7 +61,7 @@ Item {
 
         Text {
             id                      :   userNameText
-            text                    :   "Roboskop"
+            text                    :   "Yazılım"
             anchors.centerIn        :   parent
             z                       :   2
             color                   :   "white"
@@ -71,7 +86,7 @@ Item {
 
         GenericMenuItem    {
             id              :   uploadRoboskopFirmware
-            text            :   "Roboskop firmware yukle"
+            text            :   "Roboskop yazılımını yükle"
             tooltipEnabled  :   true
             tooltipText     :   "Roboskop yazılımını yüklemek için tıklayınız"
             height          :   30
@@ -80,7 +95,23 @@ Item {
                     toast.displayWarning("Lütfen işlemin bitmesini bekleyiniz.")
                     return;
                 }
-                thread.run(runOpts)
+                roboskopRunnerThread.run(runOpts)
+            }
+        }
+
+        GenericMenuItem {
+            id              :   scratchFirmware
+            text            :   "Scratch yazılımını yükle"
+            tooltipEnabled  :   true
+            tooltipText     :   "Scratch yazılımını yüklemek için lütfen tıklayınız"
+            height          :   30
+            onClicked       :   {
+                if(scratchRunner.busy){
+                    toast.displayWarning("Lütfen işlemin bitmesini bekleyiniz")
+                    return;
+                }
+
+                scratchRunnerThread.run(runOpts)
             }
         }
     }

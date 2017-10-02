@@ -49,7 +49,6 @@ ApplicationWindow {
         Qt.quit()
     }
 
-
     //Dialogs
     LoginDialog{
         id      :   loginDialog
@@ -341,12 +340,12 @@ ApplicationWindow {
 
                         IdeMenuItem{
                             id                  :   roboskopMenuItem
-                            img.source          :   "/res/icon/roboskop-icon.png"
+                            img.source          :   "/res/icon/burn.png"
                             width               :   parent.width
                             height              :   50
                             mouseArea.onClicked :   roboskopMenu.open()
                             tooltipEnabled      :    true
-                            tooltipText         :   "Roboskop yazılımı ile ilgili işlemler için tıklayınız."
+                            tooltipText         :   "Hazır yazılımları yüklemek için tıklayınız."
                             visible             :   true
                         }
 

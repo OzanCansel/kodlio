@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>res/firmware/validator-uno.hex</file>
         <file>res/firmware/firmware-uno.hex</file>
+        <file>res/firmware/s4afirmware.hex</file>
     </qresource>
 </RCC>

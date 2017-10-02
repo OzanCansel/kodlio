@@ -168,7 +168,8 @@ SOURCES += main.cpp \
     toolchain/avr/roboskop/roboskoprunner.cpp \
     thread/avr/roboskop/roboskoptoolchainthread.cpp \
     thread/avr/roboskop/roboskoptoolchainworker.cpp \
-    project/arduino/examplesmanager.cpp
+    project/arduino/examplesmanager.cpp \
+    toolchain/avr/scratch/s4arunner.cpp
 
 RESOURCES += qml.qrc \
     res.qrc \
@@ -424,5 +425,6 @@ HEADERS += \
     toolchain/avr/roboskop/roboskoprunner.h \
     thread/avr/roboskop/roboskoptoolchainthread.h \
     thread/avr/roboskop/roboskoptoolchainworker.h \
-    project/arduino/examplesmanager.h
+    project/arduino/examplesmanager.h \
+    toolchain/avr/scratch/s4arunner.h
 

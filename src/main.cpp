@@ -41,10 +41,7 @@
 #include "parse/parserplugin.h"
 #include "cloudapi/cloudplugin.h"
 #include "globalplugin.h"
-#include "file/file.h"
-#include "project/arduino/examplesmanager.h"
 #include <QStandardPaths>
-#include "toolchain/avr/avrtoolchain.h"
 
 int main(int argc, char *argv[]){
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
@@ -71,7 +68,9 @@ int main(int argc, char *argv[]){
     QQmlContext *context = engine.rootContext();
     QString path = QStandardPaths::locate(QStandardPaths::DocumentsLocation , "" , QStandardPaths::LocateDirectory);
 
-    QDir(path).mkpath("kodlio");
+    QDir(path).mkpath("KodlioProjeler");
+
+
 
     QObject::connect(&engine , SIGNAL(quit()) , &app , SLOT(quit()));
     QObject::connect(&engine , &QQmlApplicationEngine::exit , QApplication::exit);
