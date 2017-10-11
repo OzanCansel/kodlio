@@ -58,8 +58,8 @@ signals:
 private:
 
     RunnerState _state;
-    bool        _busy;
-    bool        _debugEnabled;
+    bool        m_busy;
+    bool        m_debugEnabled;
 
 };
 

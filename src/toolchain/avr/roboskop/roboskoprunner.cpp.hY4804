@@ -16,11 +16,8 @@ RoboskopRunner::RoboskopRunner(QQuickItem* parent) : Runner(parent)
 
 void RoboskopRunner::run(RunOptions *opts){
 
-    if(opts->get("port" , false).isNull()){
-        sendRunError();
-        sendStdErr("Yuklenecek portu seciniz !");
+    if(opts->get("port" , false).isNull())
         return;
-    }
 
     setBusy(true);
     sendInfo("Yükleme başlatılıyor");

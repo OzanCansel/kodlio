@@ -5,7 +5,9 @@ void Runner::registerQmlType(){
     qmlRegisterType<Runner>("Kodlio" , 1 , 0 , "Runner");
 }
 
-Runner::Runner(QQuickItem *parent) : QQuickItem(parent)
+Runner::Runner(QQuickItem *parent)
+    : QQuickItem(parent) ,
+      m_busy(false)
 {
     setRunnerState(None);
 }
@@ -18,7 +20,6 @@ void Runner::sendRunSuccess(){
     if(debugEnabled())  qDebug() << "Runner successfully ran";
     emit runSuccess();
 }
-
 
 void Runner::sendRunError(){
     if(debugEnabled())  qDebug() << "Runner sendRunError()";
@@ -52,11 +53,11 @@ void Runner::sendProgress(double val){
 }
 
 void Runner::setDebugEnabled(bool enabled){
-    _debugEnabled = enabled;
+    m_debugEnabled = enabled;
 }
 
 bool Runner::debugEnabled(){
-    return _debugEnabled;
+    return m_debugEnabled;
 }
 
 Runner::RunnerState Runner::runnerState(){
@@ -70,11 +71,11 @@ void Runner::setRunnerState(RunnerState state){
 }
 
 bool Runner::busy(){
-    return _busy;
+    return m_busy;
 }
 
 void  Runner::setBusy(bool val){
-    _busy = val;
+    m_busy = val;
 
     emit busyChanged();
 }

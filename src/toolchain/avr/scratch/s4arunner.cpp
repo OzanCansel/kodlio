@@ -13,6 +13,13 @@ S4ARunner::S4ARunner(QQuickItem* parent) : Runner(parent)
 }
 
 void S4ARunner::run(RunOptions *opts){
+
+    if(opts->get("port" , false).isNull()){
+        sendRunError();
+        sendStdErr("Yuklenecek portu seciniz !");
+        return;
+    }
+
     setBusy(true);
     sendInfo("Yükleme başlatılıyor");
     AvrRunner       runner;
