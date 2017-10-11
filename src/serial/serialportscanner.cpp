@@ -45,6 +45,7 @@ QVariantList SerialPortScanner::ports(){
 }
 
 QString SerialPortScanner::retrieveBoardName(int vid, int pid){
+
     foreach (PortInfo info, _definedBoards) {
         foreach (IdPair pair, info.pairs) {
             if(pair.pid == pid && pair.vid == vid)
