@@ -50,11 +50,11 @@ ApplicationWindow {
     }
 
     //Dialogs
-    LoginDialog{
-        id      :   loginDialog
-        cloud   :   cloudApi
-        toast   :   mainToast
-    }
+//    LoginDialog{
+//        id      :   loginDialog
+//        cloud   :   cloudApi
+//        toast   :   mainToast
+//    }
 
     ListProjectsDialog{
         id      :   listProjectsDialog
@@ -137,9 +137,9 @@ ApplicationWindow {
         onProjectCreateError:   mainToast.displayError(error)
     }
 
-    Cloud   {
-        id      :   cloudApi
-    }
+//    Cloud   {
+//        id      :   cloudApi
+//    }
 
     background  :   Image   {
         id          :   img
@@ -154,34 +154,34 @@ ApplicationWindow {
         id                  :   libManager
     }
 
-    CloudMenu {
-        id              :   cloudMenu
-        cloud           :   cloudApi
-        dialogContainer :   parent
-        x               :   110
-        y               :   235
-        z               :   2
-        toast           :   mainToast
-        onLogout        :   cloudApi.logout()
-        onUploadProject :   {
-            //Internet baglantisi yoksa
-            if(!cloudApi.hasInternetAccess){
-                mainToast.displayWarning("Internet baglantisi yok.")
-                return
-            }
+//    CloudMenu {
+//        id              :   cloudMenu
+//        cloud           :   cloudApi
+//        dialogContainer :   parent
+//        x               :   110
+//        y               :   235
+//        z               :   2
+//        toast           :   mainToast
+//        onLogout        :   cloudApi.logout()
+//        onUploadProject :   {
+//            //Internet baglantisi yoksa
+//            if(!cloudApi.hasInternetAccess){
+//                mainToast.displayWarning("Internet baglantisi yok.")
+//                return
+//            }
 
-            if(projectManager.projectOpened)
-                uploadProjectDialog.open()
-            else
-                mainToast.displayWarning("Yuklemek icin once projeyi aciniz")
-        }
-        onListProjects  :   listProjectsDialog.open()
-    }
+//            if(projectManager.projectOpened)
+//                uploadProjectDialog.open()
+//            else
+//                mainToast.displayWarning("Yuklemek icin once projeyi aciniz")
+//        }
+//        onListProjects  :   listProjectsDialog.open()
+//    }
 
     RoboskopMenu{
         id              :   roboskopMenu
         x               :   110
-        y               :   350
+        y               :   300
         z               :   2
         toast           :   mainToast
         consoleOutput   :   outputConsole
@@ -327,16 +327,16 @@ ApplicationWindow {
                             tooltipText         :   "Kütüphanelere göz atmak için tıklayınız"
                         }
 
-                        IdeMenuItem{
-                            id                  :   cloudMenuItem
-                            img.source          :   "/res/icon/cloud-icon-2.png"
-                            width               :   parent.width
-                            height              :   50
-                            txt.text            :   "Bulut"
-                            mouseArea.onClicked :   cloudApi.authenticated ? cloudMenu.open() : loginDialog.open()
-                            tooltipEnabled      :   true
-                            tooltipText         :   "Bulut işlemleri için tıklayınız"
-                        }
+//                        IdeMenuItem{
+//                            id                  :   cloudMenuItem
+//                            img.source          :   "/res/icon/cloud-icon-2.png"
+//                            width               :   parent.width
+//                            height              :   50
+//                            txt.text            :   "Bulut"
+//                            mouseArea.onClicked :   cloudApi.authenticated ? cloudMenu.open() : loginDialog.open()
+//                            tooltipEnabled      :   true
+//                            tooltipText         :   "Bulut işlemleri için tıklayınız"
+//                        }
 
                         IdeMenuItem{
                             id                  :   roboskopMenuItem

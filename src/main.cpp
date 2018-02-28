@@ -68,8 +68,7 @@ int main(int argc, char *argv[]){
     QQmlContext *context = engine.rootContext();
     QString path = QStandardPaths::locate(QStandardPaths::DocumentsLocation , "" , QStandardPaths::LocateDirectory);
 
-    QDir(path).mkpath("KodlioProjeler");
-
+    QDir(path).mkpath("kodlio");
 
 
     QObject::connect(&engine , SIGNAL(quit()) , &app , SLOT(quit()));
