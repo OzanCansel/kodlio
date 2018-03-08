@@ -294,6 +294,7 @@ Item {
             id              :   documentTabs
             width           :   parent.width
             spacing         :   5
+            height          :   35
 
             background      :   Item {            }
 
@@ -308,6 +309,7 @@ Item {
         SplitView   {
             id      :   splitView
             anchors.top     :   documentTabs.bottom
+//            y       :       documentTabs.height + documentTabs.y
             anchors.bottom  :   parent.bottom
             anchors.left    :   parent.left
             anchors.right   :   parent.right
