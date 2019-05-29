@@ -1,6 +1,6 @@
 # Kodlio
 
-OzPlayer is a basic ide for programming Arduino.
+Kodlio is a basic ide for programming Arduino.
 
 ## Download
 
