@@ -3,9 +3,7 @@
 Kodlio is a basic ide for programming Arduino.
 
 ## Download
-
-[Website](http://www.kodlio.com)
-[Download Desktop App](http://www.kodlio.com/indirmeler/v1/windows/KodlioKurulum.exe)  
+Can be downloaded from releases section. Installer is prepared just for windows.
 
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
